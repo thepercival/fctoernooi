@@ -1,40 +1,51 @@
 <div class="container-fluid px-0">
   <div class="row justify-content-around g-0">
     <div class="col-md-12 col-lg-8">
-      <div *ngIf="!processing" class="d-flex justify-content-between">
-        <h2>
-          <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon> wedstrijden
+      @if (!processing() && structure) {
+        <div class="d-flex justify-content-between">
+          <h2>
+            <fa-icon [icon]="faCalendarAlt"></fa-icon> wedstrijden
+          </h2>
+          @if (structure.hasSingleCategory()) {
+            @if (tournament && structure.allPoulesHaveGames() && hasAdminRole()) {
+              <button type="button"
+                class="btn btn-sm btn-outline-primary me-2" [routerLink]="['/admin/startandrecesses', tournament.getId()]">
+                start & pauzes
+              </button>
+            }
+          } @else {
+            <button type="button" class="btn btn-sm me-2 btn-outline-{{getCategoryFavoritesActiveClass(structure)}}"
+              (click)="openCategoriesChooseModal(structure)">
+              <fa-icon [icon]="faGrip"></fa-icon> <span class="ms-1">categoriën</span>
+            </button>
+          }
+        </div>
+      }
+      @if (processing()) {
+        <h2 class="text-center">
+          <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
         </h2>
-        <ng-container *ngIf="structure.hasSingleCategory();else withCategories">
-          <button *ngIf="tournament && structure && structure.allPoulesHaveGames() && hasAdminRole()" type="button"
-            class="btn btn-sm btn-outline-primary me-2" [routerLink]="['/admin/startandrecesses', tournament.getId()]">
-            start & pauzes
-          </button>
-
-        </ng-container>
-        <ng-template #withCategories>
-          <button type="button" class="btn btn-sm me-2 btn-outline-{{getCategoryFavoritesActiveClass(structure)}}"
-            (click)="openCategoriesChooseModal(structure)">
-            <fa-icon [icon]="['fas', 'grip']"></fa-icon> <span class="ms-1">categoriën</span>
-          </button>
-        </ng-template>
-
-      </div>
-      <h2 *ngIf="processing" class="text-center">
-        <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
-      </h2>
-      <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
-      <table *ngIf="!processing && structure" class="table mt-3">
-        <tbody app-tournament-roundnumber-planning *ngFor="let roundNumber of structure.getRoundNumbers()"
-          [structureNameService]="structureNameService" [tournament]="tournament" [roundNumber]="roundNumber"
-          [optionalGameColumns]="optionalGameColumns"
-          [showLinksToAdmin]="true" [favoriteCategories]="favoriteCategories" [roles]="roles"
-          [userRefereeId]="userRefereeId" (scrolling)="scroll()">
-        </tbody>
-      </table>
+      }
+      @if (alert()) {
+        <ngb-alert [type]="alert()!.type">{{ alert()!.message }}</ngb-alert>
+      }
+      @if (!processing() && structure) {
+        <table class="table mt-3">
+          @for (roundNumber of structure.getRoundNumbers(); track roundNumber.getNumber()) {
+            <tbody app-tournament-roundnumber-planning
+              [structureNameService]="structureNameService" [tournament]="tournament" [roundNumber]="roundNumber"
+              [optionalGameColumns]="optionalGameColumns"
+              [showLinksToAdmin]="true" [favoriteCategories]="favoriteCategories()" [roles]="roles"
+              [userRefereeId]="userRefereeId" (scrolling)="scroll()">
+            </tbody>
+          }
+        </table>
+      }
     </div>
   </div>
 </div>
 
-<app-tournament-navbar [public]="false" [currentScreen]="GamesScreen" *ngIf="tournament" [tournament]="tournament" [theme]="getTheme(tournament)">
-</app-tournament-navbar>
+@if (tournament) {
+  <app-tournament-navbar [public]="false" [currentScreen]="GamesScreen" [tournament]="tournament" [theme]="getTheme(tournament)">
+  </app-tournament-navbar>
+}

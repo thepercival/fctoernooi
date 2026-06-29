@@ -1,37 +1,44 @@
 <div class="container-fluid">
   <div class="row justify-content-center">
     <div class="col-sm-10 col-md-6 col-lg-4 g-0">
-      <h2 *ngIf="processing" class="text-center">
-        <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
+      @if(processing()) {
+      <h2 class="text-center">
+        <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
       </h2>
-      <ngb-alert *ngIf="!processing && alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
-      <div *ngIf="!processing" class="card card-auth my-3">
-        <app-user-title title="registreren" icon="user-circle">
+      }
+      @if(!processing() && alert()) {
+      <ngb-alert type="alert()?.type">{{ alert()?.message }}</ngb-alert>
+      }
+      @if(!processing()) {
+      <div class="card card-auth my-3">
+        <app-user-title title="registreren" [icon]="faUserCircle">
         </app-user-title>
         <div class="card-body text-center mx-auto form-validate border-top-0 border-primary">
 
-          <div *ngIf="authService.isLoggedIn() && registered"
-            class="card card-body mx-auto bg-faded form-register mt-3">
+          @if(authService.isLoggedIn() && registered) {
+          <div class="card card-auth card-body mx-auto bg-faded form-register mt-3">
             <legend class="m-b-1 text-xs-center">bedankt voor het registreren!</legend>
             <button role="button" class="btn btn-outline-secondary" routerLink="/">ga verder</button>
           </div>
-          <div *ngIf="authService.isLoggedIn() && !registered"
-            class="card card-body mx-auto bg-faded form-register mt-3">
+          }
+          @if(authService.isLoggedIn() && !registered) {
+          <div class="card card-auth card-body mx-auto bg-faded form-register mt-3">
             <legend class="m-b-1 text-xs-center">je bent al ingelogd</legend>
             <button role="button" class="btn btn-outline-secondary" routerLink="/">ga terug</button>
           </div>
+          }
 
-          <form *ngIf="!authService.isLoggedIn() && !registered" name="form" (ngSubmit)="register()" [formGroup]="typedForm"
-            novalidate>
+          @if(!authService.isLoggedIn() && !registered) {
+          <form name="form" (ngSubmit)="register()" [formGroup]="typedForm" novalidate>
             <div class="row mb-3">
               <div class="col-3">
                 <label for="emailaddress" class="col-form-label">emailadres</label>
               </div>
               <div class="col-9">
                 <input class="form-control"
-                  [ngClass]="{ 'is-invalid': typedForm.controls.emailaddress.invalid, 'is-valid': typedForm.controls.emailaddress.valid }"
+                  [class.is-invalid]="typedForm.controls.emailaddress.invalid" [class.is-valid]="typedForm.controls.emailaddress.valid "
                   type="text" formControlName="emailaddress"
-                  placeholder="max. {{validations.maxlengthemailaddress}} karakters">
+                  placeholder="{{validations.minlengthemailaddress}}-{{validations.maxlengthemailaddress}} karakters">
               </div>
             </div>
             <div class="row mb-3">
@@ -40,7 +47,7 @@
               </div>
               <div class="col-9">
                 <input class="form-control"
-                  [ngClass]="{ 'is-invalid': typedForm.controls.password.invalid, 'is-valid': typedForm.controls.password.valid }"
+                  [class.is-invalid]="typedForm.controls.password.invalid" [class.is-valid]="typedForm.controls.password.valid "
                   type="password" formControlName="password"
                   placeholder="min. {{validations.minlengthpassword}} karakters">
               </div>
@@ -51,7 +58,7 @@
               </div>
               <div class="col-9">
                 <input class="form-control"
-                  [ngClass]="{ 'is-invalid': typedForm.controls.passwordRepeat.invalid, 'is-valid': typedForm.controls.passwordRepeat.valid }"
+                  [class.is-invalid]="typedForm.controls.passwordRepeat.invalid" [class.is-valid]="typedForm.controls.passwordRepeat.valid "
                   type="password" formControlName="passwordRepeat"
                   placeholder="min. {{validations.minlengthpassword}} karakters">
               </div>
@@ -64,9 +71,11 @@
               </div>
             </div>
           </form>
+          }
 
         </div>
       </div>
+      }
     </div>
   </div>
 </div>

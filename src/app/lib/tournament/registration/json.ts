@@ -1,5 +1,4 @@
-import { JsonCategory, JsonIdentifiable } from "ngx-sport";
-import { JsonPlaceLocation } from "ngx-sport/src/place/location/json";
+import { JsonIdentifiable, JsonStartLocation } from "ngx-sport";
 import { RegistrationState } from "./state";
 
 export interface JsonTournamentRegistration extends JsonIdentifiable {
@@ -8,5 +7,5 @@ export interface JsonTournamentRegistration extends JsonIdentifiable {
     emailaddress: string;
     telephone: string;
     info: string;
-    startLocation: JsonPlaceLocation |undefined;
+    startLocation: JsonStartLocation |undefined;
 }

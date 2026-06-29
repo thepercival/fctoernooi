@@ -1,17 +1,23 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 import { getRoleName, Role } from '../../lib/role';
+import { facReferee } from '../../shared/customicons';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
     selector: 'app-ngbd-modal-auth-explanation',
     templateUrl: './infomodal.component.html',
-    styleUrls: ['./infomodal.component.scss']
+    styleUrls: ['./infomodal.component.scss'],
+    standalone: true,
+    imports: [NgbAlert, FontAwesomeModule],
 })
 export class AuthorizationExplanationModalComponent implements OnInit {
     @Input() header!: string;
     @Input() showAdd: boolean = false;
 
     roleDefinitions: RoleDefinition[] = [];
+
+    facReferee = facReferee;
 
     constructor(public activeModal: NgbActiveModal) {
     }

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { AuthService } from '../../lib/auth/auth.service';
 import { MyNavigation } from '../../shared/common/navigation';
@@ -11,18 +11,24 @@ import { TournamentUser } from '../../lib/tournament/user';
 import { Observable, of } from 'rxjs';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { Category, RoundNumber, SelfReferee, StartLocationMap, Structure, StructureNameService } from 'ngx-sport';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { FavoritesRepository } from '../../lib/favorites/repository';
+import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 import { TournamentScreen } from '../../shared/tournament/screenNames';
-import { OptionalGameColumn } from '../../shared/tournament/games/roundnumber.component';
+import { OptionalGameColumn, RoundNumberPlanningComponent } from '../../shared/tournament/games/roundnumber.component';
 import { TournamentCompetitor } from '../../lib/competitor';
+import { CategoryChooseModalComponent } from '../../shared/tournament/category/chooseModal.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { TournamentNavBarComponent } from '../../shared/tournament/tournamentNavBar/tournamentNavBar.component';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-  selector: 'app-tournament-games-edit',
-  templateUrl: './list.component.html',
-  styleUrls: ['./list.component.css']
+    selector: 'app-tournament-games-edit',
+    templateUrl: './list.component.html',
+    styleUrls: ['./list.component.css'],
+    standalone: true,
+    imports: [NgbAlert,FontAwesomeModule,RoundNumberPlanningComponent,TournamentNavBarComponent,RouterLink]
 })
 export class GameListComponent extends TournamentComponent implements OnInit {
+  faSpinner = faSpinner;
   userRefereeId: number | string | undefined;
   roles: number = 0;
   public structureNameService!: StructureNameService;
@@ -34,13 +40,11 @@ export class GameListComponent extends TournamentComponent implements OnInit {
     router: Router,
     tournamentRepository: TournamentRepository,
     structureRepository: StructureRepository,
-    globalEventsManager: GlobalEventsManager,
-    modalService: NgbModal,
-    favRepository: FavoritesRepository,
+    globalEventsManager: GlobalEventsManager,    
     private authService: AuthService,
     private myNavigation: MyNavigation,
   ) {
-    super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
+    super(route, router, tournamentRepository, structureRepository, globalEventsManager);
   }
 
   ngOnInit() {
@@ -49,7 +53,7 @@ export class GameListComponent extends TournamentComponent implements OnInit {
       const loggedInUserId = this.authService.getLoggedInUserId();
       const tournamentUser = loggedInUserId ? this.tournament.getUser(loggedInUserId) : undefined;
       if (tournamentUser === undefined) {
-        this.processing = false;
+        this.processing.set(false);
         return;
       }
       this.initGameColumnDefinitions(this.structure);
@@ -60,9 +64,9 @@ export class GameListComponent extends TournamentComponent implements OnInit {
         .subscribe({
           next: (userRefereeId: string | number | undefined) => {
             this.userRefereeId = userRefereeId;
-            this.processing = false;
+            this.processing.set(false);
           },
-          error: (e) => this.processing = false
+          error: (e) => this.processing.set(false)
         });
     });
   }
@@ -98,4 +102,14 @@ export class GameListComponent extends TournamentComponent implements OnInit {
   scroll() {
     this.myNavigation.scroll();
   }
+
+  openCategoriesChooseModal(structure: Structure) {
+    const activeModal = this.modalService.open(CategoryChooseModalComponent);
+    activeModal.componentInstance.categories = structure.getCategories();
+    activeModal.componentInstance.tournament = this.tournament;
+    activeModal.result.then((result) => {
+    }, (reason) => {
+        this.updateFavoriteCategories(structure);
+    });
+}
 }

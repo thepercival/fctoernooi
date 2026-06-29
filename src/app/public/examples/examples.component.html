@@ -1,33 +1,39 @@
 <div class="row justify-content-center g-0">
   <div class="col-sm-12 col-md-10 col-lg-8 text-center">
-    <h1>voorbeeld toernooien</h1>   
+    <h1>voorbeeld toernooien</h1>
 
     <div class="d-flex justify-content-center my-3">
-      
-      <h2 *ngIf="processing" class="text-center">
-        <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
-      </h2>
-      <table *ngIf="!processing" class="table mb-0">
-        <tbody>
-          <tr *ngFor="let tournamentShell of tournamentShells">
-            <td class="text-start">
-              <span>{{tournamentShell.name}}</span>
-            </td>
-            <td>
-              <button type="button" class="btn btn-sm btn-outline-primary" (click)="linkToView(tournamentShell)">
-                bekijken
-              </button>
-            </td>
-            <td>
-              <button type="button" class="btn btn-sm btn-outline-primary" (click)="openCopyModal(tournamentShell)">
-                <fa-icon [icon]="['fas', 'copy']"></fa-icon> <span class="d-none d-sm-inline ms-1">kopiëren</span>
-              </button>
-            </td>
-          </tr>
-      </table>
-    </div>
 
-    <!-- <div class="d-flex justify-content-center mt-4">
+      @if (processing()) {
+        <h2 class="text-center">
+          <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
+        </h2>
+      }
+      @if (!processing()) {
+        <table class="table mb-0">
+          <tbody>
+            @for (tournamentShell of tournamentShells; track tournamentShell) {
+              <tr>
+                <td class="text-start">
+                  <span>{{tournamentShell.name}}</span>
+                </td>
+                <td>
+                  <button type="button" class="btn btn-sm btn-outline-primary" (click)="linkToView(tournamentShell)">
+                    bekijken
+                  </button>
+                </td>
+                <td>
+                  <button type="button" class="btn btn-sm btn-outline-primary" (click)="openCopyModal(tournamentShell)">
+                    <fa-icon [icon]="faCopy"></fa-icon> <span class="d-none d-sm-inline ms-1">kopiëren</span>
+                  </button>
+                </td>
+              </tr>
+            }
+          </table>
+        }
+      </div>
+
+      <!-- <div class="d-flex justify-content-center mt-4">
       <div class="card border-dark w-50 text-center">
         <div class="card-header"><h5>publiek deel</h5></div>
         <div class="card-body">
@@ -39,7 +45,7 @@
           </div>
           <div>
             <button class="btn btn-outline-primary">meerderere sporten</button>
-          </div>      
+          </div>
         </div>
       </div>
     </div> -->
@@ -50,14 +56,14 @@
 <ng-template #exampleInfo let-modal>
   <div class="modal-header">
     <h4 class="modal-title">
-      <fa-icon [icon]="['fas', 'copy']"></fa-icon> nieuwe editie
+      <fa-icon [icon]="faCopy"></fa-icon> nieuwe editie
     </h4>
     <button type="button" class="btn-close" aria-label="sluiten" (click)="modal.dismiss('close')"></button>
   </div>
   <div class="modal-body">
     <div class="container-fluid">
-      
-        vertel hier dat de gebruiker nu naar het toernooi wordt gestuurd
+
+      vertel hier dat de gebruiker nu naar het toernooi wordt gestuurd
     </div>
   </div>
 </ng-template>

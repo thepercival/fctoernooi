@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 
 import { AuthService } from '../../lib/auth/auth.service';
 import { IAlertType } from '../../shared/common/alert';
@@ -9,14 +10,22 @@ import { UserRepository } from '../../lib/user/repository';
 import { UserComponent } from '../component';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { CustomValidators } from '../password-validation';
+import { UserTitleComponent } from '../title/title.component';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { faSpinner, faUserCircle } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-  selector: 'app-register',
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css']
+    selector: 'app-register',
+    templateUrl: './register.component.html',
+    styleUrls: ['./register.component.css'],
+  standalone: true,
+  imports: [FontAwesomeModule, NgbAlert, ReactiveFormsModule, RouterModule, UserTitleComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RegisterComponent extends UserComponent implements OnInit {
   registered = false;
+  faSpinner = faSpinner;
+  faUserCircle = faUserCircle;
   public typedForm: FormGroup<{
     emailaddress: FormControl<string>,
     password: FormControl<string>,
@@ -67,11 +76,11 @@ export class RegisterComponent extends UserComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.processing = false;
+    this.processing.set(false);
   }
 
   register(): boolean {
-    this.processing = true;
+    this.processing.set(true);
     this.setAlert(IAlertType.Info, 'de registratie wordt opgeslagen');
 
     const emailaddress = this.typedForm.controls.emailaddress.value;
@@ -85,9 +94,9 @@ export class RegisterComponent extends UserComponent implements OnInit {
           this.resetAlert();
         },
         error: (e: string) => {
-          this.setAlert(IAlertType.Danger, 'het registreren is niet gelukt: ' + e); this.processing = false;
+          this.setAlert(IAlertType.Danger, 'het registreren is niet gelukt: ' + e); this.processing.set(false);
         },
-        complete: () => this.processing = false
+        complete: () => this.processing.set(false)
       });
     return false;
   }

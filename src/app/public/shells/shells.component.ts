@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal, WritableSignal } from '@angular/core';
 import { Router } from '@angular/router';
 import { DateFormatter } from '../../lib/dateFormatter';
 import { FavoritesRepository } from '../../lib/favorites/repository';
@@ -7,15 +7,25 @@ import { TournamentShellFilter, TournamentShellRepository } from '../../lib/tour
 import { IAlert, IAlertType } from '../../shared/common/alert';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { AbstractControl, FormControl, FormGroup } from '@angular/forms';
-import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { ReactiveFormsModule } from '@angular/forms';
+import { NgbDateStruct, NgbInputDatepicker } from '@ng-bootstrap/ng-bootstrap';
 import { DateConverter } from '../../lib/dateConverter';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import { faCalendarAlt, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { getSportIconDef } from '../../shared/tournament/sport/icon.mapper';
+import { CustomSportId } from '../../lib/ngx-sport/sport/custom';
 
 @Component({
-  selector: 'app-tournament-public-shells',
-  templateUrl: './shells.component.html',
-  styleUrls: ['./shells.component.scss']
+    selector: 'app-tournament-public-shells',
+    templateUrl: './shells.component.html',
+    styleUrls: ['./shells.component.scss'],
+    standalone: true,
+    imports: [FontAwesomeModule, NgbInputDatepicker, ReactiveFormsModule]
 })
 export class PublicShellsComponent implements OnInit{
+  faSpinner = faSpinner;
+  faCalendarAlt = faCalendarAlt;
 
   public searchForm: FormGroup;/*<{
     name: FormControl<string>,
@@ -24,8 +34,8 @@ export class PublicShellsComponent implements OnInit{
   }>;*/
 
   public shells: TournamentShell[] = [];
-  public processing = true;
-  public processingSearch = false;
+  public readonly processing: WritableSignal<boolean> = signal(true);
+  public readonly processingSearch: WritableSignal<boolean> = signal(false);
   public alert: IAlert | undefined;
 
   private linethroughDate: Date;
@@ -60,7 +70,7 @@ export class PublicShellsComponent implements OnInit{
 
     this.dateConverter.setDate(this.searchForm.controls.startDate, startDate);
     this.dateConverter.setDate(this.searchForm.controls.endDate, endDate);
-    this.processing = false;
+    this.processing.set(false);
     this.search();
   }
 
@@ -87,7 +97,7 @@ export class PublicShellsComponent implements OnInit{
 
   search(name?: string) {
     
-    this.processingSearch = true;
+    this.processingSearch.set(true);
     const searchFilter = this.getSearchFilterFromForm(name);
     this.tournamentShellRepos.getObjects(searchFilter)
       .subscribe({
@@ -96,10 +106,10 @@ export class PublicShellsComponent implements OnInit{
             return (ts1.startDateTime > ts2.startDateTime ? 1 : -1);
           });
           this.shells = shellsRes;
-          this.processingSearch = false;
+          this.processingSearch.set(false);
         },
         error: (e) => {
-          this.setAlert(IAlertType.Danger, e); this.processingSearch = false;
+          this.setAlert(IAlertType.Danger, e); this.processingSearch.set(false);
         }
       });
   }
@@ -119,7 +129,7 @@ export class PublicShellsComponent implements OnInit{
   }
 
   linkToView(shell: TournamentShell) {
-    this.processing = true;
+    this.processing.set(true);
     const suffix = this.favoritesRepos.hasObject(shell.tournamentId) ? '' : '/competitors';
     this.router.navigate(['/public' + suffix, shell.tournamentId]);
   }
@@ -130,5 +140,9 @@ export class PublicShellsComponent implements OnInit{
 
   inPast(date: Date): boolean {
     return this.linethroughDate.getTime() > date.getTime();
+  }
+
+  getSportIcon(customId: number): IconDefinition | undefined {
+    return getSportIconDef(customId as CustomSportId);
   }
 }

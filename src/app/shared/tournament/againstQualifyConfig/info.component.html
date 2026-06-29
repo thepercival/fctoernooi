@@ -7,7 +7,7 @@
         </tr>
     </thead>
     <tbody>
-        <ng-template ngFor let-againstQualifyConfig [ngForOf]="round.getValidAgainstQualifyConfigs()">
+        @for (againstQualifyConfig of round().getValidAgainstQualifyConfigs(); track againstQualifyConfig) {
             <tr>
                 <td>{{againstQualifyConfig.getSport().getName()}}</td>
                 <td>overwinning</td>
@@ -18,21 +18,23 @@
                 <td>gelijkspel</td>
                 <td class="text-end">{{againstQualifyConfig.getDrawPoints()}}</td>
             </tr>
-            <tr *ngIf="round.getNumber().getValidPlanningConfig().getExtension()">
-                <td>{{againstQualifyConfig.getSport().getName()}}</td>
-                <td>overwinning na verlenging</td>
-                <td class="text-end">{{againstQualifyConfig.getWinPointsExt()}}</td>
-            </tr>
-            <tr *ngIf="round.getNumber().getValidPlanningConfig().getExtension()">
-                <td>{{againstQualifyConfig.getSport().getName()}}</td>
-                <td>gelijkspel na verlenging</td>
-                <td class="text-end">{{againstQualifyConfig.getDrawPointsExt()}}</td>
-            </tr>
-            <tr *ngIf="round.getNumber().getValidPlanningConfig().getExtension()">
-                <td>{{againstQualifyConfig.getSport().getName()}}</td>
-                <td>verlies na verlenging</td>
-                <td class="text-end">{{againstQualifyConfig.getLosePointsExt()}}</td>
-            </tr>
-        </ng-template>
+            @if (round().getNumber().getValidPlanningConfig().getExtension()) {
+                <tr>
+                    <td>{{againstQualifyConfig.getSport().getName()}}</td>
+                    <td>overwinning na verlenging</td>
+                    <td class="text-end">{{againstQualifyConfig.getWinPointsExt()}}</td>
+                </tr>
+                <tr>
+                    <td>{{againstQualifyConfig.getSport().getName()}}</td>
+                    <td>gelijkspel na verlenging</td>
+                    <td class="text-end">{{againstQualifyConfig.getDrawPointsExt()}}</td>
+                </tr>
+                <tr>
+                    <td>{{againstQualifyConfig.getSport().getName()}}</td>
+                    <td>verlies na verlenging</td>
+                    <td class="text-end">{{againstQualifyConfig.getLosePointsExt()}}</td>
+                </tr>
+            }
+        }
     </tbody>
 </table>

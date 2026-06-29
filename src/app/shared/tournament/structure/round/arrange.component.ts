@@ -1,15 +1,23 @@
-import { Component, Input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { Round, StructureEditor } from 'ngx-sport';
 import { StructureActionName } from '../../../../admin/structure/edit.component';
+import { TOURNAMENT_UI_IMPORTS } from '../../tournament.ui-imports';
+import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 @Component({
-  selector: 'app-tournament-structureround-arrange',
-  templateUrl: './arrange.component.html',
-  styleUrls: ['./arrange.component.scss']
+    selector: 'app-tournament-structureround-arrange',
+    templateUrl: './arrange.component.html',
+    styleUrls: ['./arrange.component.scss'],
+    standalone: true,
+    imports: [TOURNAMENT_UI_IMPORTS],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StructureRoundArrangeComponent {
-  @Input() structureEditor!: StructureEditor;
-  @Input() round!: Round;
-  onActionArrange = output<StructureActionName>();
+  public structureEditor = input.required<StructureEditor>();
+  public round = input.required<Round>();
+  public faMinus = faMinus;
+  public faPlus = faPlus;
+  
+  readonly onActionArrange = output<StructureActionName>();
 
   constructor() {
   }
@@ -40,8 +48,8 @@ export class StructureRoundArrangeComponent {
 
   canChange(delta: number): boolean {
     try {
-      this.structureEditor.validate(
-        this.round.getCompetition(), this.round.getNrOfPlaces(), this.round.getPoules().length + delta);
+      this.structureEditor().validate(
+        this.round().getCompetition(), this.round().getNrOfPlaces(), this.round().getPoules().length + delta);
       return true;
     } catch (e) {
       return false;
@@ -49,11 +57,11 @@ export class StructureRoundArrangeComponent {
   }
 
   canRemovePouleFromRoot(): boolean {
-    return this.round.getPoules().length > 1;
+    return this.round().getPoules().length > 1;
   }
 
   canRemovePlaceFromRoot(): boolean {
-    return this.round.getPlaces().length > this.structureEditor.getMinPlacesPerPouleSmall();
+    return this.round().getPlaces().length > this.structureEditor().getMinPlacesPerPouleSmall();
   }
 
   canDecrementNrOfPoules(): boolean {
@@ -81,17 +89,17 @@ export class StructureRoundArrangeComponent {
   }
 
   showHorizontal(): boolean {
-    const nrOfRounds = this.round.getNumber().getRounds(undefined).length;
+    const nrOfRounds = this.round().getNumber().getRounds(undefined).length;
     return nrOfRounds <= 8;
   }
 
   showVertical(): boolean {
-    const nrOfRounds = this.round.getNumber().getRounds(undefined).length;
+    const nrOfRounds = this.round().getNumber().getRounds(undefined).length;
     return nrOfRounds > 2;
   }
 
   horViewPortClass(): string {
-    const nrOfRounds = this.round.getNumber().getRounds(undefined).length;
+    const nrOfRounds = this.round().getNumber().getRounds(undefined).length;
     if (nrOfRounds <= 2) {
       return ''
     } else if (nrOfRounds <= 4) {
@@ -105,7 +113,7 @@ export class StructureRoundArrangeComponent {
   }
 
   vertViewPortClass(): string {
-    const nrOfRounds = this.round.getNumber().getRounds(undefined).length;
+    const nrOfRounds = this.round().getNumber().getRounds(undefined).length;
     if (nrOfRounds <= 2) {
       return 'd-none';
     } else if (nrOfRounds <= 4) {

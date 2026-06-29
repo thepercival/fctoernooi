@@ -1,75 +1,95 @@
-<div *ngIf="settings" class="container">
-  <h2 *ngIf="processing" class="text-center">
-    <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
-  </h2>
-  
-  <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
-  
-  <form *ngIf="typedForm && !processing" [formGroup]="typedForm" name="form" (ngSubmit)="save()" novalidate>
+@if (settings()) {
+  <div class="container">
+    @if (processing()) {
+      <h2 class="text-center">
+        <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
+      </h2>
+    }
+    
+    @if (alert) {
+      <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
+    }
+    
+    @if (typedForm && !processing()) {
+      <form [formGroup]="typedForm" name="form" (ngSubmit)="save()" novalidate>
 
-    <div class="row mb-3">
-      <label for="enabled" class="col-5 col-form-label">
-        aan/uit
-      </label>
-      <div class="col-7">
-        <div class="form-control form-check form-switch">
-          <input type="checkbox" class="form-check-input" id="enabled" formControlName="enabled">
-          <label class="form-check-label" for="enabled"></label>
+        <div class="row my-3 align-items-center">
+          <label for="enabled" class="col-5 col-form-label">
+            aanzetten
+          </label>
+          <div class="col-7">
+            <div class="form-check form-switch">
+              <input type="checkbox" class="form-check-input" id="enabled" formControlName="enabled">
+              <label class="form-check-label" for="enabled"></label>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
 
-    <div class="row mb-3">
-      <div class="col-5 pointer" (click)="openHelpModal(contentInfo)">
-        <label for="endDate" class="col-form-label pointer">inschrijven tot <fa-icon [icon]="['fas', 'info-circle']" class="text-info"></fa-icon></label>
-      </div>
-      
-      <div class="col-7">
-        <div class="input-group input-group-date">
-          
-          <input class="form-control"
-            [ngClass]="{ 'is-invalid': typedForm.controls.endDate.invalid, 'is-valid': typedForm.controls.endDate.valid }"
-            placeholder="yyyy-mm-dd" formControlName="endDate" ngbDatepicker #dEnd="ngbDatepicker" required
-            [maxDate]="maxDateStruct" container="body">
-          <span class="input-group-text pointer" (click)="dEnd.toggle()">
-            <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
-          </span>
+        @if (typedForm.controls.enabled.value) {
+          <div class="row mb-3">
+            <div class="col-5 pointer" (click)="openHelpModal(contentInfo)">
+              <label for="endDate" class="col-form-label pointer">inschrijven tot <fa-icon [icon]="faInfoCircle" class="text-info"></fa-icon></label>
+            </div>
+            
+            <div class="col-7">
+              <div class="input-group input-group-date">
+                
+                <input class="form-control"
+                  [class.is-invalid]="typedForm.controls.endDate.invalid"
+                  [class.is-valid]="typedForm.controls.endDate.valid"
+                  placeholder="yyyy-mm-dd" formControlName="endDate" ngbDatepicker #dEnd="ngbDatepicker" required
+                  [maxDate]="maxDateStruct" container="body">
+                <span class="input-group-text pointer" (click)="dEnd.toggle()">
+                  <fa-icon [icon]="faCalendarAlt"></fa-icon>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-5">
+              <label for="endTime" class="col-form-label"></label>
+            </div>
+            <div class="col-7">
+              <ngb-timepicker formControlName="endTime" [spinners]="false" required>
+              </ngb-timepicker>
+            </div>
+          </div>
+        
+          <div class="row mb-3 align-items-center">
+            <label for="mailAlert" class="col-5 col-form-label">
+              ontvang mail bij nieuwe inschrijving
+            </label>
+            <div class="col-7">
+              <div class="form-check form-switch">
+                <input type="checkbox" class="form-check-input" id="mailAlert" formControlName="mailAlert">
+                <label class="form-check-label" for="mailAlert"></label>
+              </div>
+            </div>
+          </div>
+        
+        }
+
+        <div class="row mb-3 align-items-center">
+          <div class="col-5">
+            @if (saveAlert) {
+              <ngb-alert class="py-1 mb-0" [type]="saveAlert.type" [dismissible]="false">{{ saveAlert.message }}</ngb-alert>
+            }
+          </div>
+          <div class="col-7">
+            <button [disabled]="typedForm.invalid || typedForm.pristine || saving()" type="submit" class="btn btn-primary">
+              @if (saving()) {
+                <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
+                <span class="ms-1">opslaan...</span>
+              } @else {
+                <span>opslaan</span>
+              }
+            </button>
+          </div>
         </div>
-      </div>
-    </div>
-    <div class="row mb-3">
-      <div class="col-5">
-        <label for="endTime" class="col-form-label"></label>
-      </div>
-      <div class="col-7">
-        <ngb-timepicker formControlName="endTime" [spinners]="false" required>
-        </ngb-timepicker>
-      </div>
-    </div>
-   
-    <div class="row mb-3">
-      <label for="mailAlert" class="col-5 col-form-label">
-        ontvang mail bij nieuwe inschrijving
-      </label>
-      <div class="col-7">
-        <div class="form-control form-check form-switch">
-          <input type="checkbox" class="form-check-input" id="mailAlert" formControlName="mailAlert">
-          <label class="form-check-label" for="mailAlert"></label>
-        </div>
-      </div>
-    </div>
-   
-    <div class="row mb-3 justify-content-end">
-      <div class="col-7">
-        <button [disabled]="typedForm.invalid || typedForm.pristine" type="submit" class="btn btn-primary">
-          opslaan
-        </button>
-      </div>
-    </div>
-  </form>
-
-</div>
-
+      </form>
+    }
+  </div>
+}
 <ng-template #contentInfo let-activeModal>
   <p>
     De uiterste inschrijfdatum is gelijk aan de startdatum van het toernooi : 

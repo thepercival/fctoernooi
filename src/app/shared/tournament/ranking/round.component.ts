@@ -1,4 +1,5 @@
-import { Component, OnInit, Input, TemplateRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, TemplateRef, forwardRef, inject, input } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
 
 import { Poule, Round, GameState, CompetitionSport, StructureNameService, StartLocation, Competitor, Place, AgainstSide, AgainstGamePlace, AgainstGame, ScoreConfigService, HorizontalMultipleQualifyRule, HorizontalSingleQualifyRule, VerticalMultipleQualifyRule, VerticalSingleQualifyRule } from 'ngx-sport';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -7,37 +8,54 @@ import { CSSService } from '../../common/cssservice';
 import { InfoModalComponent } from '../infomodal/infomodal.component';
 import { CompetitorRepository } from '../../../lib/ngx-sport/competitor/repository';
 import { TournamentCompetitor } from '../../../lib/competitor';
+import { TOURNAMENT_UI_IMPORTS } from '../tournament.ui-imports';
+import { RankingPouleComponent } from './poule.component';
+import { AgainstQualifyInfoComponent } from '../againstQualifyConfig/info.component';
+import { EscapeHtmlPipe } from '../../common/escapehtmlpipe';
+import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-tournament-ranking-round',
     templateUrl: './round.component.html',
-    styleUrls: ['./round.component.scss']
+    styleUrls: ['./round.component.scss'],
+    standalone: true,
+    imports: [
+        TOURNAMENT_UI_IMPORTS,
+        RankingPouleComponent,
+        AgainstQualifyInfoComponent,
+        EscapeHtmlPipe,
+        NgTemplateOutlet,
+        forwardRef(() => RankingRoundComponent)
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RankingRoundComponent implements OnInit {
-    @Input() round!: Round;
-    @Input() structureNameService!: StructureNameService;
-    @Input() competitionSports!: CompetitionSport[];
-    @Input() favorites: Favorites | undefined;
-    @Input() first: boolean = true;
+    public round = input.required<Round>();
+    public structureNameService = input.required<StructureNameService>();
+    public competitionSports = input.required<CompetitionSport[]>();
+    public favorites = input<Favorites | undefined>(undefined);
+    public first = input(true);
     public collapsed: boolean = true;
+    public faChevronRight = faChevronRight;
     public poules: Poule[] = [];
     // public gameMode!: GameMode;
     public popoverPlace: Place | undefined;
 
+    private modalService = inject(NgbModal);
+
     constructor(
         public cssService: CSSService,
         private competitorRepository: CompetitorRepository,
-        private scoreConfigService: ScoreConfigService,
-        private modalService: NgbModal
+        private scoreConfigService: ScoreConfigService
     ) {
     }
 
     ngOnInit() {
-        this.poules = this.round.getPoules();
+        this.poules = this.round().getPoules();
         // const structureCell = this.round.getStructureCell();
-        const state = this.round.getGamesState();
-        const stateParent = this.round.getParentQualifyGroup()?.getParentRound().getGamesState();
-        const childeren = this.round.getChildren();
+        const state = this.round().getGamesState();
+        const stateParent = this.round().getParentQualifyGroup()?.getParentRound().getGamesState();
+        const childeren = this.round().getChildren();
         const stateChildren = this.getRoundsGameState(childeren);
         // const childNeedsRanking = this.roundsNeedRanking(childeren);
         
@@ -98,7 +116,7 @@ export class RankingRoundComponent implements OnInit {
         if (startLocation === undefined) {
             return false;
         }
-        return this.favorites?.hasPlace(place) ?? false;
+        return this.favorites()?.hasPlace(place) ?? false;
     }
 
     hasCompetitor(place: Place): boolean {
@@ -148,18 +166,18 @@ export class RankingRoundComponent implements OnInit {
     } 
 
     getPlaceName(place: Place): string {
-        return this.structureNameService.getPlaceFromName(place, true, false); 
+        return this.structureNameService().getPlaceFromName(place, true, false); 
     } 
 
     getCompetitor(startLocation: StartLocation): Competitor | undefined {
-        return this.structureNameService.getStartLocationMap()?.getCompetitor(startLocation);
+        return this.structureNameService().getStartLocationMap()?.getCompetitor(startLocation);
     }
 
     openInfoModal(modalContent: TemplateRef<any>) {
         const activeModal = this.modalService.open(InfoModalComponent, { windowClass: 'info-modal' });
-        activeModal.componentInstance.header = 'puntentelling';
-        activeModal.componentInstance.noHeaderBorder = true;
-        activeModal.componentInstance.modalContent = modalContent;
+        activeModal.componentInstance.header = () => 'puntentelling';
+        activeModal.componentInstance.noHeaderBorder = () => true;
+        activeModal.componentInstance.modalContent = () => modalContent;
     }
 
     getAgainstSides(): AgainstSide[] {

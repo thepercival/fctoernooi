@@ -1,14 +1,25 @@
-// @import './mixins';
+// @use './mixins';
 
+// All @use statements must come first, before any other rules
+
+// Import Sass utilities
+@use "sass:map";
+
+// Import custom theme and styles (these need to use @use)
+@use "./bootswatch/variables" as bootswatch-vars;
+
+// Configuration
 $enable-responsive-font-sizes: true !default;
 $enable-negative-margins: true;
-// Configuration
 
-// replace bootswatch imports with bootstrap-custom-theme
+// Re-export Bootstrap with customizations
+// We use @import for Bootstrap since it uses @import internally
 @import "../../node_modules/bootstrap/scss/functions";
 
+// Import bootswatch variables (overrides)
 @import "./bootswatch/variables";
 
+// Import Bootstrap variables with overrides applied
 @import "../../node_modules/bootstrap/scss/variables";
 // @import "../../node_modules/bootstrap/scss/variables-dark";
 
@@ -19,7 +30,6 @@ $custom-colors: (
 $theme-colors: map-merge($theme-colors, $custom-colors);
 
 @import "../../node_modules/bootstrap/scss/maps";
-//+
 
 @import "../../node_modules/bootstrap/scss/mixins";
 
@@ -57,15 +67,17 @@ $theme-colors-text-dark: map-merge($theme-colors-text-dark, $custom-colors-text-
 $theme-colors-bg-subtle-dark: map-merge($theme-colors-bg-subtle-dark, $custom-colors-bg-subtle-dark);
 $theme-colors-border-subtle-dark: map-merge($theme-colors-border-subtle-dark, $custom-colors-border-subtle-dark);
 
-@import "./bootstrap-custom-components"; // "~bootstrap/scss/bootstrap";
+@import "./bootstrap-custom-components";
 
+// Google Fonts
 $web-font-path: "https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" !default;
 @if $web-font-path {
   @import url("#{$web-font-path}");
 }
 
-// @import "./custom-color-mode";
 @import "./bootswatch/bootswatch";
 
 @import "./custom-styles";
 
+/* Importing Bootstrap SCSS file. */
+@import "../../node_modules/bootstrap/scss/bootstrap";

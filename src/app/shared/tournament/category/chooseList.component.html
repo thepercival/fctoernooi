@@ -1,18 +1,20 @@
 <table class="table">
     <tbody>
-        <tr *ngFor="let categoryItem of categoryItems">
-            <td>
-                <label class="form-check-label pointer" for="{{getId(categoryItem.category)}}">
-                    <span>{{categoryItem.category.getName()}}</span>
-                </label>
-            </td>
-            <td>
-                <div class="d-flex justify-content-end form-check form-switch">
-                    <input type="checkbox" class="form-check-input" id="{{getId(categoryItem.category)}}"
-                        [checked]="categoryItem.selected" (change)="toggle(categoryItem)">
+        @for (categoryItem of categoryItems(); track categoryItem) {
+            <tr>
+                <td>
+                    <label class="form-check-label pointer" [for]="getId(categoryItem.category)">
+                        <span>{{categoryItem.category.getName()}}</span>
+                    </label>
+                </td>
+                <td>
+                    <div class="d-flex justify-content-end form-check form-switch">
+                        <input type="checkbox" class="form-check-input" [id]="getId(categoryItem.category)"
+                            [checked]="categoryItem.selected" (change)="toggle(categoryItem)">
 
-                </div>
-            </td>
-        </tr>
+                    </div>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

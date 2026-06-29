@@ -1,54 +1,69 @@
 <div class="container-fluid">
 
-  <app-admin-public-switcher *ngIf="!processing && isAdmin() && tournament.getPublic()"
-    [currentWebsitePart]="PublicWebsitePart" [tournament]="tournament"
-    [routerLink]="['/admin/structure', tournament.getId()]">
-  </app-admin-public-switcher>
+  @if (!processing() && isAdmin() && tournament.getPublic()) {
+    <app-admin-public-switcher
+      [currentWebsitePart]="PublicWebsitePart" [tournament]="tournament"
+      [routerLink]="['/admin/structure', tournament.getId()]">
+    </app-admin-public-switcher>
+  }
 
-  <div *ngIf="!processing" class="d-flex justify-content-between ms-1 mb-1">
-    <h2>
-      <app-tournament-icon name="structure"></app-tournament-icon> <span class="mx-1">opzet</span>       
-    </h2>
-    <img *ngIf="tournament?.getLogoExtension()" height=30 src="{{getLogoUrl(tournament, 200)}}" class="img-fluid"
-        style="width: auto;" alt="logo">
-    <div *ngIf="!processing && (tournament.getCompetitors().length > 0 || !structure.hasSingleCategory())" class="pe-1">
-      <button *ngIf="tournament.getCompetitors().length > 0" role="button" (click)="showCompetitors = !showCompetitors"
-        class="btn btn-sm me-1 btn-outline-primary">
-        <fa-icon [icon]="['fas', showCompetitorIconClass()]"></fa-icon>
-        <span class="d-none d-sm-inline ms-1">deelnemers</span>
-      </button>
-      <button *ngIf="!structure.hasSingleCategory()" type="button"
-        class="btn btn-sm btn-outline-{{getCategoryFavoritesActiveClass(structure)}}"
-        (click)="openCategoriesChooseModal(structure)">
-        <fa-icon [icon]="['fas', 'grip']"></fa-icon> <span class="ms-1">categoriën</span>
-      </button>
+  @if (!processing()) {
+    <div class="d-flex justify-content-between ms-1 mb-1">
+      <h2>
+        <fa-icon [icon]="facStructure"></fa-icon> <span class="mx-1">opzet</span>
+      </h2>
+      @if (tournament.getLogoExtension()) {
+        <img height="30" width="30" src="{{getLogoUrl(tournament, 20)}}" class="align-self-center" alt="logo">
+      }
+      @if (!processing() && (tournament.getCompetitors().length > 0 || !structure.hasSingleCategory())) {
+        <div class="pe-1">
+          @if (tournament.getCompetitors().length > 0) {
+            <button role="button" (click)="showCompetitors = !showCompetitors"
+              class="btn btn-sm me-1 btn-outline-primary">
+              <fa-icon [icon]="showCompetitorIconClass()"></fa-icon>
+              <span class="d-none d-sm-inline ms-1">deelnemers</span>
+            </button>
+          }
+          @if (!structure.hasSingleCategory()) {
+            <button type="button"
+              class="btn btn-sm btn-outline-{{getCategoryFavoritesActiveClass(structure)}}"
+              (click)="openCategoriesChooseModal(structure)">
+              <fa-icon [icon]="faGrip"></fa-icon> <span class="ms-1">categoriën</span>
+            </button>
+          }
+        </div>
+      }
     </div>
-  </div>
+  }
 
-  <h2 *ngIf="processing" class="text-center">
-    <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
-  </h2>
+  @if (processing()) {
+    <h2 class="text-center">
+      <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
+    </h2>
+  }
 
-  <div *ngIf="!processing" class="row text-center">
-
-    <ng-container *ngIf="structure.hasSingleCategory();else withCategories">
-      <app-tournament-structureround class="px-0" [editable]="false"
-        [round]="structure.getSingleCategory().getRootRound()" [showCompetitors]="showCompetitors"
-        [favorites]="competitors" [structureNameService]="structureNameService" [structureEditor]="structureEditor">
-      </app-tournament-structureround>
-    </ng-container>
-    <ng-template #withCategories>
-      <div class="d-flex flex-wrap gap-1">
-        <app-tournament-structurecategory *ngFor="let category of favoriteCategories" class="mx-auto" [editable]="false"
-          [showHeader]="favoriteCategories.length > 1" [filterActive]="isCategoryFilterActive()"
-          [structureNameService]="structureNameService" [showCompetitors]="showCompetitors"
-          [structureEditor]="structureEditor" [category]="category" [categories]="structure.getCategories()">
-        </app-tournament-structurecategory>
-      </div>
-    </ng-template>
-
-
-  </div>
+  @if (!processing()) {
+    <div class="row text-center">
+      @if (structure.hasSingleCategory()) {
+        <app-tournament-structureround class="px-0" [editable]="false" [round]="structure.getSingleCategory().getRootRound()"
+          [showCompetitors]="showCompetitors" [favorites]="competitors" [structureNameService]="structureNameService"
+          [structureEditor]="structureEditor">
+        </app-tournament-structureround>
+      } @else {
+        <div class="d-flex flex-wrap gap-1">
+          @for (category of favoriteCategories(); track category) {
+            <app-tournament-structurecategory class="mx-auto" [editable]="false"
+              [showHeader]="favoriteCategories().length > 1" [filterActive]="isCategoryFilterActive()"
+              [structureNameService]="structureNameService" [showCompetitors]="showCompetitors"
+              [structureEditor]="structureEditor" [category]="category" [categories]="structure.getCategories()">
+            </app-tournament-structurecategory>
+          }
+        </div>
+      }
+    </div>
+  }
 </div>
-<app-tournament-navbar [currentScreen]="StructureScreen" [public]="true" *ngIf="tournament" [tournament]="tournament" [theme]="getTheme(tournament)">
-</app-tournament-navbar>
+@if (tournament) {
+  <app-tournament-navbar [currentScreen]="StructureScreen" [public]="true" [tournament]="tournament" [theme]="getTheme(tournament)">
+  </app-tournament-navbar>
+}

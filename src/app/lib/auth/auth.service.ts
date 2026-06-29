@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { computed, Injectable, signal } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
@@ -13,6 +13,8 @@ import { Router } from '@angular/router';
 export class AuthService extends APIRepository {
   // private userId: UserId | undefined;
   private authItem: JsonAuthItem | undefined;
+  private readonly authItemSignal = signal<JsonAuthItem | undefined>(undefined);
+  public readonly loggedIn = computed((): boolean => this.authItemSignal() !== undefined);
 
   constructor(private userMapper: UserMapper, private http: HttpClient, router: Router) {
     super(router);
@@ -22,7 +24,7 @@ export class AuthService extends APIRepository {
   }
 
   isLoggedIn(): boolean {
-    return this.authItem !== undefined;
+    return this.loggedIn();
   }
 
   getLoggedInUserId(): UserId | undefined {
@@ -31,11 +33,13 @@ export class AuthService extends APIRepository {
 
   protected clearAuthItem() {
     this.authItem = undefined;
+    this.authItemSignal.set(undefined);
     localStorage.removeItem('auth');
   }
 
   setAuthItem(authItem: JsonAuthItem): boolean {
     this.authItem = authItem;
+    this.authItemSignal.set(authItem);
     localStorage.setItem('auth', JSON.stringify(authItem));
     return true;
   }

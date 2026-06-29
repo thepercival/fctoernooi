@@ -1,30 +1,38 @@
 <div class="container-fluid">
   <div class="row justify-content-center">
     <div class="col-sm-12 col-md-10 col-lg-8">
-      <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
-      <h2 *ngIf="processing" class="text-center">
-        <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
+      @if(alert()) {
+      <ngb-alert [type]="alert()!.type">{{ alert()!.message }}</ngb-alert>
+      }
+      @if(processing()) {
+      <h2 class="text-center">
+        <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
       </h2>
+      }
 
-      <form *ngIf="!processing" name="form" (ngSubmit)="preEdit(contentChangeStart)" [formGroup]="typedForm" novalidate>
+      @if(!processing()) {
+      <form name="form" (ngSubmit)="preEdit(contentChangeStart)" [formGroup]="typedForm" novalidate>
         <h2>start</h2>
-        <div *ngIf="!hasBegun" class="row mb-3">
+        @if(!hasBegun) {
+        <div class="row mb-3">
           <div class="col-3">
             <label for="date" class="col-form-label">datum</label>
           </div>
           <div class="col-9">
             <div class="input-group input-group-date">
               <input class="form-control"
-                [ngClass]="{ 'is-invalid': typedForm.controls.date.invalid, 'is-valid': typedForm.controls.date.valid }"
+                [class.is-invalid]="typedForm.controls.date.invalid" [class.is-valid]="typedForm.controls.date.valid "
                 placeholder="yyyy-mm-dd" formControlName="date" ngbDatepicker #d="ngbDatepicker" required
                 [minDate]="minDateStruct" container="body">
               <span class="input-group-text pointer" (click)="d.toggle()">
-                <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
+                <fa-icon [icon]="faCalendarAlt"></fa-icon>
               </span>
             </div>
           </div>
         </div>
-        <div *ngIf="!hasBegun" class="row mb-3">
+        }
+        @if(!hasBegun) {
+        <div class="row mb-3">
           <div class="col-3">
             <label for="starttime" class="col-form-label">tijd</label>
           </div>
@@ -33,7 +41,9 @@
             </ngb-timepicker>
           </div>
         </div>
-        <div *ngIf="hasBegun" class="row mb-2">
+        }
+        @if(hasBegun) {
+        <div class="row mb-2">
           <div class="col-3">
             <label for="start" class="col-form-label">datumtijd</label>
           </div>
@@ -43,16 +53,21 @@
               readonly>
           </div>
         </div>
+        }
 
-        <div *ngIf="!hasBegun" class="row mb-3 justify-content-end">
+        @if(!hasBegun) {
+        <div class="row mb-3 justify-content-end">
           <div class="col-9">
             <button [disabled]="typedForm.invalid" type="submit" class="btn btn-primary">
               opslaan
             </button>
           </div>
         </div>
+        }
       </form>
-      <div *ngIf="!processing && isTimeEnabled()">
+      }
+      @if(!processing() && isTimeEnabled()) {
+      <div>
         <h2>pauzes</h2>
         <table class="table">
           <thead>
@@ -61,36 +76,46 @@
               <th>start</th>
               <th>einde</th>
               <th class="text-end">
-                <button *ngIf="!hasBegun" type="button" class="btn btn-sm btn-primary"
-                  [routerLink]="['/admin/recess',tournament.getId()]" [disabled]="processing">
-                  <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+                @if(!hasBegun) {
+                <button type="button" class="btn btn-sm btn-primary"
+                  [routerLink]="['/admin/recess', tournament.getId()]" [disabled]="processing()">
+                  <fa-icon [icon]="faPlus"></fa-icon>
                 </button>
+                }
               </th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let recess of tournament.getRecesses()">
+            @for(recess of tournament.getRecesses(); track recess) {
+            <tr>
               <td>{{recess.getName()}}
               </td>
-              <td><span *ngIf="!sameDayFormat">{{dateFormatter.toString(recess.getStartDateTime(),
-                  dateFormatter.date())}}</span>
+              <td>
+                @if(!sameDayFormat) {
+                <span>{{dateFormatter.toString(recess.getStartDateTime(), dateFormatter.date())}}</span>
+                }
                 <span>{{dateFormatter.toString(recess.getStartDateTime(), dateFormatter.time())}}</span>
               </td>
               <td>
-                <span *ngIf="!sameDayFormat">{{dateFormatter.toString(recess.getEndDateTime(),
-                  dateFormatter.date())}}</span>
+                @if(!sameDayFormat) {
+                <span>{{dateFormatter.toString(recess.getEndDateTime(), dateFormatter.date())}}</span>
+                }
                 <span>{{dateFormatter.toString(recess.getEndDateTime(), dateFormatter.time())}}</span>
               </td>
               <td class="text-end">
-                <button *ngIf="!hasBegun" type="button" class="btn btn-sm btn-danger" [disabled]="processing"
+                @if(!hasBegun) {
+                <button type="button" class="btn btn-sm btn-danger" [disabled]="processing()"
                   (click)="removeRecess(recess);">
-                  <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
+                  <fa-icon [icon]="faTrashAlt"></fa-icon>
                 </button>
+                }
               </td>
             </tr>
+            }
           </tbody>
         </table>
       </div>
+      }
     </div>
   </div>
 </div>
@@ -102,17 +127,27 @@
   </div>
   <div class="modal-body">
       <ngb-alert [type]="StartEditMode === ReadOnly ? 'warning' : 'info'">
-        <span *ngIf="StartEditMode === LongTerm">Je kunt de start hierna nog 1 keer in de toekomst verplaatsen</span>
-        <span *ngIf="StartEditMode === ShortTerm">Je kunt de start hierna niet meer in de toekomst verplaatsen</span>
-        <span *ngIf="StartEditMode === ReadOnly">Je kunt de start niet meer in de toekomst verplaatsen</span>
+        @if(StartEditMode === LongTerm) {
+        <span>Je kunt de start hierna nog 1 keer in de toekomst verplaatsen</span>
+        }
+        @if(StartEditMode === ShortTerm) {
+        <span>Je kunt de start hierna niet meer in de toekomst verplaatsen</span>
+        }
+        @if(StartEditMode === ReadOnly) {
+        <span>Je kunt de start niet meer in de toekomst verplaatsen</span>
+        }
       </ngb-alert>
       
   </div>
   <div class="modal-footer">      
       <button type="button" class="btn btn-outline-primary" data-dismiss="modal" (click)="modal.close('toNewEdition')">naar nieuwe editie gaan</button>
-      <button *ngIf="StartEditMode !== ReadOnly" type="button" class="btn btn-primary" data-dismiss="modal" (click)="modal.close('update')">wijzigen</button>
+      @if(StartEditMode !== ReadOnly) {
+      <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="modal.close('update')">wijzigen</button>
+      }
   </div>
 </ng-template>
 
-<app-tournament-navbar [public]="false" *ngIf="tournament" [tournament]="tournament" [theme]="getTheme(tournament)">
+@if(tournament) {
+<app-tournament-navbar [public]="false" [tournament]="tournament" [theme]="getTheme(tournament)">
 </app-tournament-navbar>
+}

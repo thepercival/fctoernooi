@@ -1,7 +1,7 @@
-import { Component, OnInit, TemplateRef, InputSignal, input } from '@angular/core';
-import { ActivatedRoute, NavigationExtras, Params, Router } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { PlanningEditMode, RoundNumber } from 'ngx-sport';
+import { Component, OnInit, TemplateRef } from '@angular/core';
+import { ActivatedRoute, NavigationExtras, Params, Router, RouterLink } from '@angular/router';
+import { NgbAlert, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { CompetitionSport, PlanningEditMode, RoundNumber } from 'ngx-sport';
 
 import { AuthService } from '../../lib/auth/auth.service';
 import { CSSService } from '../../shared/common/cssservice';
@@ -22,20 +22,32 @@ import { UserRepository } from '../../lib/user/repository';
 import { User } from '../../lib/user';
 import { TournamentExportConfig } from '../../lib/pdf/repository';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
-import { FavoritesRepository } from '../../lib/favorites/repository';
 import { TournamentScreen } from '../../shared/tournament/screenNames';
 import { CopyConfig, CopyModalComponent } from '../../public/tournament/copymodal.component';
 import { CopiedModalComponent } from './copiedmodal.component';
-import { WebsitePart } from '../../shared/tournament/structure/admin-public-switcher.component';
+import { WebsitePart, AdminPublicSwitcherComponent } from '../../shared/tournament/structure/admin-public-switcher.component';
 import { TournamentRegistrationRepository } from '../../lib/tournament/registration/repository';
 import { TournamentRegistrationSettings } from '../../lib/tournament/registration/settings';
+import { TournamentNavBarComponent } from '../../shared/tournament/tournamentNavBar/tournamentNavBar.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import { faSpinner, faTv } from '@fortawesome/free-solid-svg-icons';
+import { getSportIconDef } from '../../shared/tournament/sport/icon.mapper';
+import { facReferee } from '../../shared/customicons';
+import { CustomSportId } from '../../lib/ngx-sport/sport/custom';
 
 @Component({
     selector: 'app-tournament-home-admin',
     templateUrl: './home.component.html',
-    styleUrls: ['./home.component.css']
+    styleUrls: ['./home.component.css'],
+    standalone: true,
+    imports: [TournamentNavBarComponent, NgbAlert, FontAwesomeModule, AdminPublicSwitcherComponent, RouterLink]
 })
 export class HomeAdminComponent extends TournamentComponent implements OnInit {
+
+    faSpinner = faSpinner;
+    faTv = faTv;
+    facReferee = facReferee;
 
     settings: TournamentRegistrationSettings|undefined;
     lockerRoomValidator!: LockerRoomValidator;
@@ -49,9 +61,7 @@ export class HomeAdminComponent extends TournamentComponent implements OnInit {
         router: Router,
         tournamentRepository: TournamentRepository,        
         structureRepository: StructureRepository,
-        globalEventsManager: GlobalEventsManager,
-        modalService: NgbModal,
-        favRepository: FavoritesRepository,
+        globalEventsManager: GlobalEventsManager,        
         private tournamentRegistrationRepository: TournamentRegistrationRepository,
         private competitionSportRouter: CompetitionSportRouter,
         public cssService: CSSService,
@@ -61,7 +71,7 @@ export class HomeAdminComponent extends TournamentComponent implements OnInit {
         public dateFormatter: DateFormatter,
         private translate: TranslateFieldService
     ) {
-        super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
+        super(route, router, tournamentRepository, structureRepository, globalEventsManager);
 
 
     }
@@ -88,12 +98,14 @@ export class HomeAdminComponent extends TournamentComponent implements OnInit {
                         } else if (params.myPreviousId !== undefined && !this.openModalCopiedCheck) {
                             this.openModalCopiedCheck = true;
                             this.openModalCopied(params.myPreviousId);
+                        } else if (params['openExport'] !== undefined) {
+                            this.openModalExport(true);
                         }
                     });
-                    this.processing = false;
+                    this.processing.set(false);
                 },
                 error: (e) => {
-                    this.setAlert(IAlertType.Danger, e); this.processing = false;
+                    this.alert.set({ type: IAlertType.Danger, message: e }); this.processing.set(false);
                 }
             });
     }
@@ -184,6 +196,12 @@ export class HomeAdminComponent extends TournamentComponent implements OnInit {
         return description + (nrOfReferees === 1 ? '' : 's');
     }
 
+    getSportIconByCompetitionSports(competitionSports: CompetitionSport[]): IconDefinition | undefined {
+        const competitionSport = competitionSports.length === 1 ? competitionSports[0] : undefined;
+        const customId = competitionSport?.getSport().getCustomId();
+        return customId === undefined ? undefined : getSportIconDef(customId as CustomSportId);
+    }
+
     getNrOfSponsorsDescription(): string {
         const nrOfSponsors = this.tournament.getSponsors().length;
         let description = 'sponsor';
@@ -225,8 +243,8 @@ export class HomeAdminComponent extends TournamentComponent implements OnInit {
     }
 
     remove() {
-        this.setAlert(IAlertType.Info, 'het toernooi wordt verwijderd');
-        this.processing = true;
+        this.alert.set({ type: IAlertType.Info, message: 'het toernooi wordt verwijderd' });
+        this.processing.set(true);
         this.tournamentRepository.removeObject(this.tournament)
             .subscribe({
                 next: (deleted: boolean) => {
@@ -236,15 +254,15 @@ export class HomeAdminComponent extends TournamentComponent implements OnInit {
                         };
                         this.router.navigate(['/'], navigationExtras);
                     } else {
-                        this.setAlert(IAlertType.Danger, 'het toernooi kon niet verwijderd worden');
-                        this.processing = false;
+                        this.alert.set({ type: IAlertType.Danger, message: 'het toernooi kon niet verwijderd worden' });
+                        this.processing.set(false);
                     }
                 },
                 error: (e) => {
-                    this.setAlert(IAlertType.Danger, 'het toernooi kon niet verwijderd worden');
-                    this.processing = false;
+                    this.alert.set({ type: IAlertType.Danger, message: 'het toernooi kon niet verwijderd worden' });
+                    this.processing.set(false);
                 },
-                complete: () => this.processing = false
+                complete: () => this.processing.set(false)
             });
     }
 
@@ -281,12 +299,15 @@ export class HomeAdminComponent extends TournamentComponent implements OnInit {
         return readOnlySubjects;
     }
 
-    openModalExport() {
+    openModalExport(withRegistrations: boolean = false) {
         const activeModal = this.modalService.open(ExportModalComponent, { backdrop: 'static' });
         activeModal.componentInstance.tournament = this.tournament;
         const readonlySubjects = this.getExportReadOnlySubjects();
         activeModal.componentInstance.settings = this.settings;
-        const subjects = this.getExportSubjectsFromDevice(readonlySubjects);
+        let subjects = this.getExportSubjectsFromDevice(readonlySubjects);
+        if (withRegistrations && this.settings?.isEnabled()) {
+            subjects |= TournamentExportConfig.registrationForm;
+        }
         activeModal.componentInstance.subjects = subjects;
         activeModal.componentInstance.readonlySubjects = readonlySubjects;
         activeModal.componentInstance.fieldDescription = this.getFieldDescription();
@@ -296,7 +317,7 @@ export class HomeAdminComponent extends TournamentComponent implements OnInit {
     }
 
     openModalCopy(newStartForCopyAsTime?: string) {
-        this.processing = true;
+        this.processing.set(true);
         const newStartDate = this.calculateNewStartDate(newStartForCopyAsTime);        
         
         this.userRepository.getLoggedInObject()
@@ -323,9 +344,9 @@ export class HomeAdminComponent extends TournamentComponent implements OnInit {
                         this.copy(result);
                     }, (reason) => {
                     });
-                    this.processing = false;
+                    this.processing.set(false);
                 },
-                error: (e) => { this.setAlert(IAlertType.Danger, e); this.processing = false; }
+                error: (e) => { this.alert.set({ type: IAlertType.Danger, message: e }); this.processing.set(false); }
             });
     }
 
@@ -382,10 +403,10 @@ export class HomeAdminComponent extends TournamentComponent implements OnInit {
     }
 
     copy(copyConfig: CopyConfig) {
-        this.setAlert(IAlertType.Info, 'de nieuwe editie wordt aangemaakt');
+        this.alert.set({ type: IAlertType.Info, message: 'de nieuwe editie wordt aangemaakt' });
         
 
-        this.processing = true;
+        this.processing.set(true);
         this.tournamentRepository.copyObject(this.tournament.getId(), copyConfig)
             .subscribe({
                 next: (newTournamentId: number | string) => {
@@ -393,20 +414,20 @@ export class HomeAdminComponent extends TournamentComponent implements OnInit {
                         queryParams: { myPreviousId: this.tournament.getId() }
                     };
                     this.router.navigate(['/admin', newTournamentId], navigationExtras);
-                    this.setAlert(IAlertType.Success, 'de nieuwe editie is aangemaakt, je bevindt je nu in de nieuwe editie');
+                    this.alert.set({ type: IAlertType.Success, message: 'de nieuwe editie is aangemaakt, je bevindt je nu in de nieuwe editie' });
                 },
                 error: (e) => {
-                    this.setAlert(IAlertType.Danger, 'er kon geen nieuwe editie worden aangemaakt : ' + e);
-                    this.processing = false;
+                    this.alert.set({ type: IAlertType.Danger, message: 'er kon geen nieuwe editie worden aangemaakt : ' + e });
+                    this.processing.set(false);
                 },
-                complete: () => this.processing = false
+                complete: () => this.processing.set(false)
             });
     }
 
     share(publicEnabled: boolean, sendToHomeEdit: boolean) {
-        this.setAlert(IAlertType.Info, 'het delen wordt gewijzigd');
+        this.alert.set({ type: IAlertType.Info, message: 'het delen wordt gewijzigd' });
 
-        this.processing = true;
+        this.processing.set(true);
         const json = this.tournamentMapper.toJson(this.tournament);
         json.public = publicEnabled;
         this.tournamentRepository.editObject(json)
@@ -417,13 +438,13 @@ export class HomeAdminComponent extends TournamentComponent implements OnInit {
                         this.router.navigate(['/admin/homeedit', tournament.getId()]);
                     }
                     
-                    this.setAlert(IAlertType.Success, 'het delen is gewijzigd');
+                    this.alert.set({ type: IAlertType.Success, message: 'het delen is gewijzigd' });
                 },
                 error: (e) => {
-                    this.setAlert(IAlertType.Danger, 'het delen kon niet worden gewijzigd');
-                    this.processing = false;
+                    this.alert.set({ type: IAlertType.Danger, message: 'het delen kon niet worden gewijzigd' });
+                    this.processing.set(false);
                 },
-                complete: () => this.processing = false
+                complete: () => this.processing.set(false)
             });
     }
 }

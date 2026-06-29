@@ -1,4 +1,5 @@
-import { AfterViewChecked, Component, ElementRef, Input, OnInit, TemplateRef, ViewChild, input } from '@angular/core';
+import { AfterViewChecked, ChangeDetectionStrategy, Component, ElementRef, TemplateRef, ViewChild, input } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
 import { Router } from '@angular/router';
 
 import { AuthService } from '../../../lib/auth/auth.service';
@@ -7,17 +8,30 @@ import { Tournament } from '../../../lib/tournament';
 import { TournamentScreen } from '../screenNames';
 import { CompetitorTab } from '../../common/tab-ids';
 import { JsonTheme } from '../../../lib/tournament/theme';
+import { TOURNAMENT_UI_IMPORTS } from '../tournament.ui-imports';
+import { facStructure } from '../../customicons';
+import { faCalendarAlt, faCogs, faHome, faListOl, faUsers } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-  selector: 'app-tournament-navbar',
-  templateUrl: './tournamentNavBar.component.html',
-  styleUrls: ['./tournamentNavBar.component.scss']
+    selector: 'app-tournament-navbar',
+    templateUrl: './tournamentNavBar.component.html',
+    styleUrls: ['./tournamentNavBar.component.scss'],
+    standalone: true,
+    imports: [TOURNAMENT_UI_IMPORTS, NgTemplateOutlet],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TournamentNavBarComponent implements AfterViewChecked {
-  @Input() upperNavBar: TemplateRef<any> | undefined;  
-  @Input() public: boolean = false;
-  @Input() currentScreen!: TournamentScreen;
-  @Input() roles!: Role[];
+  public facStructure = facStructure;
+  public faHome = faHome;
+  public faUsers = faUsers;
+  public faCalendarAlt = faCalendarAlt;
+  public faListOl = faListOl;
+  public faCogs = faCogs;
+  public upperNavBar = input<TemplateRef<any> | undefined>(undefined);  
+  public public = input(false);
+  public currentScreen = input<TournamentScreen|undefined>();
+  // public roles = input.required<Role[]>();
+
   public tournament = input.required<Tournament>();
   public theme = input.required<JsonTheme>();
 
@@ -27,7 +41,6 @@ export class TournamentNavBarComponent implements AfterViewChecked {
     public authService: AuthService,
     private router: Router
   ) {
-
   }
 
   ngAfterViewChecked() {
@@ -45,25 +58,25 @@ export class TournamentNavBarComponent implements AfterViewChecked {
   get FavoritesScreen(): TournamentScreen { return TournamentScreen.Favorites }
   get CompetitorsScreen(): TournamentScreen { return TournamentScreen.Competitors }
   get SettingsScreen(): TournamentScreen { return TournamentScreen.Settings }
-  get CompetitorTabBase(): CompetitorTab { return CompetitorTab.Base } 
+  get CompetitorTabBase(): CompetitorTab { return CompetitorTab.Base }   
 
   getBtnClass(screen: TournamentScreen): string {
-    if (this.currentScreen === screen) {
+    if (this.currentScreen() === screen) {
       return this.getTextContrastColorClass();
     }
     return 'btn-navbar';
   }
 
   linkToStructure() {
-    this.router.navigate(['/' + (this.public ? 'public' : 'admin') + '/structure', this.tournament().getId()]);
+    this.router.navigate(['/' + (this.public() ? 'public' : 'admin') + '/structure', this.tournament().getId()]);
   }
 
   linkToLockerRooms() {
-    this.router.navigate(['/' + (this.public ? 'public' : 'admin') + '/lockerrooms', this.tournament().getId()]);
+    this.router.navigate(['/' + (this.public() ? 'public' : 'admin') + '/lockerrooms', this.tournament().getId()]);
   }
 
   linkToGames() {
-    this.router.navigate(['/' + (this.public ? 'public' : 'admin') + '/games', this.tournament().getId()]);
+    this.router.navigate(['/' + (this.public() ? 'public' : 'admin') + '/games', this.tournament().getId()]);
   }
 
   hasRole(roles: number): boolean {

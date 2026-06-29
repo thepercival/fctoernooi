@@ -1,0 +1,18 @@
+.registration-confirmation {
+	border: 0;
+	box-shadow: 0 1rem 2.5rem rgba(0, 0, 0, 0.16);
+	background: color-mix(in srgb, var(--bs-body-bg) 88%, transparent);
+	color: var(--bs-body-color);
+	backdrop-filter: blur(6px);
+}
+
+.registration-confirmation__link {
+	color: var(--bs-primary);
+	font-weight: 600;
+	text-decoration: none;
+}
+
+.registration-confirmation__link:hover,
+.registration-confirmation__link:focus {
+	text-decoration: underline;
+}

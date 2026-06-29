@@ -1,18 +1,23 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { NgbActiveModal, NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 import { ScreenConfig } from '../../lib/liveboard/screenConfig/json';
 import { ScreenConfigName } from '../../lib/liveboard/screenConfig/name';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faCogs } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-ngbd-modal-screenconfigs',
     templateUrl: './screenconfigsmodal.component.html',
-    styleUrls: ['./screenconfigsmodal.component.scss']
+    styleUrls: ['./screenconfigsmodal.component.scss'],
+    imports: [ReactiveFormsModule, FontAwesomeModule, NgbAlert]
+    
 })
 export class ScreenConfigsModalComponent implements OnInit {
 
     @Input() screenConfigs!: ScreenConfig[];
     public typedForm: FormGroup;
+    public faCogs = faCogs;
 
     constructor(
         public activeModal: NgbActiveModal

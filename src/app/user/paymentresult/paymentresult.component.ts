@@ -1,5 +1,7 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, NavigationExtras, Router, RouterModule } from '@angular/router';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 
 import { IAlert, IAlertType } from '../../shared/common/alert';
 import { User } from '../../lib/user';
@@ -14,12 +16,16 @@ import { Action } from 'rxjs/internal/scheduler/Action';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { Payment } from '../../lib/payment/json';
 import { PaymentState } from '../../lib/payment/state';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 @Component({
-  selector: 'app-paymentresult',
-  templateUrl: './paymentresult.component.html',
-  styleUrls: ['./paymentresult.component.css']
+    selector: 'app-paymentresult',
+    templateUrl: './paymentresult.component.html',
+    styleUrls: ['./paymentresult.component.css'],
+  imports: [FontAwesomeModule, NgbAlert, RouterModule],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PaymentResultComponent extends UserComponent implements OnInit, OnDestroy {
+  faSpinner = faSpinner;
   public errorAlert: IAlert | undefined;
   refreshTimer: Subscription | undefined;
   private appErrorHandler: AppErrorHandler;
@@ -55,9 +61,9 @@ export class PaymentResultComponent extends UserComponent implements OnInit, OnD
             },
             error: (e) => {
               this.setAlert(IAlertType.Danger, 'geen checkoutUrl van backend gekregen: ' + e);
-              this.processing = false;
+              this.processing.set(false);
             },
-            complete: () => this.processing = false
+            complete: () => this.processing.set(false)
           });
       }
     });
@@ -80,15 +86,15 @@ export class PaymentResultComponent extends UserComponent implements OnInit, OnD
     if (this.refreshTimer !== undefined) {
       this.refreshTimer.unsubscribe();
     }
-    this.processing = false;
+    this.processing.set(false);
   }
 
   protected setAlert(type: IAlertType, message: string) {
-    this.alert = { 'type': type, 'message': message };
+    this.alert.set({ 'type': type, 'message': message });
   }
 
   protected resetAlert() {
-    this.alert = undefined;
+    this.alert.set(undefined);
   }
 
   navigateBack() {

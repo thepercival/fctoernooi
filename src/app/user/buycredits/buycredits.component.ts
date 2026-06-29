@@ -1,6 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, input, model, OnInit } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
+
 
 import { IAlertType } from '../../shared/common/alert';
 import { User } from '../../lib/user';
@@ -13,13 +16,23 @@ import { UserComponent } from '../component';
 import { AuthService } from '../../lib/auth/auth.service';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { PaymentState } from '../../lib/payment/state';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+
 @Component({
   selector: 'app-buycredits',
   templateUrl: './buycredits.component.html',
-  styleUrls: ['./buycredits.component.css']
+  styleUrls: ['./buycredits.component.css'],
+  imports: [
+    FontAwesomeModule,
+    ReactiveFormsModule,
+    NgbAlert
+    
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BuyCreditsComponent extends UserComponent implements OnInit {
   purpose: Purpose | undefined;
+  faSpinner = faSpinner;
   public typedForm: FormGroup<{
     purpose: FormControl<number>,
     nrOfCredits: FormControl<number>,
@@ -34,9 +47,10 @@ export class BuyCreditsComponent extends UserComponent implements OnInit {
     cvc: FormControl<string>,
     agreed: FormControl<boolean>
   }>;
-  public paymentMethods!: Observable<string[]>;
-  public idealIssuers!: Observable<IDealIssuer[]>;
-  public nrOfCreditsOptions!: Observable<number[]>;
+  public paymentMethods = model.required<string[]>();
+  public idealIssuers = model.required<IDealIssuer[]>();
+  public nrOfCreditsOptions = model.required<number[]>();
+
   constructor(
     route: ActivatedRoute,
     router: Router,
@@ -44,7 +58,7 @@ export class BuyCreditsComponent extends UserComponent implements OnInit {
     authService: AuthService,
     globalEventsManager: GlobalEventsManager,
     private paymentRepository: PaymentRepository,
-    public myNavigation: MyNavigation
+    public myNavigation: MyNavigation,
   ) {
     super(route, router, userRepository, authService, globalEventsManager);
     this.typedForm = new FormGroup(
@@ -103,9 +117,19 @@ export class BuyCreditsComponent extends UserComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.nrOfCreditsOptions = of([3, 5, 10, 15, 20, 35, 50, 100]);
-    this.paymentMethods = this.paymentRepository.getMethods();
-    this.idealIssuers = this.paymentRepository.getIDealIssuers();
+    this.nrOfCreditsOptions.set([3, 5, 10, 15, 20, 35, 50, 100]);
+    this.paymentRepository.getMethods()
+      .subscribe({
+        next: (paymentMethods: string[]) => {
+          this.paymentMethods.set(paymentMethods);
+        }
+      });
+    this.paymentRepository.getIDealIssuers()
+      .subscribe({
+        next: (idealIssuers: IDealIssuer[]) => {
+          this.idealIssuers.set(idealIssuers);
+        }
+      });
     this.userRepository.getLoggedInObject()
       .subscribe({
         next: (loggedInUser: User | undefined) => {
@@ -119,12 +143,12 @@ export class BuyCreditsComponent extends UserComponent implements OnInit {
           this.user = loggedInUser;
         },
         error: (e: string) => {
-          this.setAlert(IAlertType.Danger, e); this.processing = false;
+          this.setAlert(IAlertType.Danger, e); this.processing.set(false);
         },
-        complete: () => this.processing = false
+        complete: () => this.processing.set(false)
       });
 
-    this.processing = false;
+    this.processing.set(false);
   }
 
   canPay(): boolean {
@@ -184,9 +208,9 @@ export class BuyCreditsComponent extends UserComponent implements OnInit {
   //         this.paymentMethods = methods;
   //       },
   //       error: (e: string) => {
-  //         this.setAlert(IAlertType.Danger, e); this.processing = false;
+  //         this.setAlert(IAlertType.Danger, e); this.processing.set(false);
   //       },
-  //       complete: () => this.processing = false
+  //       complete: () => this.processing.set(false)
   //     });
   // }
 
@@ -209,7 +233,7 @@ export class BuyCreditsComponent extends UserComponent implements OnInit {
     }
 
     this.setAlert(IAlertType.Info, 'je wordt doorgestuurd naar de betaalpagina..');
-    this.processing = true;
+    this.processing.set(true);
 
     this.paymentRepository.buyCredits(jsonPayment)
       .subscribe({
@@ -226,7 +250,7 @@ export class BuyCreditsComponent extends UserComponent implements OnInit {
         },
         error: (e) => {
           this.setAlert(IAlertType.Danger, 'geen checkoutUrl van backend gekregen: ' + e);
-          this.processing = false;
+          this.processing.set(false);
         }
       });
 

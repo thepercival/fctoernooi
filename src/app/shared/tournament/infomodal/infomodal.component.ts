@@ -1,18 +1,27 @@
-import { Component, Input, OnInit, TemplateRef } from '@angular/core';
+import { Component, input, ChangeDetectionStrategy, TemplateRef, inject } from '@angular/core';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { EscapeHtmlPipe } from '../../common/escapehtmlpipe';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-    selector: 'app-ngbd-modal-info',
+    selector: 'app-infomodal',
     templateUrl: './infomodal.component.html',
-    styleUrls: ['./infomodal.component.scss']
+    standalone: true,
+    imports: [NgClass, NgTemplateOutlet, FontAwesomeModule,EscapeHtmlPipe],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InfoModalComponent {
-    @Input() header: string = '';
-    @Input() modalContent!: TemplateRef<any>;
-    @Input() noHeaderBorder: boolean = false;
-
-    constructor(public activeModal: NgbActiveModal) {
-
+    public modalContent = input.required<TemplateRef<any>>();
+    public header = input.required<string>();
+    public noHeaderBorder = input(false);
+    
+    faInfoCircle = faInfoCircle;
+    public activeModal = inject(NgbActiveModal);
+    
+    
+    constructor() {
     }
 
     close(value: string) {

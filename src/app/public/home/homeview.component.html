@@ -1,89 +1,118 @@
 <div class="row justify-content-center g-0">
   <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6 text-center">
     <div class="container-fluid">
-    
 
-      <app-admin-public-switcher *ngIf="!processing && isAdmin() && tournament.getPublic()"
-        [currentWebsitePart]="PublicWebsitePart" [tournament]="tournament"
-        [routerLink]="['/admin/homeedit', tournament.getId()]">
-      </app-admin-public-switcher>
 
-      <h2 *ngIf="processing" class="text-center">
-        <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
-      </h2>
-      <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
+      @if (!processing() && isAdmin() && tournament.getPublic()) {
+        <app-admin-public-switcher
+          [currentWebsitePart]="PublicWebsitePart" [tournament]="tournament"
+          [routerLink]="['/admin/homeedit', tournament.getId()]">
+        </app-admin-public-switcher>
+      }
 
-      <div *ngIf="!processing && tournament" class="text-start">
-        <div>
-          <img width="100" *ngIf="tournament.getLogoExtension()" src="{{getLogoUrl(tournament, 200)}}" class="img-fluid rounded float-end"
-            alt="logo">
-          <h3 class="mb-1 text-start">welkom</h3>
+      @if (processing()) {
+        <h2 class="text-center">
+          <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
+        </h2>
+      }
+      @if (alert()) {
+        <ngb-alert [type]="alert()!.type">{{ alert()!.message }}</ngb-alert>
+      }
+
+      @if (!processing() && tournament) {
+        <div class="text-start">
           <div>
-            <span>{{tournament.getIntro()}}</span>
-          </div>
-        </div>
-        
-        <ng-container *ngIf="settings">
-          <h3 *ngIf="showRegistration(settings)" class="mb-1 mt-4">inschrijven</h3>
-          <p *ngIf="showRegistration(settings)">
-            <span *ngIf="registrateIsActive(settings)">Je kan je 
-              <button type="button" class="btn btn-sm btn-primary" [routerLink]="['/public/registrationform', tournament.getId()]">
-              inschrijven</button> tot {{dateFormatter.toString(settings.getEnd(), dateFormatter.datetimeWithWeekDay())}} uur.</span>
-            <span *ngIf="registrateIsInActive(settings)">De inschrijving is op {{dateFormatter.toString(settings.getEnd(), dateFormatter.datetimeWithWeekDay())}} uur verlopen.</span>
-          </p>
-        </ng-container>
-
-        <h3 *ngIf="rules.length > 0" class="mb-1 mt-4">huisregels</h3>
-        <ul class="list-group">
-          <li *ngFor=" let rule of rules" class="list-group-item text-start">
-            <span [innerHTML]="rule.text"></span>
-          </li>
-        </ul>
-
-        <h3 *ngIf="tournament.getLocation()" class="mb-0 mt-4">locatie</h3>
-        <div *ngIf="tournament.getLocation()">        
-          <span *ngIf="locationIsCoordinate(tournament.getLocation())">
-            bekijk op google maps
-          </span>
-          <span *ngIf="!locationIsCoordinate(tournament.getLocation())">
-            {{tournament.getLocation()}}
-          </span>
-          <a target="_blank" href="{{getMapsUrl(tournament.getLocation())}}" type="button" class="btn btn-sm btn-secondary ms-1" rel="noopener">
-            <fa-icon [icon]="['fas', 'location-dot']"></fa-icon>
-          </a>
-        </div>        
-
-        <h3 *ngIf="tournament.getSponsors().length > 0" class="mb-0 mt-3">sponsors</h3>
-        <div *ngIf="tournament.getSponsors().length > 0" class="">
-          <div class="row row-cols-1 row-cols-md-2 g-4">
-            
-
-          <div *ngFor="let sponsor of tournament.getSponsors()" class="col">
-            <div class="card h-100">
-              <div class="card-header">
-                <span class="">{{sponsor.getName()}}</span>
-              </div>
-              <div *ngIf="sponsor && sponsor.getLogoExtension()" class="card-body p-1 text-center sponsor-card-body ">
-                <img  src="{{getSponsorLogoUrl(sponsor)}}" height="200px" class="sponsor-img"
-                  alt="img">
-              </div>
-              <div *ngIf="sponsor.getUrl()" class="card-footer">
-                <span class="text-break">{{sponsor.getUrl()}}</span>
-              </div>
+            @if (tournament.getLogoExtension()) {
+              <img width="100" src="{{getLogoUrl(tournament, 200)}}" class="img-fluid rounded float-end"
+                alt="logo">
+            }
+            <h3 class="mb-1 text-start">welkom</h3>
+            <div>
+              <span>{{tournament.getIntro()}}</span>
             </div>
-          </div>        
+          </div>
+          @if (settings) {
+            @if (showRegistration(settings)) {
+              <h3 class="mb-1 mt-4">inschrijven</h3>
+            }
+            @if (showRegistration(settings)) {
+              <p>
+                @if (registrateIsActive(settings)) {
+                  <span>Je kan je
+                    <button type="button" class="btn btn-sm btn-primary" [routerLink]="['/public/registrationform', tournament.getId()]">
+                    inschrijven</button> tot {{dateFormatter.toString(settings.getEnd(), dateFormatter.datetimeWithWeekDay())}} uur.</span>
+                  }
+                  @if (registrateIsInActive(settings)) {
+                    <span>De inschrijving is op {{dateFormatter.toString(settings.getEnd(), dateFormatter.datetimeWithWeekDay())}} uur verlopen.</span>
+                  }
+                </p>
+              }
+            }
+            @if (rules.length > 0) {
+              <h3 class="mb-1 mt-4">huisregels</h3>
+            }
+            <ul class="list-group">
+              @for ( rule of rules; track  rule) {
+                <li class="list-group-item text-start">
+                  <span [innerHTML]="rule.text"></span>
+                </li>
+              }
+            </ul>
+            @if (tournament.getLocation()) {
+              <h3 class="mb-0 mt-4">locatie</h3>
+            }
+            @if (tournament.getLocation()) {
+              <div>
+                @if (locationIsCoordinate(tournament.getLocation())) {
+                  <span>
+                    bekijk op google maps
+                  </span>
+                }
+                @if (!locationIsCoordinate(tournament.getLocation())) {
+                  <span>
+                    {{tournament.getLocation()}}
+                  </span>
+                }
+                <a target="_blank" href="{{getMapsUrl(tournament.getLocation())}}" type="button" class="btn btn-sm btn-secondary ms-1" rel="noopener">
+                  <fa-icon [icon]="faLocationDot"></fa-icon>
+                </a>
+              </div>
+            }
+            @if (tournament.getSponsors().length > 0) {
+              <h3 class="mb-0 mt-3">sponsors</h3>
+            }
+            @if (tournament.getSponsors().length > 0) {
+              <div class="">
+                <div class="row row-cols-1 row-cols-md-2 g-4">
+                  @for (sponsor of tournament.getSponsors(); track sponsor) {
+                    <div class="col">
+                      <div class="card h-100">
+                        <div class="card-header">
+                          <span class="">{{sponsor.getName()}}</span>
+                        </div>
+                        @if (sponsor && sponsor.getLogoExtension()) {
+                          <div class="card-body p-1 text-center sponsor-card-body ">
+                            <img  src="{{getSponsorLogoUrl(sponsor)}}" height="200px" class="sponsor-img"
+                              alt="img">
+                          </div>
+                        }
+                        @if (sponsor.getUrl()) {
+                          <div class="card-footer">
+                            <span class="text-break">{{sponsor.getUrl()}}</span>
+                          </div>
+                        }
+                      </div>
+                    </div>
+                  }
+                </div>
+            </div>
+          }
         </div>
-
-        <!-- <div *ngIf="!processing && tournament.getSponsors().length > 0" class="d-flex flex-wrap gap-3">
-          <app-tournament-lockerroom *ngFor="let lockerRoom of tournament.getLockerRooms()" [lockerRoom]="lockerRoom"
-            [validator]="validator" [editable]="true" class="mx-auto" (remove)="remove($event)"
-            (changeName)="changeName($event)" (changeCompetitors)="changeCompetitors($event)">
-          </app-tournament-lockerroom>
-        </div> -->
-      </div>
+      }
     </div>
   </div>
-</div>
 
-<app-tournament-navbar [public]="true" [currentScreen]="HomeScreen" *ngIf="tournament" [tournament]="tournament" [theme]="getTheme(tournament)">
-</app-tournament-navbar>
+  @if (tournament) {
+    <app-tournament-navbar [public]="true" [currentScreen]="HomeScreen" [tournament]="tournament" [theme]="getTheme(tournament)">
+    </app-tournament-navbar>
+  }

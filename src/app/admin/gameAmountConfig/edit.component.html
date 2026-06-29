@@ -1,22 +1,30 @@
-<ng-container *ngIf="gameAmountControls.length === 1" [formGroup]="typedForm">
-  <div class="row mb-3" *ngFor="let gameAmountControl of gameAmountControls">
-    <label [for]="gameAmountControl.json.id" class="col-7 col-form-label">{{label}}</label>
+@if (gameAmountControls.length === 1) {
+  <div [formGroup]="typedForm">
+    @for (gameAmountControl of gameAmountControls; track gameAmountControl.json.id) {
+      <div class="row mb-3">
+        <label [for]="gameAmountControl.json.id" class="col-7 col-form-label">{{label}}</label>
+        <div class="col-5">
+          <select class="form-control" [formControlName]="gameAmountControl.json.id" required>
+            @for (n of getRange(gameAmountControl.range); track n) {
+              <option [ngValue]="n">{{n}}</option>
+            }
+          </select>
+        </div>
+      </div>
+    }
+  </div>
+}
+
+@if (gameAmountControls.length > 1) {
+  <div class="row mb-3">
+    <label class="col-7 col-form-label">{{label}}</label>
     <div class="col-5">
-      <select class="form-control" [formControlName]="gameAmountControl.json.id" required>
-        <option *ngFor="let n of getRange(gameAmountControl.range)" [ngValue]="n">{{n}}</option>
-      </select>
+      <button type="button" (click)="openModal(gameAmountModal)" class="btn btn-sm btn-outline-secondary">
+        instellen
+      </button>
     </div>
   </div>
-</ng-container>
-
-<div class="row mb-3" *ngIf="gameAmountControls.length > 1">
-  <label class="col-7 col-form-label">{{label}}</label>
-  <div class="col-5">
-    <button type="button" (click)="openModal(gameAmountModal)" class="btn btn-sm btn-outline-secondary">
-      instellen
-    </button>
-  </div>
-</div>
+}
 
 <ng-template #gameAmountModal let-modal>
   <div class="modal-header">
@@ -26,18 +34,25 @@
     <button type="button" class="btn-close" aria-label="sluiten" (click)="modal.dismiss()"></button>
   </div>
   <div class="modal-body" [formGroup]="typedForm">
-    <div class="row mb-3" *ngFor="let gameAmountControl of gameAmountControls">
-      <label [for]="gameAmountControl.json.id"
-        class="col-8 col-form-label">{{gameAmountControl.jsonCompetitionSport.sport.name}} 
-      <span *ngIf="sportIsUsedMultipleTimes(gameAmountControl.jsonCompetitionSport)">
-      - {{nameService.getGameModeName(gameAmountControl.jsonCompetitionSport.gameMode)}}
-      </span></label>
-      <div class="col-4">
-        <select class="form-control" [formControlName]="gameAmountControl.json.id" required>
-          <option *ngFor="let n of getRange(gameAmountControl.range)" [ngValue]="n">{{n}}</option>
-        </select>
+    @for (gameAmountControl of gameAmountControls; track gameAmountControl.json.id) {
+      <div class="row mb-3">
+        <label [for]="gameAmountControl.json.id"
+          class="col-8 col-form-label">{{gameAmountControl.jsonCompetitionSport.sport.name}} 
+        @if (sportIsUsedMultipleTimes(gameAmountControl.jsonCompetitionSport)) {
+          <span>
+            - {{nameService.getGameModeName(gameAmountControl.jsonCompetitionSport.gameMode)}}
+          </span>
+        }
+        </label>
+        <div class="col-4">
+          <select class="form-control" [formControlName]="gameAmountControl.json.id" required>
+            @for (n of getRange(gameAmountControl.range); track n) {
+              <option [ngValue]="n">{{n}}</option>
+            }
+          </select>
+        </div>
       </div>
-    </div>
+    }
   </div>
   <div class="modal-footer d-flex justify-content-reverse border-top-0">
     <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" (click)="modal.dismiss()">

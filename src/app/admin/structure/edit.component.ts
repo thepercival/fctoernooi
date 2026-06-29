@@ -22,21 +22,32 @@ import { DefaultService } from '../../lib/ngx-sport/defaultService';
 import { IAlertType } from '../../shared/common/alert';
 import { QualifyPathNode } from 'ngx-sport';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 import { CategoryUniqueChecker } from '../../lib/ngx-sport/category/uniqueChecker';
-import { FavoritesRepository } from '../../lib/favorites/repository';
 import { Favorites } from '../../lib/favorites';
 import { TournamentScreen } from '../../shared/tournament/screenNames';
 import { TournamentRegistrationRepository } from '../../lib/tournament/registration/repository';
 import { TournamentRegistration } from '../../lib/tournament/registration';
 import { CategoryModalComponent } from '../../shared/tournament/structure/categorymodal/categorymodal.component';
+import { TournamentNavBarComponent } from '../../shared/tournament/tournamentNavBar/tournamentNavBar.component';
+import { PlanningNavBarComponent } from './planningNavBar.component';
+import { StructureCategoryComponent } from '../../shared/tournament/structure/category.component';
+import { StructureRoundComponent } from '../../shared/tournament/structure/round.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { CategoryChooseModalComponent } from '../../shared/tournament/category/chooseModal.component';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { facStructure } from '../../shared/customicons';
 
 @Component({
-  selector: 'app-tournament-structure',
-  templateUrl: './edit.component.html',
-  styleUrls: ['./edit.component.scss'],
+    selector: 'app-tournament-structure',
+    templateUrl: './edit.component.html',
+    styleUrls: ['./edit.component.scss'],
+    standalone: true,
+    imports: [StructureRoundComponent,NgbAlert,StructureCategoryComponent,FontAwesomeModule, TournamentNavBarComponent, PlanningNavBarComponent, StructureCategoryComponent, StructureRoundComponent]
 })
 export class StructureEditComponent extends TournamentComponent implements OnInit {
+  faSpinner = faSpinner;
+  facStructure = facStructure;
   lastAction: StructureAction | undefined;
   actions: StructureAction[] = [];
   originalCompetitors!: Competitor[];
@@ -52,9 +63,7 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
     router: Router,
     tournamentRepository: TournamentRepository,
     structureRepository: StructureRepository,
-    globalEventsManager: GlobalEventsManager,
-    modalService: NgbModal,
-    favRepository: FavoritesRepository,
+    globalEventsManager: GlobalEventsManager,    
     public structureEditor: StructureEditor,
     private planningRepository: PlanningRepository,
     private myNavigation: MyNavigation,
@@ -62,7 +71,7 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
     private structureMapper: StructureMapper,
     private registrationRepository: TournamentRegistrationRepository
   ) {
-    super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
+    super(route, router, tournamentRepository, structureRepository, globalEventsManager);
   }
 
   ngOnInit() {
@@ -81,7 +90,7 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
             this.favorites = this.favRepository.getObject(this.tournament, this.clonedStructure.getCategories());
             this.updateFavoriteCategories(this.clonedStructure);
             this.structureNameService = new StructureNameService(new StartLocationMap(this.originalCompetitors));
-            this.processing = false;
+            this.processing.set(false);
           },
           error: (e: string) => {
             const sportVariant = this.competition.getSingleSport().getVariant();
@@ -92,8 +101,8 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
             this.hasBegun = this.clonedStructure.getFirstRoundNumber().hasBegun();
             this.updateFavoriteCategories(this.clonedStructure);
             this.structureNameService = new StructureNameService(new StartLocationMap(this.originalCompetitors));
-            this.setAlert(IAlertType.Danger, e + ', new structure created');
-            this.processing = false;
+            this.alert.set({ type: IAlertType.Danger, message: e + ', new structure created' });
+            this.processing.set(false);
           }
         });
     }, noStructure);
@@ -131,7 +140,7 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
     // }
     // (new StructureOutput()).toConsole(this.clonedStructure, console);
     // console.log('addAction(post)  has child', .getBorderQualifyGroup(QualifyTarget.Winners) !== undefined);
-    this.resetAlert();
+    this.alert.set(undefined);
     if (structureAction.recreateStructureNameService) {
       this.structureNameService = new StructureNameService();
     }
@@ -148,7 +157,7 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
 
   private addCategory(name: string, abbreviation: string|undefined) {
     if ((new CategoryUniqueChecker()).doesNameExists(this.clonedStructure.getCategories(), name)) {
-      this.setAlert(IAlertType.Danger, 'de category-naam bestaat al');
+      this.alert.set({ type: IAlertType.Danger, message: 'de category-naam bestaat al' });
       return;
     }
     // this.addAction(new StructureAction( StructureActionName.AddCategory)
@@ -170,7 +179,7 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
 
   public updateCategory(category: Category, categoryProperties: CategoryProperties) {
     if ((new CategoryUniqueChecker()).doesNameExists(this.clonedStructure.getCategories(), categoryProperties.newName, category)) {
-      this.setAlert(IAlertType.Danger, 'de category-naam bestaat al');
+      this.alert.set({ type: IAlertType.Danger, message: 'de category-naam bestaat al' });
       return;
     }
     
@@ -203,13 +212,13 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
   }
 
   public removeCategory(category: Category): void {
-    this.processing = true;
+    this.processing.set(true);
     this.registrationRepository.getObjects(category, this.tournament)
       .subscribe({
         next: (registrations: TournamentRegistration[]) => {
           if (registrations.length > 0) {
-            this.setAlert(IAlertType.Warning, 'er zijn al inschrijvingen voor deze category');
-            this.processing = false;
+            this.alert.set({ type: IAlertType.Warning, message: 'er zijn al inschrijvingen voor deze category' });
+            this.processing.set(false);
             return;  
           }
           const categories = this.clonedStructure.getCategories();
@@ -229,10 +238,10 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
           // console.log('removeCategory', this.clonedStructure);
 
           this.addAction({ name: StructureActionName.RemoveCategory, recreateStructureNameService: true });
-          this.processing = false;
+          this.processing.set(false);
         },
         error: (e: string) => {
-          this.processing = false;
+          this.processing.set(false);
         }
       });
   }
@@ -245,8 +254,8 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
   }
 
   saveStructure() {
-    this.processing = true;
-    this.setAlert(IAlertType.Info, 'wijzigingen worden opgeslagen');
+    this.processing.set(true);
+    this.alert.set({ type: IAlertType.Info, message: 'wijzigingen worden opgeslagen' });
 
     // console.log('pre edit-structure has child', this.clonedStructure.getCategory(1).getRootRound().getBorderQualifyGroup(QualifyTarget.Winners) !== undefined);
 
@@ -256,7 +265,7 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
           // console.log('post save-structure has child', this.clonedStructure.getCategory(1).getRootRound().getBorderQualifyGroup(QualifyTarget.Winners) !== undefined);
           this.syncPlanning(structureRes/*this.getLowestLevelAction()*/); // should always be first roundnumber
         },
-        error: (e) => { this.setAlert(IAlertType.Danger, e); this.processing = false; }
+        error: (e) => { this.alert.set({ type: IAlertType.Danger, message: e }); this.processing.set(false); }
       });
   }
 
@@ -269,8 +278,8 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
         next: () => {
           this.resetVariablesAfterSave(structure)
         },
-        error: e => { this.setAlert(IAlertType.Danger, e); this.processing = false; },
-        complete: () => this.processing = false
+        error: e => { this.alert.set({ type: IAlertType.Danger, message: e }); this.processing.set(false); },
+        complete: () => this.processing.set(false)
       });
   }
 
@@ -282,8 +291,8 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
     this.clonedStructure = this.createClonedStructure(structureRes); // updates PlanningInfo
     this.updateFavoriteCategories(this.clonedStructure);
     this.actions = [];
-    this.processing = false;
-    this.setAlert(IAlertType.Success, 'de wijzigingen zijn opgeslagen');
+    this.processing.set(false);
+    this.alert.set({ type: IAlertType.Success, message: 'de wijzigingen zijn opgeslagen' });
   }
 
   navigateBack() {
@@ -291,12 +300,21 @@ export class StructureEditComponent extends TournamentComponent implements OnIni
   }
 
   // ngAfterViewChecked() {
-  //   if (this.roundElRef !== undefined && !this.processing && !this.scrolled) {
+  //   if (this.roundElRef !== undefined && !this.processing() && !this.scrolled) {
   //     this.scrolled = true;
   //     this.roundElRef.nativeElement.scrollIntoView({ behavior: 'smooth' });
   //   }
   // }
 
+  openCategoriesChooseModal(structure: Structure) {
+    const activeModal = this.modalService.open(CategoryChooseModalComponent);
+    activeModal.componentInstance.categories = structure.getCategories();
+    activeModal.componentInstance.tournament = this.tournament;
+    activeModal.result.then((result) => {
+    }, (reason) => {
+        this.updateFavoriteCategories(structure);
+    });
+  }
 }
 
 export interface StructureAction {

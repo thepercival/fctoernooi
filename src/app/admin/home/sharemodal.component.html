@@ -9,17 +9,17 @@
         <form name="form" (ngSubmit)="false" [formGroup]="typedForm" novalidate>
             <div class="row mb-3">
                 <label for="publicotherid" class="col-4 col-form-label pointer">publiek
-                    <fa-icon (click)="openInfoModal(infoPublic)" [icon]="['fas', 'info-circle']" class="text-info">
+                    <fa-icon (click)="openInfoModal(infoPublic)" [icon]="faInfoCircle" class="text-info">
                     </fa-icon>
                 </label>
                 <div class="form-check col-8">
-                    <div class="form-control form-check form-switch">
+                    <div class="form-check form-switch">
                         <input type="checkbox" class="form-check-input" id="public" formControlName="public">
                         <label class="form-check-label" for="public"></label>
                     </div>
                 </div>
             </div>
-            <div [ngStyle]="{'visibility':typedForm.value['public'] ? 'visible' : 'hidden'}" class="row">
+            <div [style.visibility]="typedForm.value['public'] ? 'visible' : 'hidden'" class="row">
                 <div class="col-4">
                     <label for="url" class="col-form-label">url</label>
                 </div>
@@ -28,9 +28,9 @@
                         <input type="text" class="form-control" formControlName="url"
                             placeholder="kopiëer url naar klembord" aria-label="kopiëer url naar klembord"
                             aria-describedby="basic-copy">
-                        <button type="button" class="btn btn-outline-secondary" type="button" id="basic-copy"
-                            ngxClipboard [cbContent]="typedForm.controls.url.value" (cbOnSuccess)="copied = true;">
-                            <fa-icon [icon]="['fas', 'copy']"></fa-icon>
+                        <button type="button" class="btn btn-outline-secondary" id="basic-copy"
+                            ngxClipboard cbContent="typedForm.controls.url.value" (cbOnSuccess)="copied = true;">
+                            <fa-icon [icon]="faCopy"></fa-icon>
                         </button>
                     </div>
                 </div>
@@ -40,11 +40,15 @@
 </div>
 
 <div class="modal-footer d-flex justify-content-reverse">
-    <ngb-alert *ngIf="copied === true" type="info">de url is gekopiëerd naar het
-        klembord
-    </ngb-alert>
-    <button *ngIf="!typedForm.pristine" type="button" class="btn btn-primary" data-dismiss="modal"
-        (click)="modal.close(typedForm.value['public'])">{{getButtonLabel()}}</button>
+    @if (copied === true) {
+        <ngb-alert type="info">de url is gekopiëerd naar het
+            klembord
+        </ngb-alert>
+    }
+    @if (!typedForm.pristine) {
+        <button type="button" class="btn btn-primary" data-dismiss="modal"
+            (click)="modal.close(typedForm.value['public'])">{{getButtonLabel()}}</button>
+    }
 </div>
 
 <ng-template #infoPublic>

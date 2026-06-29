@@ -3,11 +3,15 @@ import { AgainstRuleSet, AgainstSportRoundRankingCalculator, AgainstVariant, Pou
 
 import { CSSService } from '../../shared/common/cssservice';
 import { PoulesRankingScreen } from '../../lib/liveboard/screens';
+import { EscapeHtmlPipe } from '../../shared/common/escapehtmlpipe';
+import { NgTemplateOutlet } from '@angular/common';
 
 @Component({
     selector: 'app-tournament-liveboard-poules',
     templateUrl: './poules.liveboard.component.html',
-    styleUrls: ['./poules.liveboard.component.scss']
+    styleUrls: ['./poules.liveboard.component.scss'],
+    imports: [EscapeHtmlPipe, NgTemplateOutlet]
+    
 })
 export class LiveboardPoulesComponent {
     @Input() screen!: PoulesRankingScreen;

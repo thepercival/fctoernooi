@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { MyNavigation } from '../../shared/common/navigation';
@@ -9,7 +9,7 @@ import { SponsorRepository } from '../../lib/sponsor/repository';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
 import { SponsorScreensCreator } from '../../lib/liveboard/screenCreator/sponsors';
 import { SponsorScreen } from '../../lib/liveboard/screens';
@@ -17,14 +17,19 @@ import { IAlertType } from '../../shared/common/alert';
 import { ScreenConfig } from '../../lib/liveboard/screenConfig/json';
 import { SponsorMapper } from '../../lib/sponsor/mapper';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
-import { FavoritesRepository } from '../../lib/favorites/repository';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { TournamentNavBarComponent } from '../../shared/tournament/tournamentNavBar/tournamentNavBar.component';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-tournament-sponsor-edit',
     templateUrl: './edit.component.html',
-    styleUrls: ['./edit.component.css']
+    styleUrls: ['./edit.component.css'],
+    standalone: true,
+    imports: [NgbAlert, FontAwesomeModule, TournamentNavBarComponent, FormsModule, ReactiveFormsModule]
 })
 export class SponsorEditComponent extends TournamentComponent implements OnInit {
+    faSpinner = faSpinner;
     public typedForm: FormGroup<{
         name: FormControl<string>,
         screenNr: FormControl<number|null>,
@@ -59,14 +64,12 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
         router: Router,
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
-        globalEventsManager: GlobalEventsManager,
-        modalService: NgbModal,
-        favRepository: FavoritesRepository,
+        globalEventsManager: GlobalEventsManager,        
         private sponsorRepository: SponsorRepository,
         private sponsorMapper: SponsorMapper,
         private myNavigation: MyNavigation
     ) {
-        super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
+        super(route, router, tournamentRepository, structureRepository, globalEventsManager);
         this.logoInputType = LogoInput.ByUpload;
         this.newLogoUploaded = false;
         this.screenConfig = this.sponsorMapper.getDefaultScreenConfig();
@@ -134,7 +137,7 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
             if( this.rangeScreenNrs.length > 0 ) {
                 this.typedForm.controls.screenNr.setValue(this.rangeScreenNrs[0]);
             }
-            this.processing = false;
+            this.processing.set(false);
             return;
         }
 
@@ -142,12 +145,12 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
         this.typedForm.controls.url.setValue(this.originalSponsor.getUrl());
         this.typedForm.controls.logoExtension.setValue(this.originalSponsor.getLogoExtension() ?? null);
         this.typedForm.controls.screenNr.setValue(this.originalSponsor.getScreenNr());
-        this.processing = false;
+        this.processing.set(false);
     }
 
     save(): boolean {
-        this.processing = true;
-        this.setAlert(IAlertType.Info, 'de sponsor wordt opgeslagen');
+        this.processing.set(true);
+        this.alert.set({ type: IAlertType.Info, message: 'de sponsor wordt opgeslagen' });
 
         const reposCall = this.originalSponsor ? this.sponsorRepository.editObject(this.formToJson(), this.originalSponsor, this.tournament) : this.sponsorRepository.createObject(this.formToJson(), this.tournament);
 
@@ -157,9 +160,9 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
                 this.processLogoAndNavigateBack(sponsor);
             },
             error: (e) => {
-                this.setAlert(IAlertType.Danger, e); this.processing = false;
+                this.alert.set({ type: IAlertType.Danger, message: e }); this.processing.set(false);
             },
-            complete: () => this.processing = false
+            complete: () => this.processing.set(false)
         });
         return false;
     }
@@ -178,7 +181,7 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
 
     processLogoAndNavigateBack(sponsor: Sponsor) {
         if (this.logoInputType === LogoInput.ByUrl || this.newLogoUploaded !== true) {
-            this.processing = false;
+            this.processing.set(false);
             this.navigateBack();
             return;
         }
@@ -190,13 +193,13 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
         this.sponsorRepository.uploadImage(input, sponsor, this.tournament)
             .subscribe({
                 next: () => {
-                    this.processing = false;
+                    this.processing.set(false);
                     this.navigateBack();
                 },
                 error: (e) => {
-                    this.setAlert(IAlertType.Danger, e); this.processing = false;
+                    this.alert.set({ type: IAlertType.Danger, message: e }); this.processing.set(false);
                 },
-                complete: () => this.processing = false
+                complete: () => this.processing.set(false)
             });
     }
 
@@ -208,7 +211,7 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
         const file = files[0];
         const mimeType = file.type;
         if (mimeType.match(/image\/*/) == null) {
-            this.setAlert(IAlertType.Danger, 'alleen afbeeldingen worden ondersteund');
+            this.alert.set({ type: IAlertType.Danger, message: 'alleen afbeeldingen worden ondersteund' });
             return;
         }
         const reader = new FileReader();
@@ -240,8 +243,8 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
 
     openInfoModal(modalContent: TemplateRef<any>) {
         const activeModal = this.modalService.open(InfoModalComponent, { windowClass: 'info-modal' });
-        activeModal.componentInstance.header = 'uitleg upload logo';
-        activeModal.componentInstance.modalContent = modalContent;
+        activeModal.componentInstance.header = () => 'uitleg upload logo';
+        activeModal.componentInstance.modalContent = () => modalContent;
     }
 
     getSponsorLogoUrl(sponsor: Sponsor): string {

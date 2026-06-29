@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Period } from 'ngx-sport';
 
@@ -10,20 +10,26 @@ import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { IAlertType } from '../../shared/common/alert';
 import { RecessRepository } from '../../lib/recess/repository';
 import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
-import { NgbDateStruct, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlert, NgbDateStruct, NgbInputDatepicker, NgbTimepicker } from '@ng-bootstrap/ng-bootstrap';
 import { Recess } from '../../lib/recess';
 import { RecessValidator } from '../../lib/recess/validator';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { FavoritesRepository } from '../../lib/favorites/repository';
 import { JsonRecess } from '../../lib/recess/json';
 import { DateConverter } from '../../lib/dateConverter';
+import { TournamentNavBarComponent } from '../../shared/tournament/tournamentNavBar/tournamentNavBar.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-tournament-competitor-edit',
     templateUrl: './addRecess.component.html',
-    styleUrls: ['./addRecess.component.css']
+    styleUrls: ['./addRecess.component.css'],
+    standalone: true,
+    imports: [TournamentNavBarComponent,NgbAlert,NgbTimepicker,NgbInputDatepicker,FontAwesomeModule,ReactiveFormsModule]
 })
 export class RecessAddComponent extends TournamentComponent implements OnInit {
+    
     public typedForm: FormGroup<{
         name: FormControl<string>,
         startdate: FormControl<string>,
@@ -34,20 +40,20 @@ export class RecessAddComponent extends TournamentComponent implements OnInit {
     hasBegun!: boolean;
     minDateStruct!: NgbDateStruct;
 
+    faSpinner = faSpinner;
+
     constructor(
         route: ActivatedRoute,
         router: Router,
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         globalEventsManager: GlobalEventsManager,
-        modalService: NgbModal,
-        favRepository: FavoritesRepository,
         private recessRepository: RecessRepository,
         private planningRepository: PlanningRepository,
         private myNavigation: MyNavigation,
         private dateConverter: DateConverter,
     ) {
-        super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
+        super(route, router, tournamentRepository, structureRepository, globalEventsManager);
         this.typedForm = new FormGroup({
             name: new FormControl('pauze', { nonNullable: true, validators: 
                 [
@@ -81,7 +87,7 @@ export class RecessAddComponent extends TournamentComponent implements OnInit {
         const minDate = this.getMinStartDate();
         this.minDateStruct = { year: minDate.getFullYear(), month: minDate.getMonth() + 1, day: minDate.getDate() };
         this.initForm(minDate);
-        this.processing = false;
+        this.processing.set(false);
     }
 
     initForm(minDate: Date) {
@@ -115,13 +121,13 @@ export class RecessAddComponent extends TournamentComponent implements OnInit {
         const newRecessPeriod = new Period(new Date(jsonRecess.start), new Date(jsonRecess.end));
         const message = this.validatePeriod(newRecessPeriod);
         if (message !== undefined) {
-            this.setAlert(IAlertType.Danger, message);
+            this.alert.set({ type: IAlertType.Danger, message });
             return false;
         }
         
 
-        this.processing = true;
-        this.setAlert(IAlertType.Info, 'de pauze wordt opgeslagen');
+        this.processing.set(true);
+        this.alert.set({ type: IAlertType.Info, message: 'de pauze wordt opgeslagen' });
         this.recessRepository.createObject(jsonRecess, this.tournament)
             .subscribe({
                 next: () => {
@@ -131,14 +137,14 @@ export class RecessAddComponent extends TournamentComponent implements OnInit {
                                 this.myNavigation.back();
                             },
                             error: (e) => {
-                                this.setAlert(IAlertType.Danger, 'de wedstrijdplanning is niet opgeslagen: ' + e);
-                                this.processing = false;
+                                this.alert.set({ type: IAlertType.Danger, message: 'de wedstrijdplanning is niet opgeslagen: ' + e });
+                                this.processing.set(false);
                             }
                         });
                 },
                 error: (e) => {
-                    this.setAlert(IAlertType.Danger, e);
-                    this.processing = false;
+                    this.alert.set({ type: IAlertType.Danger, message: e });
+                    this.processing.set(false);
                 }
             });
         return false;

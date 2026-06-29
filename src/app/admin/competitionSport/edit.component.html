@@ -1,10 +1,12 @@
 <div class="container-fluid">
   <div class="row justify-content-center">
     <div class="col-sm-10 col-md-8 col-lg-6">
-      <div *ngIf="competitionSport" class="d-flex justify-content-between">
+      @if(competitionSport) {
+      <div class="d-flex justify-content-between">
         <h2 class="text-truncate">
-          <app-sport-icon [customId]="competitionSport.getSport().getCustomId()">
-          </app-sport-icon>
+          @if (getSportIcon(competitionSport.getSport().getCustomId()); as sportIcon) {
+            <fa-icon [icon]="sportIcon"></fa-icon>
+          }
           <span> {{competitionSport.getSport().getName()}}</span>
         </h2>
         <button (click)="linkToSports()"
@@ -12,15 +14,21 @@
           <span>{{competition.getSports().length > 1 ? 'naar' : 'meerdere'}} sporten</span>
         </button>
       </div>
+      }
 
-      <h2 *ngIf="processing" class="text-center">
-        <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
+      @if(processing()) {
+      <h2 class="text-center">
+        <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
       </h2>
+      }
 
-      <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
+      @if(alert()) {
+      <ngb-alert [type]="alert()!.type">{{ alert()!.message }}</ngb-alert>
+      }
 
-      <div *ngIf="!processing && competitionSport">
-        <ul ngbNav #nav="ngbNav" [(activeId)]="activeTab" class="nav nav-tabs nav-fill">
+      @if(!processing() && competitionSport) {
+      <div>
+        <ul ngbNav #nav="ngbNav" [(activeId)]="activeTab" (activeIdChange)="onTabChange($event)" class="nav nav-tabs nav-fill">
           <li [ngbNavItem]="TabFields" class="nav-item">
             <a ngbNavLink class="nav-link">{{getFieldsDescription()}}</a>
             <ng-template ngbNavContent>
@@ -37,7 +45,8 @@
               </app-tournament-scoreconfig-edit>
             </ng-template>
           </li>
-          <li *ngIf="showAgainstQualifyConfig(competitionSport)" [ngbNavItem]="TabPoints" class="nav-item">
+          @if(showAgainstQualifyConfig(competitionSport)) {
+          <li [ngbNavItem]="TabPoints" class="nav-item">
             <a ngbNavLink class="nav-link">puntentelling</a>
             <ng-template ngbNavContent>
               <app-tournament-qualifyagainstconfig-edit [competitionSport]="competitionSport" [tournament]="tournament"
@@ -45,9 +54,13 @@
               </app-tournament-qualifyagainstconfig-edit>
             </ng-template>
           </li>
+          }
         </ul>
         <div [ngbNavOutlet]="nav" class="mt-2"></div>
       </div>
+      }
     </div>
   </div>
-  <app-tournament-navbar *ngIf="tournament" [tournament]="tournament" [theme]="getTheme(tournament)"></app-tournament-navbar>
+  @if(tournament) {
+  <app-tournament-navbar [tournament]="tournament" [theme]="getTheme(tournament)"></app-tournament-navbar>
+  }

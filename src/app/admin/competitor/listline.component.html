@@ -1,50 +1,68 @@
 <td>
   <button #btnEdit type="button" class="btn btn-sm btn-outline-primary" (click)="edit()">
-    <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
+    <fa-icon [icon]="faPencilAlt"></fa-icon>
   </button>
 </td>
 <td>
   <span [innerHtml]="structureNameService.getPlaceFromName(placeCompetitor.place, false) | keepHtml"></span>
 </td>
-<td *ngIf="hasSomeCompetitorAnImage" class="pe-0">
-  <img *ngIf="placeCompetitor.competitor && competitorRepository.hasLogoExtension(placeCompetitor.competitor)" src="{{competitorRepository.getLogoUrl(placeCompetitor.competitor, 20)}}" height="20" width="20">
-</td>
-<td *ngIf="placeCompetitor.competitor">
-  <div class="d-flex justify-content-between">    
-    <span>{{placeCompetitor.competitor.getName()}}</span>
-    <div>
-      <button *ngIf="showLockerRoomNotArranged" type="button" class="btn btn-sm btn-outline-warning me-2" (click)="openLockerRoomInfoModal(popLockerRoom)">
-        <fa-icon [icon]="['fas', 'door-closed']"></fa-icon>
-      </button>
-      
-      <fa-icon title="aanwezig" [fixedWidth]="true" [icon]="['fas', 'check-circle']"
-        class="text-success d-inline d-sm-none"
-        [ngClass]="{ 'empty-fixedwidth': !placeCompetitor.competitor.getPresent()}">
-      </fa-icon>
+@if (hasSomeCompetitorAnImage) {
+  <td class="pe-0">
+    @if (placeCompetitor.competitor && competitorRepository.hasLogoExtension(placeCompetitor.competitor)) {
+      <img src="{{competitorRepository.getLogoUrl(placeCompetitor.competitor, 20)}}" height="20" width="20" alt="competitor logo">
+    }
+  </td>
+}
+@if (placeCompetitor.competitor) {
+  <td>
+    <div class="d-flex justify-content-between">    
+      <span>{{placeCompetitor.competitor.getName()}}</span>
+      <div>
+        @if (showLockerRoomNotArranged) {
+          <button type="button" class="btn btn-sm btn-outline-warning me-2" (click)="openLockerRoomInfoModal(popLockerRoom)">
+            <fa-icon [icon]="faDoorClosed"></fa-icon>
+          </button>
+        }
+        
+        <fa-icon title="aanwezig" [fixedWidth]="true" [icon]="faCheckCircle"
+          [class.text-success]="placeCompetitor.competitor.getPresent()"
+          [class.d-inline]="true"
+          [class.d-sm-none]="true"
+          [class.empty-fixedwidth]="!placeCompetitor.competitor.getPresent()">
+        </fa-icon>
+      </div>
     </div>
-  </div>
-</td>
-<td *ngIf="!placeCompetitor.competitor">
-  <button #btnEdit type="button" class="btn btn-sm btn-outline-warning border-0" (click)="edit()">vul een naam in</button>
-</td>
+  </td>
+}
+@if (!placeCompetitor.competitor) {
+  <td>
+    <button #btnEdit type="button" class="btn btn-sm btn-outline-warning border-0" (click)="edit()">vul een naam in</button>
+  </td>
+}
 
 <td class="d-none d-sm-table-cell">
-  <a *ngIf="placeCompetitor.competitor" target="_blank" href="mailto:{{placeCompetitor.competitor.getEmailaddress()}}" rel="noopener">
-    {{placeCompetitor.competitor.getEmailaddress()}}
-  </a>
+  @if (placeCompetitor.competitor) {
+    <a target="_blank" href="mailto:{{placeCompetitor.competitor.getEmailaddress()}}" rel="noopener">
+      {{placeCompetitor.competitor.getEmailaddress()}}
+    </a>
+  }
 </td>
 <td class="d-none d-sm-table-cell">
-  <div *ngIf="placeCompetitor.competitor" class="form-switch text-center">
-    <input type="checkbox" class="form-check-input" id="{{getSwitchId(placeCompetitor.place)}}"
-      [checked]="placeCompetitor.competitor.getPresent()" (change)="setPresent(placeCompetitor.competitor)">
-    <label class="form-check-label" for="{{getSwitchId(placeCompetitor.place)}}"></label>
-  </div>
+  @if (placeCompetitor.competitor) {
+    <div class="form-switch text-center">
+      <input type="checkbox" class="form-check-input" id="{{getSwitchId(placeCompetitor.place)}}"
+        [checked]="placeCompetitor.competitor.getPresent()" (change)="setPresent(placeCompetitor.competitor)">
+      <label class="form-check-label" for="{{getSwitchId(placeCompetitor.place)}}"></label>
+    </div>
+  }
 </td>
-<td *ngIf="!hasBegun" class="text-end">
-  <button type="button" class="btn btn-sm btn-outline-danger" (click)="remove()">
-    <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
-  </button>
-</td>
+@if (!hasBegun) {
+  <td class="text-end">
+    <button type="button" class="btn btn-sm btn-outline-danger" (click)="remove()">
+      <fa-icon [icon]="faTrashAlt"></fa-icon>
+    </button>
+  </td>
+}
 
 <ng-template #popLockerRoom let-activeModal>
   <div class="text-center lead">

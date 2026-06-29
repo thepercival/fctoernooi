@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, WritableSignal, inject, input, signal } from '@angular/core';
 import { Poule, CompetitionSport, RoundRankingCalculator, RoundRankingItem, Cumulative, StructureNameService } from 'ngx-sport';
 
 import { CSSService } from '../../../common/cssservice';
@@ -7,18 +7,24 @@ import { FavoritesRepository } from '../../../../lib/favorites/repository';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PouleRankingModalComponent } from '../../poulerankingmodal/rankingmodal.component';
 import { ViewPort, ViewPortManager, ViewPortNrOfColumnsMap } from '../../../common/viewPortManager';
+import { TOURNAMENT_UI_IMPORTS } from '../../tournament.ui-imports';
+import { EscapeHtmlPipe } from '../../../common/escapehtmlpipe';
 
 @Component({
-  selector: 'app-tournament-ranking-sports-table',
-  templateUrl: './sports.component.html',
-  styleUrls: ['./sports.component.scss']
+    selector: 'app-tournament-ranking-sports-table',
+    templateUrl: './sports.component.html',
+    styleUrls: ['./sports.component.scss'],
+    standalone: true,
+    imports: [TOURNAMENT_UI_IMPORTS, EscapeHtmlPipe],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RankingSportsComponent implements OnInit {
-  @Input() poule!: Poule;
-  @Input() competitionSports!: CompetitionSport[];
-  @Input() favorites: Favorites | undefined;
-  @Input() structureNameService!: StructureNameService;
-  @Input() header!: boolean;
+  public poule = input.required<Poule>();
+  public competitionSports = input<CompetitionSport[]>([]);
+  public favorites = input<Favorites | undefined>(undefined);
+  public structureNameService = input.required<StructureNameService>();
+  public header = input.required<boolean>();
+
   protected roundRankingCalculator: RoundRankingCalculator;
   public roundRankingItems!: RoundRankingItem[];
   public viewPortManager!: ViewPortManager;
@@ -26,22 +32,23 @@ export class RankingSportsComponent implements OnInit {
   togetherRankingMap: TogetherRankingMap = new TogetherRankingMap();
   viewPointStart: number = 1;
   public showDifferenceDetail = false;
-  public processing = true;
-
+  public readonly processing: WritableSignal<boolean> = signal(true);
+  private resolvedCompetitionSports: CompetitionSport[] = [];
+  private modalService = inject(NgbModal);
 
   constructor(
     public cssService: CSSService,
-    private modalService: NgbModal,
     public favRepos: FavoritesRepository) {
     this.roundRankingCalculator = new RoundRankingCalculator(undefined, Cumulative.byPerformance);
   }
 
   ngOnInit() {
-    this.processing = true;
-    this.roundRankingItems = this.roundRankingCalculator.getItemsForPoule(this.poule);
-    this.competitionSports = this.poule.getCompetition().getSports();
-    this.viewPortManager = new ViewPortManager(this.getViewPortNrOfColumnsMap(), this.competitionSports.length);
-    this.processing = false;
+    this.processing.set(true);
+    this.roundRankingItems = this.roundRankingCalculator.getItemsForPoule(this.poule());
+    const inputSports = this.competitionSports();
+    this.resolvedCompetitionSports = inputSports.length > 0 ? inputSports : this.poule().getCompetition().getSports();
+    this.viewPortManager = new ViewPortManager(this.getViewPortNrOfColumnsMap(), this.resolvedCompetitionSports.length);
+    this.processing.set(false);
   }
 
   protected getViewPortNrOfColumnsMap(): ViewPortNrOfColumnsMap {
@@ -55,7 +62,7 @@ export class RankingSportsComponent implements OnInit {
   }
 
   getQualifyPlaceClass(roundRankingItem: RoundRankingItem): string {
-    const place = this.poule.getPlace(roundRankingItem.getUniqueRank());
+    const place = this.poule().getPlace(roundRankingItem.getUniqueRank());
     return place ? this.cssService.getQualifyPlace(place) : '';
   }
 

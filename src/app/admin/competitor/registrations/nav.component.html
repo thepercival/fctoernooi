@@ -1,33 +1,43 @@
-
-
 <div>
-  <ul ngbNav #nav2="ngbNav" [(activeId)]="activeTab" class="nav-tabs nav-fill mt-3" id="registrationTab">
+  <ul ngbNav #nav2="ngbNav" [(activeId)]="activeTab" class="nav nav-tabs nav-fill mt-3" id="registrationTab">
     <li [ngbNavItem]="TabRegistrationSettings"> <!-- settings -->
-      <a class="px-1" ngbNavLink>instellingen</a>
+        <a class="nav-link px-1" ngbNavLink>instellingen</a>
       <ng-template ngbNavContent>
-          <app-tournament-registrations-settings *ngIf="settings" [(settings)]="settings"
+        @if (processing()) {
+          <div class="text-center mt-3" role="status" aria-label="laden">
+            <div class="spinner-border"></div>
+          </div>
+        } @else if (settings) {
+          <app-tournament-registrations-settings [(settings)]="settings"
             [tournament]="tournament()">
           </app-tournament-registrations-settings>
+        }
       </ng-template>
     </li>
-    <li [ngbNavItem]="TabRegistrationList" [disabled]="!settings || !settings.isEnabled()"> <!-- registrations => list -->
-      <a class="px-1" ngbNavLink>lijst</a>
+    <li [ngbNavItem]="TabRegistrationList" [disabled]="processing()"> <!-- registrations => list -->
+        <a class="nav-link px-1" ngbNavLink>inschrijvingen</a>
       <ng-template ngbNavContent>
-        <div *ngIf="!processing" class="d-flex flex-wrap gap-3 mt-3">                    
-          <app-tournament-registrations-list *ngFor="let category of favoriteCategories()" class="mx-auto"
-            [showHeader]="favoriteCategories.length > 1" [category]="category" [tournament]="tournament()"
-            [structureNameService]="structureNameService()" [activeTab]="activeTab" 
-            (onCompetitorsUpdate)="onCompetitorsUpdate.emit()"
-            (onAlertChange)="setAlert($event.type,$event.message)">
-          </app-tournament-registrations-list>
-        </div>        
+        @if (!processing()) {
+          <div class="d-flex flex-wrap gap-3 mt-3">
+            @for (category of favoriteCategories(); track category) {
+              <app-tournament-registrations-list class="mx-auto"
+                [showHeader]="favoriteCategories().length > 1" [category]="category" [tournament]="tournament()"
+                [structureNameService]="structureNameService()" [activeTab]="activeTab" 
+                (onCompetitorsUpdate)="onCompetitorsUpdate.emit()"
+                (onAlertChange)="setAlert($event.type,$event.message)">
+              </app-tournament-registrations-list>
+            }
+          </div>
+        }
       </ng-template>
     </li>
-    <li [ngbNavItem]="TabRegistrationForm" [disabled]="!settings || !settings.isEnabled()"> <!-- form -->
-      <a class="px-1" ngbNavLink>formulier</a>
+    <li [ngbNavItem]="TabRegistrationForm" [disabled]="processing()"> <!-- form -->
+        <a class="nav-link px-1" ngbNavLink>formulier</a>
       <ng-template ngbNavContent>
-        <app-tournament-registrations-form *ngIf="settings" [settings]="settings" [tournament]="tournament()">
-        </app-tournament-registrations-form>
+        @if (settings) {
+          <app-tournament-registrations-form [settings]="settings" [tournament]="tournament()">
+          </app-tournament-registrations-form>
+        }
         </ng-template>
     </li>
   </ul>

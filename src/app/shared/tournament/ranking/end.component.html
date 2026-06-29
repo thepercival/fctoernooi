@@ -8,16 +8,20 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let rankingItem of rankingItems">
-        <td class="text-end">
-          <span [ngClass]="{ 'favitem': isFavorite(rankingItem) }">{{rankingItem.getRank()}}</span>
-        </td>
-        <td>
-          <fa-icon *ngIf="hasMedal(rankingItem.getRank())" [icon]="['fas', 'medal']"
-            class="{{getMedalColor(rankingItem.getRank())}}"></fa-icon>
-        </td>
-        <td [ngClass]="{ 'favitem': isFavorite(rankingItem) }">{{getName(rankingItem)}}</td>
-      </tr>
+      @for (rankingItem of rankingItems; track rankingItem) {
+        <tr>
+          <td class="text-end">
+            <span [class.favitem]="isFavorite(rankingItem)">{{rankingItem.getRank()}}</span>
+          </td>
+          <td>
+            @if (hasMedal(rankingItem.getRank())) {
+              <fa-icon [icon]="faMedal"
+                [class]="getMedalColor(rankingItem.getRank())"></fa-icon>
+            }
+          </td>
+          <td [class.favitem]="isFavorite(rankingItem)">{{getName(rankingItem)}}</td>
+        </tr>
+      }
     </tbody>
   </table>
 </div>

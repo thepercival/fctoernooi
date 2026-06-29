@@ -3,23 +3,28 @@
     <div class="col-sm-10 col-md-8 col-lg-6">
       <div>
         <h2>
-          <fa-icon [icon]="['fas', 'money-bill-alt']"></fa-icon> sponsor <span>{{originalSponsor !== undefined ?
+          <fa-icon [icon]="faMoneyBillAlt"></fa-icon> sponsor <span>{{originalSponsor !== undefined ?
             'wijzigen' : 'toevoegen'}}</span>
         </h2>
-        <h2 *ngIf="processing" class="text-center">
-          <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
+        @if(processing()) {
+        <h2 class="text-center">
+          <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
         </h2>
+        }
       </div>
-      <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
-      <form *ngIf="!processing" name="form" (ngSubmit)="save()" [formGroup]="typedForm" novalidate>
+      @if(alert()) {
+      <ngb-alert [type]="alert()!.type">{{ alert()!.message }}</ngb-alert>
+      }
+      @if(!processing()) {
+      <form name="form" (ngSubmit)="save()" [formGroup]="typedForm" novalidate>
         <div class="row mb-3">
           <div class="col-3">
             <label for="name" class="col-form-label">naam</label>
           </div>
           <div class="col-9">
             <input class="form-control"
-              [ngClass]="{ 'is-invalid': typedForm.controls.name.invalid, 'is-valid': typedForm.controls.name.valid }" type="text"
-              formControlName="name" placeholder="max. {{validations.maxlengthname}} karakters">
+              [class.is-invalid]="typedForm.controls.name.invalid" [class.is-valid]="typedForm.controls.name.valid " type="text"
+              formControlName="name" placeholder="{{validations.minlengthname}}-{{validations.maxlengthname}} karakters">
           </div>
         </div>
         <div class="row mb-3">
@@ -28,30 +33,34 @@
           </div>
           <div class="col-9">
             <input class="form-control"
-              [ngClass]="{ 'is-invalid': typedForm.controls.url.invalid, 'is-valid': typedForm.controls.url.valid }" type="url"
+              [class.is-invalid]="typedForm.controls.url.invalid" [class.is-valid]="typedForm.controls.url.valid " type="url"
               formControlName="url" placeholder="max. {{validations.maxlengthurl}} karakters">
           </div>
         </div>
-        <div *ngIf="logoInputType === LogoInputTypeByUpload" class="row mb-3">
+        @if(logoInputType === LogoInputTypeByUpload) {
+        <div class="row mb-3">
           <div class="col-3">
             <label for="logouploadother" (click)="openInfoModal(contentInfo)" class="pointer">logo
-              <fa-icon [icon]="['fas', 'info-circle']" class="text-info"></fa-icon>
+              <fa-icon [icon]="faInfoCircle" class="text-info"></fa-icon>
             </label>
           </div>
           <div class="col-9">
             <input type="file" accept='image/*' class="form-control" (change)="onFileChange($event)" #fileInput>
           </div>
         </div>
+        }
         <div class="row mb-3">
           <div class="col-3">
             <label for="screennr" class="col-form-label">scherm nummer</label>
           </div>
           <div class="col-9">
             <select formControlName="screenNr" class="form-control"
-              [ngClass]="{ 'is-invalid': typedForm.controls.screenNr.invalid, 'is-valid': typedForm.controls.screenNr.valid }"
+              [class.is-invalid]="typedForm.controls.screenNr.invalid" [class.is-valid]="typedForm.controls.screenNr.valid "
               required>
-              <option *ngFor="let screenNr of rangeScreenNrs" [ngValue]="screenNr">
+              @for(screenNr of rangeScreenNrs; track screenNr) {
+              <option [ngValue]="screenNr">
                 {{screenNr}}</option>
+              }
             </select>
           </div>
         </div>
@@ -65,7 +74,8 @@
             </button>
           </div>
         </div>
-        <div *ngIf="base64Logo || typedForm.controls.logoExtension.value" class="row">
+        @if(base64Logo || typedForm.controls.logoExtension.value) {
+        <div class="row">
           <div class="col-3">
             <label for="log">preview</label>
             <br/>
@@ -75,15 +85,23 @@
             </button>
           </div>
           <div class="col-9 overflow-hidden">
-            <img *ngIf="base64Logo" [src]="base64Logo" height="150px;">
-            <img *ngIf="!base64Logo && typedForm.controls.logoExtension.value && originalSponsor" [src]="getSponsorLogoUrl(originalSponsor)" height="150px;">
+            @if(base64Logo) {
+            <img [src]="base64Logo" height="150px;">
+            }
+            @if(!base64Logo && typedForm.controls.logoExtension.value && originalSponsor) {
+            <img [src]="getSponsorLogoUrl(originalSponsor)" height="150px;">
+            }
           </div>
         </div>
+        }
       </form>
+      }
     </div>
   </div>
 </div>
-<app-tournament-navbar *ngIf="tournament" [tournament]="tournament" [theme]="getTheme(tournament)"></app-tournament-navbar>
+@if(tournament) {
+<app-tournament-navbar [tournament]="tournament" [theme]="getTheme(tournament)"></app-tournament-navbar>
+}
 
 <ng-template #contentInfo>
   {{getLogoUploadDescription()}}

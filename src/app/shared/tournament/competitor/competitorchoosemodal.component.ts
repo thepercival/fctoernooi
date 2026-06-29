@@ -1,33 +1,49 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { ChangeDetectionStrategy, Component, InjectionToken, OnInit, inject } from '@angular/core';
+import { NgbActiveModal, NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 import { Competitor, Place, Round, StartLocationMap, Structure, StructureNameService } from 'ngx-sport';
 import { TournamentCompetitor } from '../../../lib/competitor';
 import { LockerRoom } from '../../../lib/lockerroom';
 import { LockerRoomValidator } from '../../../lib/lockerroom/validator';
+import { TOURNAMENT_UI_IMPORTS } from '../tournament.ui-imports';
+import { FavoritesRepository } from '../../../lib/favorites/repository';
+import { faDoorClosed, faUsers } from '@fortawesome/free-solid-svg-icons';
+
+export interface CompetitorChooseModalData {
+    validator: LockerRoomValidator;
+    structure: Structure;
+    competitors: Competitor[];
+    lockerRoom: LockerRoom;
+    selectedCompetitors: Competitor[];
+    competitorsAssignedElsewhere: Competitor[];
+}
+
+export const COMPETITOR_CHOOSE_MODAL_DATA = new InjectionToken<CompetitorChooseModalData>('COMPETITOR_CHOOSE_MODAL_DATA');
 
 @Component({
     selector: 'app-ngbd-modal-competitor-choose',
     templateUrl: './competitorchoosemodal.component.html',
-    styleUrls: ['./competitorchoosemodal.component.scss']
+    styleUrls: ['./competitorchoosemodal.component.scss'],
+    imports: [TOURNAMENT_UI_IMPORTS, NgbAlert],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true
 })
 export class CompetitorChooseModalComponent implements OnInit {
-    @Input() validator!: LockerRoomValidator;
-    @Input() structure!: Structure;
-    @Input() competitors: Competitor[] = [];
-    @Input() lockerRoom!: LockerRoom;
-    @Input() selectedCompetitors: Competitor[] = [];
+    readonly data = inject(COMPETITOR_CHOOSE_MODAL_DATA);
     public competitorLists: CompetitorList[] = [];
     public structureNameService!: StructureNameService;
     public startLocationMap!: StartLocationMap;
     public changed = false;
+    public faUsers = faUsers;
+    public faDoorClosed = faDoorClosed;
 
-    constructor(public activeModal: NgbActiveModal) {
-    }
+    public activeModal: NgbActiveModal = inject(NgbActiveModal) 
+    public favRepository = inject(FavoritesRepository);
+
 
     ngOnInit() {
-        this.startLocationMap = new StartLocationMap(this.competitors);
+        this.startLocationMap = new StartLocationMap(this.data.competitors);
         this.structureNameService = new StructureNameService(this.startLocationMap);
-        this.structure.getRootRounds().forEach((rootRound: Round) => {
+        this.data.structure.getRootRounds().forEach((rootRound: Round) => {
             const competitorItems: CompetitorListItem[] = [];
             rootRound.getPlaces().forEach((place: Place) => {
                 const startLocation = place.getStartLocation();
@@ -42,7 +58,7 @@ export class CompetitorChooseModalComponent implements OnInit {
                     placeName: this.structureNameService.getPlaceFromName(place, false),
                     competitor: competitor,
                     selected: this.isSelected(competitor),
-                    nrOtherLockerRooms: this.validator.nrArranged(competitor, this.lockerRoom)
+                    nrOtherLockerRooms: this.data.validator.nrArranged(competitor, this.data.lockerRoom)
                 });
             });
             this.competitorLists.push({
@@ -53,7 +69,11 @@ export class CompetitorChooseModalComponent implements OnInit {
     }
 
     hasSelectableCompetitors(): boolean {
-        return this.validator && this.validator.getCompetitors().length > 0;
+        return this.data.validator.getCompetitors().length > 0;
+    }
+
+    alreadyAssignedElsewhere(competitor: TournamentCompetitor): boolean {
+        return this.data.competitorsAssignedElsewhere.find(competitorIt => competitorIt === competitor) !== undefined
     }
 
     getId(competitor: TournamentCompetitor): string {
@@ -65,7 +85,7 @@ export class CompetitorChooseModalComponent implements OnInit {
     }
 
     private isSelected(competitor?: TournamentCompetitor): boolean {
-        return competitor !== undefined && this.selectedCompetitors.indexOf(competitor) >= 0;
+        return competitor !== undefined && this.data.selectedCompetitors.indexOf(competitor) >= 0;
     }
 
     toggle(competitorListItem: CompetitorListItem) {

@@ -1,18 +1,18 @@
-import { Component, Input } from '@angular/core';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { ChangeDetectionStrategy, Component, Inject, input } from '@angular/core';
+import { NgbActiveModal, NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'app-ngbd-modal-copied',
     templateUrl: './copiedmodal.component.html',
-    styleUrls: ['./copiedmodal.component.scss']
+    styleUrls: ['./copiedmodal.component.scss'],
+    standalone: true,
+    imports: [NgbAlert],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CopiedModalComponent {
-    @Input() previousId!: string;
-    @Input() title!: string; 
-    
-    constructor(public modal: NgbActiveModal) {
-        
-    }
+    previousId = input<string>('');
+    title = input<string>('');
 
-    
+    constructor(@Inject(NgbActiveModal) public modal: NgbActiveModal) {
+    }
 }

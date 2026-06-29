@@ -4,56 +4,70 @@
       <h2 class="text-center">
         wedstrijd wijzigen
       </h2>
-      <h2 *ngIf="processing" class="text-center">
-        <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
-      </h2>
-      <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
-      <form *ngIf="!processing && tournament && hasAuthorization" [formGroup]="typedForm" (ngSubmit)="save()" #f="ngForm"
-        novalidate>
-        <app-tournament-basegame-edit [form]="getBaseFormGroup()" [structureNameService]="structureNameService"
-          [game]="getGame()" [structure]="structure">
-        </app-tournament-basegame-edit>
-        <div class="row mb-3">
-          <div class="col-3">
-            <label class="col-form-label">deelnemers</label>
-          </div>
-          <div class="col-9">
-            <div formGroupName="gamePlaces" class="d-flex flex-wrap gap-3">
-              <app-tournament-togetherscorecard *ngFor="let gamePlace of getGame().getTogetherPlaces()"
-                [gamePlace]="gamePlace" [form]="getFormGroupGamePlace(gamePlace.getId())"
-                [structureNameService]="structureNameService" (afterEdit)="postScoreControlUpdate()">
-              </app-tournament-togetherscorecard>
+      @if (processing()) {
+        <h2 class="text-center">
+          <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
+        </h2>
+      }
+      @if (alert()) {
+        <ngb-alert [type]="alert()!.type">{{ alert()!.message }}</ngb-alert>
+      }
+      @if (!processing() && tournament && hasAuthorization) {
+        <form [formGroup]="typedForm" (ngSubmit)="save()" #f="ngForm"
+          novalidate>
+          <app-tournament-basegame-edit [form]="getBaseFormGroup()" [structureNameService]="structureNameService"
+            [game]="getGame()" [structure]="structure">
+          </app-tournament-basegame-edit>
+          <div class="row mb-3">
+            <div class="col-3">
+              <label class="col-form-label">deelnemers</label>
+            </div>
+            <div class="col-9">
+              <div formGroupName="gamePlaces" class="d-flex flex-wrap gap-3">
+                @for (gamePlace of getGame().getTogetherPlaces(); track gamePlace.getId()) {
+                  <app-tournament-togetherscorecard
+                    [gamePlace]="gamePlace" [form]="getFormGroupGamePlace(gamePlace.getId())"
+                    [structureNameService]="structureNameService" (afterEdit)="postScoreControlUpdate()">
+                  </app-tournament-togetherscorecard>
+                }
+              </div>
             </div>
           </div>
-        </div>
-        <div class="row mb-3">
-          <label for="played" class="col-3 col-form-label">gespeeld</label>
-          <div class="col-9">
-            <div class="form-control form-check form-switch">
-              <input type="checkbox" class="form-check-input" id="played" formControlName="played"
-                (ngModelChange)="setPlayed($event)">
-              <label class="form-check-label" for="played"></label>
+          <div class="row mb-3">
+            <label for="played" class="col-3 col-form-label">gespeeld</label>
+            <div class="col-9">
+              <div class="form-check form-switch">
+                <input type="checkbox" class="form-check-input" id="played" formControlName="played"
+                  (ngModelChange)="setPlayed($event)">
+                <label class="form-check-label" for="played"></label>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div *ngFor="let warning of warningsForEqualQualifiers" class="alert alert-warning">
-          <span [innerHtml]="warning | keepHtml"></span>
-        </div>
-        <div class="row mb-3 justify-content-end">
-          <div class="col-9 d-inline-flex">
-            <button type="submit" [disabled]="typedForm.invalid || !allScoresValid"
-              class="btn btn-outline-primary me-1">wijzig
-              wedstrijd</button>
-            <button type="button" *ngIf="manualEditMode()" class="btn btn-outline-danger"
-              (click)="remove()">verwijder</button>
+          @for (warning of warningsForEqualQualifiers; track warning) {
+            <div class="alert alert-warning">
+              <span [innerHtml]="warning | keepHtml"></span>
+            </div>
+          }
+          <div class="row mb-3 justify-content-end">
+            <div class="col-9 d-inline-flex">
+              <button type="submit" [disabled]="typedForm.invalid || !allScoresValid"
+                class="btn btn-outline-primary me-1">wijzig
+                wedstrijd</button>
+              @if (manualEditMode()) {
+                <button type="button" class="btn btn-outline-danger"
+                  (click)="remove()">verwijder</button>
+              }
+            </div>
           </div>
-        </div>
-      </form>
+        </form>
+      }
 
     </div>
   </div>
 </div>
 
-<app-tournament-navbar [public]="false" *ngIf="tournament" [tournament]="tournament" [theme]="getTheme(tournament)">
-</app-tournament-navbar>
+@if (tournament) {
+  <app-tournament-navbar [public]="false" [tournament]="tournament" [theme]="getTheme(tournament)">
+  </app-tournament-navbar>
+}

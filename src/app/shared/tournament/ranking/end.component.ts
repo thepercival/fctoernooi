@@ -1,41 +1,36 @@
-import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, input } from '@angular/core';
 import { EndRankingItem, VoetbalRange, EndRankingCalculator, Category, StructureNameService } from 'ngx-sport';
 import { Favorites } from '../../../lib/favorites';
+import { TOURNAMENT_UI_IMPORTS } from '../tournament.ui-imports';
+import { faMedal } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-  selector: 'app-tournament-endranking',
-  templateUrl: './end.component.html',
-  styleUrls: ['./end.component.scss']
+    selector: 'app-tournament-endranking',
+    templateUrl: './end.component.html',
+    styleUrls: ['./end.component.scss'],
+    standalone: true,
+    imports: [TOURNAMENT_UI_IMPORTS],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class RankingEndComponent implements OnInit, OnChanges {
-
-  @Input() category!: Category;
-  @Input() structureNameService!: StructureNameService;
-  @Input() favorites: Favorites | undefined;
-  @Input() range: VoetbalRange | undefined;
+export class RankingEndComponent {
+  public category = input.required<Category>();
+  public structureNameService = input.required<StructureNameService>();
+  public favorites = input<Favorites | undefined>(undefined);
+  public range = input<VoetbalRange | undefined>(undefined);
   public rankingItems: EndRankingItem[] = [];
+  public faMedal = faMedal;
 
   constructor() {
-  }
-
-  ngOnInit() {
-    this.updateItems();
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes.category !== undefined && changes.category.currentValue !== changes.category.previousValue
-      && changes.category.firstChange === false) {
+    effect(() => {
       this.updateItems();
-    } else if (changes.range !== undefined && changes.range.isFirstChange() === false
-      && changes.range.currentValue !== changes.range.previousValue) {
-      this.updateItems();
-    }
+    });
   }
 
   protected updateItems() {
-    const endRankingCalculator = new EndRankingCalculator(this.category);
+    const endRankingCalculator = new EndRankingCalculator(this.category());
     this.rankingItems = endRankingCalculator.getItems().filter((item: EndRankingItem): boolean => {
-      return this.range === undefined || (item.getUniqueRank() >= this.range.min && item.getUniqueRank() <= this.range.max);
+      const range = this.range();
+      return range === undefined || (item.getUniqueRank() >= range.min && item.getUniqueRank() <= range.max);
     });
   }
 
@@ -52,8 +47,9 @@ export class RankingEndComponent implements OnInit, OnChanges {
     if (startLocation === undefined) {
       return false;
     }
-    const competitor = this.structureNameService.getStartLocationMap()?.getCompetitor(startLocation);
-    return this.favorites !== undefined && competitor !== undefined && this.favorites.hasCompetitor(competitor);
+    const competitor = this.structureNameService().getStartLocationMap()?.getCompetitor(startLocation);
+    const favorites = this.favorites();
+    return competitor !== undefined && favorites !== undefined && favorites.hasCompetitor(competitor);
   }
 
   getName(endRankingItem: EndRankingItem): string {
@@ -61,6 +57,6 @@ export class RankingEndComponent implements OnInit, OnChanges {
     if (startLocation === undefined) {
       return 'nog onbekend';
     }
-    return this.structureNameService.getStartLocationMap()?.getCompetitor(startLocation)?.getName() ?? 'onbekend';
+    return this.structureNameService().getStartLocationMap()?.getCompetitor(startLocation)?.getName() ?? 'onbekend';
   }
 }

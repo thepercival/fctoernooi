@@ -3,7 +3,7 @@ import { NavigationExtras, Router } from '@angular/router';
 
 import { AuthService } from './auth.service';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class AuthguardService  {
 
   constructor(private router: Router, private authService: AuthService) { }

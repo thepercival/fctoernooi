@@ -1,0 +1,7 @@
+:host .nav-tabs .nav-link:not(.disabled) {
+	cursor: pointer;
+}
+
+:host .nav-tabs .nav-link.disabled {
+	cursor: not-allowed;
+}

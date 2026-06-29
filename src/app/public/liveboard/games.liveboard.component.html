@@ -6,55 +6,84 @@
           ronde
         </th>
         <th class="width-4">
-          <fa-icon [icon]="['fas', 'list-ul']"></fa-icon>
+          <fa-icon [icon]="faListUl"></fa-icon>
         </th>
-        <th *ngIf="isScheduleScreen()" class="width-10"
-          [ngClass]="{ 'text-center': this.getBatchViewModeHeader(screen) === BatchViewModeNr }">
-          
-          <span *ngIf="this.getBatchViewModeHeader(screen) === BatchViewModeDate">{{getFirstGameStartDate()}}</span>
-          <span *ngIf="this.getBatchViewModeHeader(screen) === BatchViewModeNr">batch</span>
-        </th>
-        <th *ngIf="isScheduleScreen()" class="width-8">
-          <app-tournament-icon name="soccer-field"></app-tournament-icon>
-        </th>
+        @if (isScheduleScreen()) {
+          <th class="width-10"
+            [class.text-center]="this.getBatchViewModeHeader(screen) === BatchViewModeNr">
+            
+            @if (this.getBatchViewModeHeader(screen) === BatchViewModeDate) {
+              <span>{{getFirstGameStartDate()}}</span>
+            }
+            @if (this.getBatchViewModeHeader(screen) === BatchViewModeNr) {
+              <span>batch</span>
+            }
+          </th>
+        }
+        @if (isScheduleScreen()) {
+          <th class="width-8">
+            <fa-icon [icon]="facSoccerField"></fa-icon>
+          </th>
+        }
         <!-- gamePlaces & score -->
-        <th *ngIf="hasOnlyGameModeAgainst" class="text-end width-25">thuis</th>
-        <th *ngIf="hasOnlyGameModeAgainst" class="text-center width-8">
-          <app-tournament-icon name="scoreboard"></app-tournament-icon>
-        </th>
-        <th *ngIf="hasOnlyGameModeAgainst" class="text-left width-25">uit</th>
-        <th *ngIf="!hasOnlyGameModeAgainst" colspan="3" class="text-center width-58">deelnemers en score</th>
-        <th *ngIf="isScheduleScreen() && hasReferees()" class="width-14 text-end">
-          <app-tournament-icon name="referee"></app-tournament-icon>
-        </th>
+        @if (hasOnlyGameModeAgainst) {
+          <th class="text-end width-25">thuis</th>
+        }
+        @if (hasOnlyGameModeAgainst) {
+          <th class="text-center width-8">
+            <fa-icon [icon]="facScoreboard"></fa-icon>
+          </th>
+        }
+        @if (hasOnlyGameModeAgainst) {
+          <th class="text-left width-25">uit</th>
+        }
+        @if (!hasOnlyGameModeAgainst) {
+          <th colspan="3" class="text-center width-58">deelnemers en score</th>
+        }
+        @if (isScheduleScreen() && hasReferees()) {
+          <th class="width-14 text-end">
+            <fa-icon [icon]="facReferee"></fa-icon>
+          </th>
+        }
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let game of screen.getGames()" [ngClass]="{ 'table-alternate': (game.getBatchNr() % 2) === 0 }">
-        <td class="d-none d-xl-table-cell">
-          <span [innerHtml]="getRoundAbbreviation(game.getRound()) | keepHtml"></span>          
-        </td>
-        <td>
-          <span>{{structureNameService.getPouleName(game.getPoule(), false)}}</span>
-        </td>
+      @for (game of screen.getGames(); track game) {
+        <tr [class.table-alternate]="(game.getBatchNr() % 2) === 0">
+          <td class="d-none d-xl-table-cell">
+            <span [innerHtml]="getRoundAbbreviation(game.getRound()) | keepHtml"></span>          
+          </td>
+          <td>
+            <span>{{structureNameService.getPouleName(game.getPoule(), false)}}</span>
+          </td>
 
-        <td class="width-10" *ngIf="isScheduleScreen()"
-          [ngClass]="{ 'text-center': getBatchViewMode(game) === BatchViewModeNr }">          
-          <span
-            *ngIf="getBatchViewMode(game) === BatchViewModeDate">{{dateFormatter.toString(game.getStartDateTime(),dateFormatter.time())}}</span>
-          <span *ngIf="getBatchViewMode(game) === BatchViewModeNr">{{game.getBatchNr()}}</span>
-        </td>
-        <td *ngIf="isScheduleScreen()">{{game.getField()?.getName()}}</td>
+          @if (isScheduleScreen()) {
+            <td class="width-10"
+              [class.text-center]="getBatchViewMode(game) === BatchViewModeNr">          
+              @if (getBatchViewMode(game) === BatchViewModeDate) {
+                <span>{{dateFormatter.toString(game.getStartDateTime(),dateFormatter.time())}}</span>
+              }
+              @if (getBatchViewMode(game) === BatchViewModeNr) {
+                <span>{{game.getBatchNr()}}</span>
+              }
+            </td>
+          }
+          @if (isScheduleScreen()) {
+            <td>{{game.getField()?.getName()}}</td>
+          }
 
-        <ng-container *ngIf="isAgainst(game)">
-          <ng-container *ngTemplateOutlet="againstGamePlacesCell;context:{$implicit: game}"></ng-container>
-        </ng-container>
-        <ng-container *ngIf="!isAgainst(game)">
-          <ng-container *ngTemplateOutlet="togetherGamePlaces;context:{$implicit: game}"></ng-container>
-        </ng-container>
+          @if (isAgainst(game)) {
+            <ng-container [ngTemplateOutlet]="againstGamePlacesCell" [ngTemplateOutletContext]="{$implicit: game}"></ng-container>
+          }
+          @if (!isAgainst(game)) {
+            <ng-container [ngTemplateOutlet]="togetherGamePlaces" [ngTemplateOutletContext]="{$implicit: game}"></ng-container>
+          }
 
-        <td *ngIf="isScheduleScreen() && hasReferees()" class="text-end">{{getRefereeName(game)}}</td>
-      </tr>
+          @if (isScheduleScreen() && hasReferees()) {
+            <td class="text-end">{{getRefereeName(game)}}</td>
+          }
+        </tr>
+      }
     </tbody>
   </table>
 </div>
@@ -77,14 +106,18 @@
 <ng-template #togetherGamePlaces let-game>
   <td colspan="3" class="text-nowrap text-center pb-0">
     <div class="d-flex flex-wrap gap-2 justify-content-center mb-2">
-      <ul *ngFor="let gamePlace of game.getTogetherPlaces()" class="list-group list-group-horizontal">
-        <li class="list-group-item border-start-0">
-          <span [innerHtml]="structureNameService.getPlaceFromName(gamePlace.getPlace(),true,true) | keepHtml"></span>
-        </li>
-        <li *ngIf="isPlayed(game)" class="list-group-item">
-          {{getTogetherScore(gamePlace)}}
-        </li>
-      </ul>
+      @for (gamePlace of game.getTogetherPlaces(); track gamePlace) {
+        <ul class="list-group list-group-horizontal">
+          <li class="list-group-item border-start-0">
+            <span [innerHtml]="structureNameService.getPlaceFromName(gamePlace.getPlace(),true,true) | keepHtml"></span>
+          </li>
+          @if (isPlayed(game)) {
+            <li class="list-group-item">
+              {{getTogetherScore(gamePlace)}}
+            </li>
+          }
+        </ul>
+      }
     </div>
   </td>
 </ng-template>

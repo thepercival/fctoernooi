@@ -1,34 +1,32 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, inject, OnInit, TemplateRef } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { MyNavigation } from '../../shared/common/navigation';
-import { Sponsor } from '../../lib/sponsor';
-import { JsonSponsor } from '../../lib/sponsor/json';
-import { SponsorRepository } from '../../lib/sponsor/repository';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlert, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
-import { SponsorScreensCreator } from '../../lib/liveboard/screenCreator/sponsors';
-import { SponsorScreen } from '../../lib/liveboard/screens';
 import { IAlertType } from '../../shared/common/alert';
-import { ScreenConfig } from '../../lib/liveboard/screenConfig/json';
-import { SponsorMapper } from '../../lib/sponsor/mapper';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
-import { FavoritesRepository } from '../../lib/favorites/repository';
 import { League } from 'ngx-sport';
 import { TournamentMapper } from '../../lib/tournament/mapper';
 import { JsonTournament } from '../../lib/tournament/json';
 import { Tournament } from '../../lib/tournament';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { TournamentNavBarComponent } from '../../shared/tournament/tournamentNavBar/tournamentNavBar.component';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-tournament-name-and-theme',
     templateUrl: './name-and-theme.component.html',
-    styleUrls: ['./name-and-theme.component.scss']
+    styleUrls: ['./name-and-theme.component.scss'],
+    standalone: true,
+    imports: [FontAwesomeModule, NgbAlert, TournamentNavBarComponent, ReactiveFormsModule]
 })
 export class TournamentNameAndThemeComponent extends TournamentComponent implements OnInit {
+    faSpinner = faSpinner;
     public typedForm: FormGroup<{
         name: FormControl<string>,
         textColor: FormControl<string>,
@@ -48,18 +46,18 @@ export class TournamentNameAndThemeComponent extends TournamentComponent impleme
         maxlengthname: League.MAX_LENGTH_NAME
     };
 
+    modalService: NgbModal = inject(NgbModal);
+
     constructor(
         route: ActivatedRoute,
         router: Router,
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
-        globalEventsManager: GlobalEventsManager,
-        modalService: NgbModal,
-        favRepository: FavoritesRepository,
+        globalEventsManager: GlobalEventsManager,        
         private tournamentMapper: TournamentMapper,
         private myNavigation: MyNavigation
     ) {
-        super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
+        super(route, router, tournamentRepository, structureRepository, globalEventsManager);
         this.logoInputType = LogoInput.ByUpload;
         this.newLogoUploaded = false;
         
@@ -116,14 +114,14 @@ export class TournamentNameAndThemeComponent extends TournamentComponent impleme
                     this.typedForm.controls.bgColor.setValue(theme.bgColor);
                 }
                 this.typedForm.controls.logoExtension.setValue(this.tournament.getLogoExtension() ?? null);
-                this.processing = false; 
+                this.processing.set(false); 
             });
         });
     }
     
     save(): boolean {
-        this.processing = true;
-        this.setAlert(IAlertType.Info, 'de sponsor wordt opgeslagen');
+        this.processing.set(true);
+        this.alert.set({ type: IAlertType.Info, message: 'de sponsor wordt opgeslagen' });
 
         this.tournamentRepository.editObject(this.formToJson()).subscribe({
             next: (tournament: Tournament) => {
@@ -131,30 +129,30 @@ export class TournamentNameAndThemeComponent extends TournamentComponent impleme
                 this.processLogoAndNavigateBack(tournament);
             },
             error: (e) => {
-                this.setAlert(IAlertType.Danger, e); this.processing = false;
+                this.alert.set({ type: IAlertType.Danger, message: e }); this.processing.set(false);
             },
-            complete: () => this.processing = false
+            complete: () => this.processing.set(false)
         });
         return false;
     }
 
     saveName(newName: string) {
-        this.setAlert(IAlertType.Info, 'de naam wordt opgeslagen');
+        this.alert.set({ type: IAlertType.Info, message: 'de naam wordt opgeslagen' });
 
-        this.processing = true;
+        this.processing.set(true);
         const json = this.formToJson()
         this.tournamentRepository.editObject(json)
             .subscribe({
                 next: (tournament: Tournament) => {
                     this.tournament = tournament;
                     // this.router.navigate(['/admin', newTournamentId]);
-                    this.setAlert(IAlertType.Success, 'de naam is opgeslagen');
+                    this.alert.set({ type: IAlertType.Success, message: 'de naam is opgeslagen' });
                 },
                 error: (e) => {
-                    this.setAlert(IAlertType.Danger, 'de naam kon niet worden opgeslagen');
-                    this.processing = false;
+                    this.alert.set({ type: IAlertType.Danger, message: 'de naam kon niet worden opgeslagen' });
+                    this.processing.set(false);
                 },
-                complete: () => this.processing = false
+                complete: () => this.processing.set(false)
             });
     }
 
@@ -171,7 +169,7 @@ export class TournamentNameAndThemeComponent extends TournamentComponent impleme
 
     processLogoAndNavigateBack(tournament: Tournament) {
         if (this.logoInputType === LogoInput.ByUrl || this.newLogoUploaded !== true) {
-            this.processing = false;
+            this.processing.set(false);
             this.navigateBack();
             return;
         }
@@ -183,13 +181,13 @@ export class TournamentNameAndThemeComponent extends TournamentComponent impleme
         this.tournamentRepository.uploadImage(input, tournament)
             .subscribe({
                 next: () => {
-                    this.processing = false;
+                    this.processing.set(false);
                     this.navigateBack();
                 },
                 error: (e) => {
-                    this.setAlert(IAlertType.Danger, e); this.processing = false;
+                    this.alert.set({ type: IAlertType.Danger, message: e }); this.processing.set(false);
                 },
-                complete: () => this.processing = false
+                complete: () => this.processing.set(false)
             });
     }
 
@@ -201,7 +199,7 @@ export class TournamentNameAndThemeComponent extends TournamentComponent impleme
         const file = files[0];
         const mimeType = file.type;
         if (mimeType.match(/image\/*/) == null) {
-            this.setAlert(IAlertType.Danger, 'alleen afbeeldingen worden ondersteund');
+            this.alert.set({ type: IAlertType.Danger, message: 'alleen afbeeldingen worden ondersteund' });
             return;
         }
         const reader = new FileReader();
@@ -233,8 +231,8 @@ export class TournamentNameAndThemeComponent extends TournamentComponent impleme
 
     openInfoModal(modalContent: TemplateRef<any>) {
         const activeModal = this.modalService.open(InfoModalComponent, { windowClass: 'info-modal' });
-        activeModal.componentInstance.header = 'uitleg upload logo';
-        activeModal.componentInstance.modalContent = modalContent;
+        activeModal.componentInstance.header = () => 'uitleg upload logo';
+        activeModal.componentInstance.modalContent = () => modalContent;
     }
 
     getLogoUrl(tournament: Tournament): string {

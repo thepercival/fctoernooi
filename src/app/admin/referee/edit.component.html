@@ -3,81 +3,95 @@
     <div class="col-sm-10 col-md-8 col-lg-6">
       <div>
         <h2>
-          <app-tournament-icon name="referee"></app-tournament-icon> scheidsrechter <span>{{originalReferee !==
+          <fa-icon [icon]="facReferee"></fa-icon> scheidsrechter <span>{{originalReferee !==
             undefined ?
             'wijzigen' : 'toevoegen'}}</span>
         </h2>
-        <h2 *ngIf="processing" class="text-center">
-          <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
-        </h2>
+        @if (processing()) {
+          <h2 class="text-center">
+            <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
+          </h2>
+        }
       </div>
-      <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
-      <form *ngIf="!processing" name="form" (ngSubmit)="save()" [formGroup]="typedForm" novalidate>
-        <div class="row mb-3">
-          <div class="col-3">
-            <label for="initials" class="col-form-label">initialen</label>
+      @if (alert()) {
+        <ngb-alert [type]="alert()!.type">{{ alert()!.message }}</ngb-alert>
+      }
+      @if (!processing()) {
+        <form name="form" (ngSubmit)="save()" [formGroup]="typedForm" novalidate>
+          <div class="row mb-3">
+            <div class="col-3">
+              <label for="initials" class="col-form-label">initialen</label>
+            </div>
+            <div class="col-9">
+              <input class="form-control"
+                [class.is-invalid]="typedForm.controls.initials.invalid"
+                [class.is-valid]="typedForm.controls.initials.valid"
+                type="text" formControlName="initials" placeholder="{{validations.minlengthinitials}}-{{validations.maxlengthinitials}} karakters"
+                [focusMe]="originalReferee === undefined">
+            </div>
           </div>
-          <div class="col-9">
-            <input class="form-control"
-              [ngClass]="{ 'is-invalid': typedForm.controls.initials.invalid, 'is-valid': typedForm.controls.initials.valid }"
-              type="text" formControlName="initials" placeholder="max. {{validations.maxlengthinitials}} karakters"
-              [focusMe]="originalReferee === undefined">
+          <div class="row mb-3">
+            <div class="col-3">
+              <label for="name" class="col-form-label">naam</label>
+            </div>
+            <div class="col-9">
+              <input class="form-control"
+                [class.is-invalid]="typedForm.controls.name.invalid"
+                [class.is-valid]="typedForm.controls.name.valid" type="text"
+                formControlName="name" placeholder="max. {{validations.maxlengthname}} karakters">
+            </div>
           </div>
-        </div>
-        <div class="row mb-3">
-          <div class="col-3">
-            <label for="name" class="col-form-label">naam</label>
+          <div class="row mb-3">
+            <div class="col-3 d-flex justify-content-between">
+              <label for="emailaddress" (click)="openInfoModal(contentInfoEmail)" class="col-form-label pointer">email
+                <fa-icon [icon]="faInfoCircle" class="text-info"></fa-icon>
+              </label>
+            </div>
+            <div class="col-9">
+              <input class="form-control"
+                [class.is-invalid]="typedForm.controls.emailaddress.invalid"
+                [class.is-valid]="typedForm.controls.emailaddress.valid"
+                type="email" formControlName="emailaddress"
+                placeholder="{{validations.minlengthemailaddress}}-{{validations.maxlengthemailaddress}} karakters">
+            </div>
           </div>
-          <div class="col-9">
-            <input class="form-control"
-              [ngClass]="{ 'is-invalid': typedForm.controls.name.invalid, 'is-valid': typedForm.controls.name.valid }" type="text"
-              formControlName="name" placeholder="max. {{validations.maxlengthname}} karakters">
+          <div class="row mb-3">
+            <div class="col-3">
+              <label for="info" class="col-form-label">info</label>
+            </div>
+            <div class="col-9">
+              <textarea class="form-control"
+                [class.is-invalid]="typedForm.controls.info.invalid"
+                [class.is-valid]="typedForm.controls.info.valid"
+                formControlName="info" placeholder="max. {{validations.maxlengthinfo}} karakters"></textarea>
+            </div>
           </div>
-        </div>
-        <div class="row mb-3">
-          <div class="col-3 d-flex justify-content-between">
-            <label for="emailaddress" (click)="openInfoModal(contentInfoEmail)" class="col-form-label pointer">email
-              <fa-icon [icon]="['fas', 'info-circle']" class="text-info"></fa-icon>
-            </label>
+          <div class="row">
+            <div class="col-3">
+              <button (click)="navigateBack()" type="button" class="btn btn-outline-secondary mt-2">terug</button>
+            </div>
+            <div class="col-9">
+              <button [disabled]="typedForm.invalid" type="submit" class="btn btn-primary me-2 mt-2">
+                <fa-icon [icon]="facReferee"></fa-icon> <span>{{originalReferee ? 'wijzigen' :
+                  'toevoegen'}}</span>
+              </button>
+              @if (emailaddressChanged() && typedForm.controls.emailaddress.value) {
+                <button [disabled]="typedForm.invalid"
+                  type="submit" class="btn btn-primary mt-2" (click)="invite=true">
+                  <fa-icon [icon]="facReferee"></fa-icon> {{ originalReferee ? 'wijzigen' : 'toevoegen'}}
+                  & uitnodigen
+                </button>
+              }
+            </div>
           </div>
-          <div class="col-9">
-            <input class="form-control"
-              [ngClass]="{ 'is-invalid': typedForm.controls.emailaddress.invalid, 'is-valid': typedForm.controls.emailaddress.valid }"
-              type="email" formControlName="emailaddress"
-              placeholder="max. {{validations.maxlengthemailaddress}} karakters">
-          </div>
-        </div>
-        <div class="row mb-3">
-          <div class="col-3">
-            <label for="info" class="col-form-label">info</label>
-          </div>
-          <div class="col-9">
-            <textarea class="form-control"
-              [ngClass]="{ 'is-invalid': typedForm.controls.info.invalid, 'is-valid': typedForm.controls.info.valid }"
-              formControlName="info" placeholder="max. {{validations.maxlengthinfo}} karakters"></textarea>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-3">
-            <button (click)="navigateBack()" type="button" class="btn btn-outline-secondary mt-2">terug</button>
-          </div>
-          <div class="col-9">
-            <button [disabled]="typedForm.invalid" type="submit" class="btn btn-primary me-2 mt-2">
-              <app-tournament-icon name="referee"></app-tournament-icon> <span>{{originalReferee ? 'wijzigen' :
-                'toevoegen'}}</span>
-            </button>
-            <button *ngIf="emailaddressChanged() && typedForm.controls.emailaddress.value" [disabled]="typedForm.invalid"
-              type="submit" class="btn btn-primary mt-2" (click)="invite=true">
-              <app-tournament-icon name="referee"></app-tournament-icon> {{ originalReferee ? 'wijzigen' : 'toevoegen'}}
-              & uitnodigen
-            </button>
-          </div>
-        </div>
-      </form>
+        </form>
+      }
     </div>
   </div>
 </div>
-<app-tournament-navbar *ngIf="tournament" [tournament]="tournament" [theme]="getTheme(tournament)"></app-tournament-navbar>
+@if (tournament) {
+  <app-tournament-navbar [tournament]="tournament" [theme]="getTheme(tournament)"></app-tournament-navbar>
+}
 
 <ng-template #contentInfoEmail>
   <div class="text-center lead">

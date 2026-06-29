@@ -1,19 +1,29 @@
 <div class="sponsor-wrapper">
-  <div *ngFor="let sponsorRow of sponsorRows" class="container-fluid sponsor-row-{{sponsorRows.length}}">
-    <div class="row py-2 h-100">
-      <div *ngFor="let sponsor of sponsorRow" class="text-center col-{{12 / sponsorRows.length}} sponsor-cell">
-        <div class="card h-100 w-100">
-          <div *ngIf="sponsor" class="card-header text-white bg-secondary">
-            <span class="">{{sponsor.getName()}}</span>
+  @for (sponsorRow of sponsorRows; track sponsorRow) {
+    <div class="container-fluid sponsor-row-{{sponsorRows.length}}">
+      <div class="row py-2 h-100">
+        @for (sponsor of sponsorRow; track sponsor) {
+          <div class="text-center col-{{12 / sponsorRows.length}} sponsor-cell">
+            <div class="card h-100 w-100">
+              @if (sponsor) {
+                <div class="card-header text-white bg-secondary">
+                  <span class="">{{sponsor.getName()}}</span>
+                </div>
+              }
+              <div class="card-body p-1 text-center sponsor-card-body">
+                @if (sponsor && sponsor.getLogoExtension()) {
+                  <img src="{{getSponsorLogoUrl(sponsor)}}" class="sponsor-img" alt="img">
+                }
+              </div>
+              @if (sponsor && sponsor.getUrl()) {
+                <div class="card-footer">
+                  <span class="">{{sponsor.getUrl()}}</span>
+                </div>
+              }
+            </div>
           </div>
-          <div class="card-body p-1 text-center sponsor-card-body">
-            <img *ngIf="sponsor && sponsor.getLogoExtension()" src="{{getSponsorLogoUrl(sponsor)}}" class="sponsor-img" alt="img">
-          </div>
-          <div *ngIf="sponsor && sponsor.getUrl()" class="card-footer">
-            <span class="">{{sponsor.getUrl()}}</span>
-          </div>
-        </div>
+        }
       </div>
     </div>
-  </div>
+  }
 </div>

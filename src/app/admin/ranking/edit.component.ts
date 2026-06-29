@@ -5,7 +5,6 @@ import { TournamentRepository } from '../../lib/tournament/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
 import { AgainstRuleSet, Category, GameState, StartLocationMap, Structure, StructureNameService } from 'ngx-sport';
-import { FavoritesRepository } from '../../lib/favorites/repository';
 import { AuthService } from '../../lib/auth/auth.service';
 import { Role } from '../../lib/role';
 import { TournamentMapper } from '../../lib/tournament/mapper';
@@ -14,14 +13,24 @@ import { Favorites } from '../../lib/favorites';
 import { IAlertType } from '../../shared/common/alert';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { TournamentScreen } from '../../shared/tournament/screenNames';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlert, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { CategoryChooseModalComponent } from '../../shared/tournament/category/chooseModal.component';
+import { RankingCategoryComponent } from '../../shared/tournament/ranking/category.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { RankingRulesComponent } from '../../shared/tournament/rankingrules/rankingrules.component';
+import { TournamentNavBarComponent } from '../../shared/tournament/tournamentNavBar/tournamentNavBar.component';
+import { EscapeHtmlPipe } from '../../shared/common/escapehtmlpipe';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-tournament-ranking-edit',
     templateUrl: './edit.component.html',
-    styleUrls: ['./edit.component.scss']
+    styleUrls: ['./edit.component.scss'],
+    standalone: true,
+    imports: [EscapeHtmlPipe,NgbAlert,RankingCategoryComponent,FontAwesomeModule,RankingRulesComponent,TournamentNavBarComponent]
 })
 export class RankingEditComponent extends TournamentComponent implements OnInit {
+    faSpinner = faSpinner;
     public favorites!: Favorites;
     public structureNameService!: StructureNameService;
     public againstRuleSet!: AgainstRuleSet;
@@ -33,12 +42,10 @@ export class RankingEditComponent extends TournamentComponent implements OnInit 
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         globalEventsManager: GlobalEventsManager,
-        modalService: NgbModal,
-        favRepository: FavoritesRepository,
         protected tournamentMapper: TournamentMapper,
         protected authService: AuthService
     ) {
-        super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
+        super(route, router, tournamentRepository, structureRepository, globalEventsManager);
     }
 
     ngOnInit() {
@@ -49,7 +56,7 @@ export class RankingEditComponent extends TournamentComponent implements OnInit 
             this.structureNameService = new StructureNameService(startLocationMap);
             this.favorites = this.favRepository.getObject(this.tournament, this.structure.getCategories());
             this.hasBegun = this.structure.getFirstRoundNumber().hasBegun();
-            this.processing = false;
+            this.processing.set(false);
         });
     }
 
@@ -75,17 +82,27 @@ export class RankingEditComponent extends TournamentComponent implements OnInit 
     }
 
     saveRankingRuleSet(againstRuleSet: AgainstRuleSet) {
-        this.resetAlert();
-        this.processing = true;
+        this.alert.set(undefined);
+        this.processing.set(true);
         const json = this.tournamentMapper.toJson(this.tournament);
         json.competition.againstRuleSet = againstRuleSet;
         this.tournamentRepository.editObject(json)
             .subscribe({
                 next: (tournament: Tournament) => { this.tournament = tournament; },
                 error: (e) => {
-                    this.alert = { type: IAlertType.Danger, message: e }; this.processing = false;
+                    this.alert.set({ type: IAlertType.Danger, message: e }); this.processing.set(false);
                 },
-                complete: () => this.processing = false
+                complete: () => this.processing.set(false)
             });
+    }
+
+    openCategoriesChooseModal(structure: Structure) {
+        const activeModal = this.modalService.open(CategoryChooseModalComponent);
+        activeModal.componentInstance.categories = structure.getCategories();
+        activeModal.componentInstance.tournament = this.tournament;
+        activeModal.result.then((result) => {
+        }, (reason) => {
+            this.updateFavoriteCategories(structure);
+        });
     }
 }

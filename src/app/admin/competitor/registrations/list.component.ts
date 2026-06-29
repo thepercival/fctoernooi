@@ -1,10 +1,7 @@
-import { Component, Input, OnChanges, output, SimpleChanges } from '@angular/core';
-import { Router } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Category, Place, StartLocationMap, StructureNameService } from 'ngx-sport';
-import { TournamentCompetitor } from '../../../lib/competitor';
-import { LockerRoomValidator } from '../../../lib/lockerroom/validator';
-import { CompetitorRepository } from '../../../lib/ngx-sport/competitor/repository';
+import { Component, Input, OnChanges, output, signal, SimpleChanges, WritableSignal } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
+import { NgbAlert, NgbDropdown, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Category, StartLocationMap, StructureNameService } from 'ngx-sport';
 import { Tournament } from '../../../lib/tournament';
 import { IAlert, IAlertType } from '../../../shared/common/alert';
 import { TournamentCompetitorMapper } from '../../../lib/competitor/mapper';
@@ -14,11 +11,15 @@ import { TournamentRegistrationProcessModalComponent } from './processmodal.comp
 import { RegistrationState } from '../../../lib/tournament/registration/state';
 import { TournamentRegistrationTextSubject } from '../../../lib/tournament/registration/text';
 import { TextEditorModalComponent } from '../../textEditor/texteditormodal.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faCheckCircle, faFileLines, faPencilAlt, faRegistered, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-  selector: 'app-tournament-registrations-list',
-  templateUrl: './list.component.html',
-  styleUrls: ['./list.component.scss']
+    selector: 'app-tournament-registrations-list',
+    templateUrl: './list.component.html',
+    styleUrls: ['./list.component.scss'],
+    standalone: true,
+    imports: [FontAwesomeModule, NgbAlert, NgbDropdown, RouterLink]
 })
 export class RegistrationListComponent implements OnChanges  {
   @Input() tournament!: Tournament;
@@ -34,7 +35,13 @@ export class RegistrationListComponent implements OnChanges  {
   private startLocationMap!: StartLocationMap;
   // public alert: IAlert | undefined;
   
-  public processing = false;
+  public readonly processing: WritableSignal<boolean> = signal(true);
+
+  faRegistered = faRegistered;
+  faTimesCircle = faTimesCircle;
+  faFileLines = faFileLines;
+  faPencilAlt = faPencilAlt;
+  faCheckCircle = faCheckCircle;
 
   constructor(
     private router: Router,
@@ -62,16 +69,16 @@ export class RegistrationListComponent implements OnChanges  {
   get Declined(): RegistrationState { return RegistrationState.Declined; } 
 
   updateRegistrations(): void {
-    this.processing = true;
+    this.processing.set(true);
     this.tournamentRegistrationRepository.getObjects(this.category, this.tournament)
       .subscribe({
         next: (registrations: TournamentRegistration[]) => {
           this.registrations = registrations;
-          this.processing = false;
+          this.processing.set(false);
         },
         error: (e: string) => {
           this.onAlertChange.emit({ type: IAlertType.Danger, message: e });
-          this.processing = false;
+          this.processing.set(false);
         }
       });
   }

@@ -4,20 +4,28 @@
 </div>
 <div class="modal-body">
   <ul class="list-group">
-    <li *ngFor="let roundNumber of structure.getRoundNumbers()" class="list-group-item border-primary"
-      [ngClass]="{pointer: !roundNumber.hasBegun()}" (click)="sendRoundNumber(roundNumber)">
-      <div class="d-flex justify-content-between">
-        <label for="roundNumber-{{roundNumber.getNumber()}}" class="mb-0">
-          <span [innerHTML]="getRoundNumbersName( roundNumber ) | keepHtml"></span>
-          <span *ngIf="roundNumber.hasBegun()" class="badge bg-warning ms-1" pull="left">begonnen</span>
-          <span *ngIf="showDifferentConfig(roundNumber)" class="badge bg-warning ms-1" pull="left">verschillend</span>
-        </label>
-        <div *ngIf="!roundNumber.hasBegun()" class="form-check form-switch">
-          <input type="checkbox" class="form-check-input" id="roundNumber-{{roundNumber.getNumber()}}">
-          <label class="form-check-label" for="roundNumber-{{roundNumber.getNumber()}}"></label>
+    @for (roundNumber of structure.getRoundNumbers(); track roundNumber.getNumber()) {
+      <li class="list-group-item border-primary" [class.pointer]="!roundNumber.hasBegun()" (click)="sendRoundNumber(roundNumber)">
+        <div class="d-flex justify-content-between">
+          <label for="roundNumber-{{roundNumber.getNumber()}}" class="mb-0">
+            <span [innerHTML]="getRoundNumbersName( roundNumber ) | keepHtml"></span>
+            @if (roundNumber.hasBegun()) {
+              <span class="badge bg-warning ms-1" pull="left">begonnen</span>
+            }
+            @if (showDifferentConfig(roundNumber)) {
+              <span class="badge bg-warning ms-1" pull="left">verschillend</span>
+            }
+          </label>
+          @if (!roundNumber.hasBegun()) {
+            <div class="form-check form-switch">
+              <input type="checkbox" class="form-check-input" id="roundNumber-{{roundNumber.getNumber()}}">
+              <label class="form-check-label" for="roundNumber-{{roundNumber.getNumber()}}"></label>
+            </div>
+          } @else {
+            <div></div>
+          }
         </div>
-        <div *ngIf="roundNumber.hasBegun()"></div>
-      </div>
-    </li>
+      </li>
+    }
   </ul>
 </div>

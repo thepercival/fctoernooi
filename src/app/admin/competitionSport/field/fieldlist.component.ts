@@ -1,45 +1,56 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, signal, WritableSignal, Injector } from '@angular/core';
 import { Field, CompetitionSport, JsonField, Structure } from 'ngx-sport';
 
 import { FieldRepository } from '../../../lib/ngx-sport/field/repository';
 import { PlanningRepository } from '../../../lib/ngx-sport/planning/repository';
 import { IAlert, IAlertType } from '../../../shared/common/alert';
-import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalRef, NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 import { Tournament } from '../../../lib/tournament';
-import { NameModalComponent } from '../../../shared/tournament/namemodal/namemodal.component';
+import { NAME_MODAL_DATA, NameModalComponent } from '../../../shared/tournament/namemodal/namemodal.component';
 import { TranslateFieldService } from '../../../lib/translate/field';
+import { FaIconComponent } from "@fortawesome/angular-fontawesome";
+import { faArrowUp, faPencil, faPlus, faSort, faSpinner, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-tournament-fields',
     templateUrl: './fieldlist.component.html',
-    styleUrls: ['./fieldlist.component.scss']
+    styleUrls: ['./fieldlist.component.scss'],
+    imports: [NgbAlert, FaIconComponent],
 })
 export class FieldListComponent implements OnInit {
 
-    alert: IAlert | undefined;
-    processing: boolean;
+    public readonly alert: WritableSignal<IAlert | undefined> = signal(undefined);
+    public readonly processing: WritableSignal<boolean> = signal(true);
     @Input() tournament!: Tournament;
     @Input() structure!: Structure;
     @Input() competitionSport!: CompetitionSport;
     @Input() hasBegun!: boolean;
     prioritizable!: boolean;
 
+    faSpinner = faSpinner;
+    faSort = faSort;
+    faPlus = faPlus;
+    faPencilAlt = faPencil;
+    faLevelUpAlt = faArrowUp;
+    faTrashAlt = faTrashCan;
+
     constructor(
         private fieldRepository: FieldRepository,
         private planningRepository: PlanningRepository,
         private translate: TranslateFieldService,
         private modalService: NgbModal,
+        private injector: Injector,
     ) {
-        this.processing = true;
+        this.processing.set(true);
 
     }
 
     ngOnInit() {
         if (this.hasBegun) {
-            this.alert = { type: IAlertType.Warning, message: 'er zijn al wedstrijden gespeeld, je kunt niet meer toevoegen of verwijderen' };
+            this.alert.set({ type: IAlertType.Warning, message: 'er zijn al wedstrijden gespeeld, je kunt niet meer toevoegen of verwijderen' });
         }
         this.prioritizable = !this.competitionSport.getCompetition().hasMultipleSports();
-        this.processing = false;
+        this.processing.set(false);
     }
 
     getFieldDescription(): string {
@@ -47,13 +58,21 @@ export class FieldListComponent implements OnInit {
     }
 
     getChangeNameModel(buttonLabel: string, initialName?: string): NgbModalRef {
-        const activeModal = this.modalService.open(NameModalComponent);
-        activeModal.componentInstance.header = this.getFieldDescription() + 'naam';
-        activeModal.componentInstance.range = { min: Field.MIN_LENGTH_NAME, max: Field.MAX_LENGTH_NAME };
-        activeModal.componentInstance.buttonName = buttonLabel;
-        activeModal.componentInstance.initialName = initialName;
-        activeModal.componentInstance.labelName = 'naam';
-        return activeModal;
+        return this.modalService.open(NameModalComponent, {
+            injector: Injector.create({
+                providers: [{
+                    provide: NAME_MODAL_DATA,
+                    useValue: {
+                        header: this.getFieldDescription() + 'naam',
+                        range: { min: Field.MIN_LENGTH_NAME, max: Field.MAX_LENGTH_NAME },
+                        buttonName: buttonLabel,
+                        initialName: initialName ?? '',
+                        labelName: 'naam'
+                    }
+                }],
+                parent: this.injector
+            })
+        });
     }
 
     formToJson(name: string, field?: Field): JsonField {
@@ -65,16 +84,16 @@ export class FieldListComponent implements OnInit {
     }
 
     addField() {
-        this.alert = undefined;
+        this.alert.set(undefined);
         const modal = this.getChangeNameModel('toevoegen');
         modal.result.then((resName: string) => {
-            this.processing = true;
+            this.processing.set(true);
             const jsonField = this.formToJson(resName);
             this.fieldRepository.createObject(jsonField, this.competitionSport, this.tournament)
                 .subscribe({
                     next: () => this.updatePlanning(),
                     error: (e) => {
-                        this.alert = { type: IAlertType.Danger, message: e }; this.processing = false;
+                        this.alert.set({ type: IAlertType.Danger, message: e }); this.processing.set(false);
                     }
                 });
         }, (reason) => {
@@ -82,40 +101,40 @@ export class FieldListComponent implements OnInit {
     }
 
     editField(field: Field) {
-        this.alert = undefined;
+        this.alert.set(undefined);
         const modal = this.getChangeNameModel('wijzigen', field.getName());
         modal.result.then((resName: string) => {
-            this.processing = true;
+            this.processing.set(true);
             const jsonField = this.formToJson(resName, field);
             this.fieldRepository.editObject(jsonField, field, this.tournament)
                 .subscribe({
                     next: () => { },
                     error: (e) => {
-                        this.alert = { type: IAlertType.Danger, message: e }; this.processing = false;
+                        this.alert.set({ type: IAlertType.Danger, message: e }); this.processing.set(false);
                     },
-                    complete: () => this.processing = false
+                    complete: () => this.processing.set(false)
                 });
         }, (reason) => {
         });
     }
 
     upgradePriority(field: Field) {
-        this.processing = true;
+        this.processing.set(true);
         this.fieldRepository.upgradeObject(field, this.tournament).subscribe({
             next: () => this.updatePlanning(),
             error: (e) => {
-                this.alert = { type: IAlertType.Danger, message: e }; this.processing = false;
+                this.alert.set({ type: IAlertType.Danger, message: e }); this.processing.set(false);
             }
         });
     }
 
     removeField(field: Field) {
-        this.processing = true;
+        this.processing.set(true);
 
         this.fieldRepository.removeObject(field, this.tournament).subscribe({
             next: () => this.updatePlanning(),
             error: (e) => {
-                this.alert = { type: IAlertType.Danger, message: e }; this.processing = false;
+                this.alert.set({ type: IAlertType.Danger, message: e }); this.processing.set(false);
             }
         });
     }
@@ -124,9 +143,9 @@ export class FieldListComponent implements OnInit {
         this.planningRepository.create(this.structure, this.tournament).subscribe({
             next: () => { },
             error: (e) => {
-                this.alert = { type: IAlertType.Danger, message: e }; this.processing = false;
+                this.alert.set({ type: IAlertType.Danger, message: e }); this.processing.set(false);
             },
-            complete: () => this.processing = false
+            complete: () => this.processing.set(false)
         });
     }
 }

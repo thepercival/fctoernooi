@@ -1,6 +1,4 @@
-import { JsonAgainstGame, JsonTogetherGame, AgainstGame, TogetherGame, GameMapper, GameState, QualifyGroup, RoundRankingCalculator, RoundRankingItem, QualifyTarget, Round, Place, Cumulative, StructureNameService, HorizontalMultipleQualifyRule } from "ngx-sport";
-import { VerticalMultipleQualifyRule } from "ngx-sport/src/qualify/rule/vertical/multiple";
-import { VerticalSingleQualifyRule } from "ngx-sport/src/qualify/rule/vertical/single";
+import { JsonAgainstGame, JsonTogetherGame, AgainstGame, TogetherGame, GameMapper, GameState, QualifyGroup, RoundRankingCalculator, RoundRankingItem, QualifyTarget, Round, Place, Cumulative, StructureNameService, HorizontalMultipleQualifyRule, VerticalMultipleQualifyRule, VerticalSingleQualifyRule } from "ngx-sport";
 
 export class EqualQualifiersChecker {
 

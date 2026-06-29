@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal, WritableSignal } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import { TournamentShell } from '../../lib/tournament/shell';
 import { TournamentShellRepository } from '../../lib/tournament/shell/repository';
@@ -9,16 +9,22 @@ import { UserRepository } from '../../lib/user/repository';
 import { User } from '../../lib/user';
 import { CopyConfig, CopyModalComponent } from '../tournament/copymodal.component';
 import { TournamentRepository } from '../../lib/tournament/repository';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faCopy, faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-  selector: 'app-tournament-examples',
-  templateUrl: './examples.component.html',
-  styleUrls: ['./examples.component.scss']
+    selector: 'app-tournament-examples',
+    templateUrl: './examples.component.html',
+    styleUrls: ['./examples.component.scss'],
+  imports: [FontAwesomeModule]
+    
 })
 export class ExamplesComponent implements OnInit{
+  faSpinner = faSpinner;
+  faCopy = faCopy;
 
-  public processing = true;
-  public alert: IAlert | undefined;
+  public readonly processing: WritableSignal<boolean> = signal(true);
+  public readonly alert: WritableSignal<IAlert | undefined> = signal(undefined);
   public tournamentShells!: TournamentShell[];
 
   constructor(
@@ -39,11 +45,11 @@ export class ExamplesComponent implements OnInit{
       .subscribe({
         next: (shells: TournamentShell[]) => {
           this.tournamentShells = shells;
-          this.processing = false;
+          this.processing.set(false);
         },
         error: (e: string) => {
-          this.alert = { type: IAlertType.Danger, message: e };
-          this.processing = false;
+          this.alert.set({ type: IAlertType.Danger, message: e });
+          this.processing.set(false);
         }
       });
   }
@@ -54,7 +60,7 @@ export class ExamplesComponent implements OnInit{
 
   openCopyModal(shell: TournamentShell) {    
     
-    this.processing = true;
+    this.processing.set(true);
     this.userRepository.getLoggedInObject()
       .subscribe({
         next: (loggedInUser: User | undefined) => {
@@ -81,28 +87,28 @@ export class ExamplesComponent implements OnInit{
             this.copy(shell.tournamentId, result);
           }, (reason) => {
           });
-          this.processing = false;
+          this.processing.set(false);
         },
-        error: (e: string) => { this.alert = this.createAlert( IAlertType.Danger, e); this.processing = false; }
+        error: (e: string) => { this.alert.set(this.createAlert( IAlertType.Danger, e)); this.processing.set(false); }
       });
   }
 
   copy(tournamentId: number, copyConfig: CopyConfig) {
-    this.alert = this.createAlert(IAlertType.Info, 'de nieuwe editie wordt aangemaakt');
+    this.alert.set(this.createAlert(IAlertType.Info, 'de nieuwe editie wordt aangemaakt'));
 
 
-    this.processing = true;
+    this.processing.set(true);
     this.tournamentRepository.copyObject(tournamentId, copyConfig)
       .subscribe({
         next: (newTournamentId: number | string) => {
           this.router.navigate(['/admin', newTournamentId]);
-          this.alert = this.createAlert(IAlertType.Success, 'de nieuwe editie is aangemaakt, je bevindt je nu in de nieuwe editie');
+          this.alert.set(this.createAlert(IAlertType.Success, 'de nieuwe editie is aangemaakt, je bevindt je nu in de nieuwe editie'));
         },
         error: (e: string) => {
-          this.alert = this.createAlert(IAlertType.Danger, 'er kon geen nieuwe editie worden aangemaakt : ' + e);
-          this.processing = false;
+          this.alert.set(this.createAlert(IAlertType.Danger, 'er kon geen nieuwe editie worden aangemaakt : ' + e));
+          this.processing.set(false);
         },
-        complete: () => this.processing = false
+        complete: () => this.processing.set(false)
       });
   }
 

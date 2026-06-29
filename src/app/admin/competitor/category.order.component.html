@@ -1,73 +1,93 @@
-<div *ngIf="category">
+@if (category) {
 
-  <div class="card border-secondary" [ngClass]="{ 'border-0': !showHeader }">
+  <div class="card border-secondary" [class.border-0]="!showHeader">
 
-    <div *ngIf="showHeader" class="card-cat-header px-3">
-      <div class="d-flex justify-content-between">
-        <h5 class="my-0">
-          <span class="fw-bold align-middle">{{category.getName()}}</span>
-        </h5>
+    @if (showHeader) {
+      <div class="card-cat-header px-3">
+        <div class="d-flex justify-content-between">
+          <h5 class="my-0">
+            <span class="fw-bold align-middle">{{category.getName()}}</span>
+          </h5>
+        </div>
       </div>
-    </div>
+    }
 
     <div class="card-body p-0">
 
-      <ng-container *ngIf="atLeastTwoPlacesHaveACompetitor(); else lessThanTwoCompetitors">      
+      @if (atLeastTwoPlacesHaveACompetitor()) {     
         <table class="table mb-0">
           <thead>
             <tr>
               <th>plek</th>
-              <th *ngIf="hasSomeCompetitorAnImage" class="d-none d-sm-table-cell"></th>
+              @if (hasSomeCompetitorAnImage) {
+                <th class="d-none d-sm-table-cell"></th>
+              }
               <th colspan="2">
-                <div class="d-flex justify-content-between">
+                <div class="d-flex justify-content-between align-items-center">
                   <span>naam</span>
             
-                  <button *ngIf="allPlacesHaveACompetitor()" type="button" class="btn btn-sm btn-outline-primary" (click)="swapAll(category)"
-                    [disabled]="swapItem && !processing" title="willekeurige volgorde">
-                    <fa-icon [icon]="['fas', 'random']"></fa-icon> willekeurig
-                  </button>
-                  <span *ngIf="!allPlacesHaveACompetitor()">volgorde </span>
-                  <fa-icon *ngIf="!allPlacesHaveACompetitor()" title="omwisselen" [icon]="['fas', 'sort']">
-                  </fa-icon>
+                  @if (allPlacesHaveACompetitor()) {
+                    <span class="ps-3">
+                      <button type="button" class="btn btn-sm btn-outline-primary" (click)="swapAll(category)"
+                        [disabled]="swapItem && !processing()" title="willekeurige volgorde">
+                        <fa-icon [icon]="faRandom"></fa-icon> willekeurig
+                      </button>
+                    </span>
+                  } @else {
+                    <span class="ps-3 d-inline-flex align-items-center">
+                      <span>volgorde </span>
+                      <fa-icon title="omwisselen" [icon]="faSort"></fa-icon>
+                    </span>
+                  }
                 </div>
               </th>
             </tr>
           </thead>
           <tbody>              
-            <tr *ngFor="let item of placeCompetitorItems">
-              <td>
-                <span [innerHtml]="structureNameService.getPlaceFromName(item.place, false) | keepHtml"></span>
-              </td>
-              <td *ngIf="hasSomeCompetitorAnImage" class="d-none d-sm-table-cell pe-0">
-                <img *ngIf="item.competitor && competitorRepository.hasLogoExtension(item.competitor)" src="{{competitorRepository.getLogoUrl(item.competitor, 20)}}" height="20"
-                  width="20">
-              </td>
-              <td>
-                <span *ngIf="item.competitor">{{item.competitor.getName()}}</span>
-              </td>
-              <td>
-                <div class="d-flex justify-content-center">
-                  <ng-container *ngIf="!processing; else isProcessing">
-                    <div *ngIf="item.competitor" class="form-check form-switch">
-                      <input type="checkbox" class="form-check-input" id="{{getSwapSwitchId(item.place)}}" (change)="swap(item)">
-                      <label class="form-check-label" for="{{getSwapSwitchId(item.place)}}"></label>
-                    </div>
-                  </ng-container>
-                  <ng-template #isProcessing>
-                    <fa-icon *ngIf="item.competitor" [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
-                  </ng-template>
-                  
-                </div>
-              </td>
-            </tr>
+            @for (item of placeCompetitorItems; track item.place) {
+              <tr>
+                <td>
+                  <span [innerHtml]="structureNameService.getPlaceFromName(item.place, false) | keepHtml"></span>
+                </td>
+                @if (hasSomeCompetitorAnImage) {
+                  <td class="d-none d-sm-table-cell pe-0">
+                    @if (item.competitor && competitorRepository.hasLogoExtension(item.competitor)) {
+                      <img [src]="competitorRepository.getLogoUrl(item.competitor, 20)" height="20" width="20"
+                        [attr.alt]="item.competitor.getName()">
+                    }
+                  </td>
+                }
+                <td>
+                  @if (item.competitor) {
+                    <span>{{item.competitor.getName()}}</span>
+                  }
+                </td>
+                <td>
+                  <div class="d-flex justify-content-center">
+                    @if (!processing()) {
+                      @if (item.competitor) {
+                        <div class="form-check form-switch">
+                          <input type="checkbox" class="form-check-input" [id]="getSwapSwitchId(item.place)"
+                            (change)="swap(item)">
+                          <label class="form-check-label" [for]="getSwapSwitchId(item.place)"></label>
+                        </div>
+                      }
+                    } @else {
+                      @if (item.competitor) {
+                        <fa-icon [icon]="faSpinner" animation="spin"></fa-icon>
+                      }
+                    }
+                  </div>
+                </td>
+              </tr>
+            }
           </tbody>
         </table>
-      </ng-container>
-      <ng-template #lessThanTwoCompetitors>
+      } @else {
         <ngb-alert class="m-0" type="warning">
           om de volgorde te kunnen aanpassen zijn er minimaal twee deelnemers nodig, ga naar de tab "lijst"
         </ngb-alert>
-      </ng-template>
+      }
     </div>
   </div>
-</div>
+}

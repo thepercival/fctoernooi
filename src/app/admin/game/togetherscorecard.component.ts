@@ -1,17 +1,23 @@
 import { Component, Input, OnInit, output } from '@angular/core';
-import { AbstractControl, FormArray, FormControl, FormGroup } from '@angular/forms';
+import { AbstractControl, FormArray, FormControl, FormGroup, ReactiveFormsModule, FormGroupDirective, FormArrayName, FormControlName } from '@angular/forms';
 import { ScoreConfig, ScoreDirection, StructureNameService, TogetherGamePlace, TogetherScore } from 'ngx-sport';
 import { TranslateScoreService } from '../../lib/translate/score';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { EscapeHtmlPipe } from '../../shared/common/escapehtmlpipe';
+import { faTrashCan } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-  selector: 'app-tournament-togetherscorecard',
-  templateUrl: './togetherscorecard.component.html',
-  styleUrls: ['./togetherscorecard.component.css']
+    selector: 'app-tournament-togetherscorecard',
+    templateUrl: './togetherscorecard.component.html',
+    styleUrls: ['./togetherscorecard.component.css'],
+    standalone: true,
+    imports: [FontAwesomeModule, EscapeHtmlPipe, ReactiveFormsModule]
 })
 export class ScoreTogetherCardComponent implements OnInit {
   @Input() form!: FormGroup;
   @Input() gamePlace!: TogetherGamePlace;
   @Input() structureNameService!: StructureNameService;
+  faTrashAlt = faTrashCan;
   
   onAfterEdit = output<void>();
   public firstScoreConfig!: ScoreConfig;

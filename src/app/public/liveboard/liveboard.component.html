@@ -3,54 +3,67 @@
     <ngb-alert type="info">deze pagina werkt alleen vanaf middelgrote schermen</ngb-alert>
   </div>
   <div>
-    <button *ngIf="tournament" (click)="navigateBack()" routerLinkActive="active" class="btn btn-outline-secondary"
-      type="button">
-      <fa-icon [icon]="['fas', 'level-up-alt']" [rotate]="270"></fa-icon>
-      <span> terug</span>
-    </button>
+    @if (tournament) {
+      <button (click)="navigateBack()" routerLinkActive="active" class="btn btn-outline-secondary"
+        type="button">
+        <fa-icon [icon]="faLevelUpAlt" [rotate]="270"></fa-icon>
+        <span> terug</span>
+      </button>
+    }
   </div>
 </div>
 
-<app-liveboard-nav *ngIf="tournament && screenConfigs && activeScreen" class="d-none d-lg-block"
-  [tournament]="tournament"
-  [showCategoryButton]="!structure.hasSingleCategory()"
-  [activeScreen]="activeScreen"
-  (onCategoryButtonPressed)="openCategoriesModal()"
-  (onScreenConfigsButtonPressed)="openScreenConfigsModal(screenConfigs)"
-  (atZero)="executeScheduledTask(screenConfigs)">
-</app-liveboard-nav>
+@if (tournament && screenConfigs && activeScreen) {
+  <app-liveboard-nav class="d-none d-lg-block"
+    [tournament]="tournament"
+    [showCategoryButton]="!structure.hasSingleCategory()"
+    [activeScreen]="activeScreen"
+    (onCategoryButtonPressed)="openCategoriesModal()"
+    (onScreenConfigsButtonPressed)="openScreenConfigsModal(screenConfigs)"
+    (atZero)="executeScheduledTask(screenConfigs)">
+  </app-liveboard-nav>
+}
 
-<div class="container-fluid px-0 d-none d-lg-block mt-n3 liveboard">  
+<div class="container-fluid px-0 d-none d-lg-block mt-n3 liveboard">
   <div>
-    <h2 *ngIf="processing" class="text-center">
-      <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
-    </h2>
+    @if (processing()) {
+      <h2 class="text-center">
+        <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
+      </h2>
+    }
   </div>
-  <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
+  @if (alert()) {
+    <ngb-alert [type]="alert()!.type">{{ alert()!.message }}</ngb-alert>
+  }
 
   <!-- scheduled games and results screen -->
-  <ng-container *ngIf="activeScreen && !processing">
-    <app-tournament-liveboard-games *ngIf="isGamesScreen()" [screen]="getGamesScreen()"
-      [structureNameService]="structureNameService">
-    </app-tournament-liveboard-games>
-
+  @if (activeScreen && !processing()) {
+    @if (isGamesScreen()) {
+      <app-tournament-liveboard-games [screen]="getGamesScreen()"
+        [structureNameService]="structureNameService">
+      </app-tournament-liveboard-games>
+    }
     <!-- pouleranking screen -->
-    <app-tournament-liveboard-poules *ngIf="isPoulesRankingScreen()" [screen]="getPoulesRankingScreen()"
-      [structureNameService]="structureNameService" [ruleSet]="competition.getAgainstRuleSet()">
-    </app-tournament-liveboard-poules>
-
+    @if (isPoulesRankingScreen()) {
+      <app-tournament-liveboard-poules [screen]="getPoulesRankingScreen()"
+        [structureNameService]="structureNameService" [ruleSet]="competition.getAgainstRuleSet()">
+      </app-tournament-liveboard-poules>
+    }
     <!-- endranking screen -->
-    <div *ngIf="isEndRankingScreen()" class="row g-0">
-      <div class="col-12 liveboard">
-        <app-tournament-endranking [structureNameService]="structureNameService"
-          [category]="getEndRankingScreen().getCategory()" [range]="getEndRankingScreen().range">
-        </app-tournament-endranking>
+    @if (isEndRankingScreen()) {
+      <div class="row g-0">
+        <div class="col-12 liveboard">
+          <app-tournament-endranking [structureNameService]="structureNameService"
+            [category]="getEndRankingScreen().getCategory()" [range]="getEndRankingScreen().range">
+          </app-tournament-endranking>
+        </div>
       </div>
-    </div>
-
+    }
     <!-- sponsor screen -->
-    <div *ngIf="isSponsorScreen()">
-      <app-tournament-liveboard-sponsors [sponsors]="getSponsorScreen().getSponsors()">
-      </app-tournament-liveboard-sponsors>
-    </div>
-  </ng-container>
+    @if (isSponsorScreen()) {
+      <div>
+        <app-tournament-liveboard-sponsors [sponsors]="getSponsorScreen().getSponsors()">
+        </app-tournament-liveboard-sponsors>
+      </div>
+    }
+  }

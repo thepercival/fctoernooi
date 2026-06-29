@@ -1,10 +1,13 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, WritableSignal, signal } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Round, CompetitionSport, StructureNameService, Category } from 'ngx-sport';
+import { StructureSelectRoundComponent } from "./rounds.component";
 
 @Component({
     selector: 'app-ngbd-modal-rounds',
     templateUrl: './selector.component.html',
+    standalone: true,
+    imports: [StructureSelectRoundComponent],    
 })
 export class RoundsSelectorModalComponent implements OnInit {
     @Input() subject!: string;
@@ -13,7 +16,7 @@ export class RoundsSelectorModalComponent implements OnInit {
     @Input() selectableCategories!: SelectableCategory[];
 
     public structureNameService: StructureNameService;
-    processing = true;
+    public readonly processing: WritableSignal<boolean> = signal(true);
 
     constructor(
         public activeModal: NgbActiveModal
@@ -22,7 +25,7 @@ export class RoundsSelectorModalComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.processing = false;
+        this.processing.set(false);
         // this.someRoundSelected = this.selectableCategories.some((selectableCategory: SelectableCategory): boolean => {
         //     return this.areSomeRoundsSelected(selectableCategory.rootRoundNode);
         // });

@@ -1,4 +1,4 @@
-import { AfterViewChecked, Component, ElementRef, Input, output, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, Input, output, signal, TemplateRef, ViewChild, WritableSignal } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Place, StructureNameService } from 'ngx-sport';
@@ -7,11 +7,16 @@ import { CompetitorRepository } from '../../lib/ngx-sport/competitor/repository'
 import { PlaceCompetitorItem } from '../../lib/ngx-sport/placeCompetitorItem';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
 import { TournamentCompetitorMapper } from '../../lib/competitor/mapper';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { EscapeHtmlPipe } from '../../shared/common/escapehtmlpipe';
+import { faCircleCheck, faDoorClosed, faPencil, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-  selector: 'app-tournament-competitor-line',
-  templateUrl: './listline.component.html',
-  styleUrls: ['./listline.component.css']
+    selector: 'app-tournament-competitor-line',
+    templateUrl: './listline.component.html',
+    styleUrls: ['./listline.component.css'],
+    standalone: true,
+    imports: [FontAwesomeModule, EscapeHtmlPipe]
 })
 export class CompetitorListLineComponent implements AfterViewChecked {
   @Input() placeCompetitor!: PlaceCompetitorItem;
@@ -25,7 +30,11 @@ export class CompetitorListLineComponent implements AfterViewChecked {
   onPressEdit = output<Place>();
   onPressRemove = output<PlaceCompetitorItem>();
   
-  public processing: boolean = false;
+  public readonly processing: WritableSignal<boolean> = signal(true);
+  faPencilAlt = faPencil;
+  faDoorClosed = faDoorClosed;
+  faCheckCircle = faCircleCheck;
+  faTrashAlt = faTrashCan;
 
   @ViewChild('btnEdit', { static: true }) private btnEditRef: ElementRef | undefined;
 
@@ -55,7 +64,7 @@ export class CompetitorListLineComponent implements AfterViewChecked {
 
     this.competitorRepository.editObject(jsonCompetitor, competitor, this.tournamentId)
       .subscribe({
-        complete: () => this.processing = false
+        complete: () => this.processing.set(false)
       });
   }
 
@@ -71,8 +80,8 @@ export class CompetitorListLineComponent implements AfterViewChecked {
 
   openLockerRoomInfoModal(modalContent: TemplateRef<any>) {
     const activeModal = this.modalService.open(InfoModalComponent, { windowClass: 'info-modal' });
-    activeModal.componentInstance.header = 'kleedkamers';
-    activeModal.componentInstance.modalContent = modalContent;
+    activeModal.componentInstance.header = () => 'kleedkamers';
+    activeModal.componentInstance.modalContent = () => modalContent;
     activeModal.result.then((result) => {
       if (result === 'linkToLockerRooms') {
         this.linkToLockerRooms();

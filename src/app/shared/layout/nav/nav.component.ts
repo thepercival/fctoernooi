@@ -1,25 +1,30 @@
-import { AfterContentInit, Component, ElementRef, OnInit, input } from '@angular/core';
+import { AfterContentInit, ChangeDetectionStrategy, Component, ElementRef, OnInit, effect, input, signal } from '@angular/core';
+import { NavigationEnd, Router, RouterModule } from '@angular/router';
+import { filter } from 'rxjs/operators';
 
 import { AuthService } from '../../../lib/auth/auth.service';
 import { GlobalEventsManager } from '../../../shared/common/eventmanager';
 import { LiveboardLink } from '../../../lib/liveboard/link';
-import { Router } from '@angular/router';
 import { DefaultJsonTheme, JsonTheme } from '../../../lib/tournament/theme';
+import { SvgIconComponent } from '../svgicon.component';
 
 @Component({
-  selector: 'app-nav',
-  templateUrl: './nav.component.html',
-  styleUrls: ['./nav.component.scss']
+    selector: 'app-nav',
+    templateUrl: './nav.component.html',
+    styleUrls: ['./nav.component.scss'],
+    standalone: true,
+    imports: [RouterModule, SvgIconComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NavComponent implements OnInit, AfterContentInit {
 
   public defaultTitle: string = 'FCToernooi';
   private colorMode: ColorMode;
-  public navBarData: NavBarData = {
+  public navBarData = signal<NavBarData>({
     title: this.defaultTitle,
     theme: DefaultJsonTheme,
     atHome: true
-  }
+  });  
   tournamentLiveboardLink: LiveboardLink = {};
   navbarCollapsed = true;
 
@@ -31,21 +36,27 @@ export class NavComponent implements OnInit, AfterContentInit {
   ) {
     let colorMode = <ColorMode>localStorage.getItem('colorMode');
     if (colorMode === null) {
-      colorMode = ColorMode.Light
-      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        colorMode = ColorMode.Dark
-      }      
+      colorMode = ColorMode.Inherit;
     }
     this.colorMode = colorMode;    
     this.setAndApplyColorMode(colorMode);
+
+    effect(() => {
+      // this.navBarData.set(this.navBarDataInput());
+      this.updateCustomProperty();
+    });
   }
 
   ngOnInit() {
-    this.globalEventsManager.toggleLiveboardIconInNavBar.subscribe((tournamentLiveboardLink: LiveboardLink) => {
-      this.tournamentLiveboardLink = tournamentLiveboardLink;
-    });
+    this.updateIsAtHome();
+    this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe(() => {
+        this.updateIsAtHome();
+      });
+
     this.globalEventsManager.updateDataInNavBar.subscribe((navBarData: NavBarData) => {
-      this.navBarData = navBarData;
+      this.navBarData.set(navBarData);
       this.updateCustomProperty();
     });
     this.updateCustomProperty();
@@ -57,7 +68,7 @@ export class NavComponent implements OnInit, AfterContentInit {
   }
 
   updateCustomProperty() {
-    const theme = this.navBarData.theme;
+    const theme = this.navBarData().theme;
     if (theme !== undefined) {
       // console.log('--nav-bg', theme.bgColor);
       // console.log('--nav-color', theme.textColor)
@@ -66,13 +77,20 @@ export class NavComponent implements OnInit, AfterContentInit {
     }
   }
 
-  execLeftButton(atHome: boolean) {
-    if (!atHome) {
+  execLeftButton() {
+    if (!this.navBarData().atHome) {
       this.linkToHome();
     } else {
-      let colorMode = this.colorMode === ColorMode.Light ? ColorMode.Dark : ColorMode.Light;
+      let colorMode = this.colorMode === ColorMode.Dark ? ColorMode.Light : ColorMode.Dark;
       this.setAndApplyColorMode(colorMode);
     }
+  }
+
+  private updateIsAtHome() {
+    this.navBarData.update((navBarData: NavBarData): NavBarData => ({
+      ...navBarData,
+      atHome: this.router.url === '/'
+    }));
   }
 
   linkToHome(){
@@ -84,9 +102,31 @@ export class NavComponent implements OnInit, AfterContentInit {
     this.router.navigate(['/']);
   }
 
+  linkToUserProfile() {
+    this.globalEventsManager.updateDataInNavBar.emit({
+      title: this.defaultTitle,
+      atHome: false,
+      theme: DefaultJsonTheme
+    });
+    this.router.navigate(['/user/profile']);
+  }
+
+  linkToLogin() {
+    this.globalEventsManager.updateDataInNavBar.emit({
+      title: this.defaultTitle,
+      atHome: false,
+      theme: DefaultJsonTheme
+    });
+    this.router.navigate(['/user/login']);
+  }
+
   setAndApplyColorMode(colorMode: ColorMode) {
     this.colorMode = colorMode;    
     localStorage.setItem('colorMode', colorMode);
+    if (this.colorMode === ColorMode.Inherit) {
+      document.body.removeAttribute('data-bs-theme');
+      return;
+    }
     document.body.setAttribute('data-bs-theme', this.colorMode);
   }
 }
@@ -98,5 +138,5 @@ export interface NavBarData {
 }
 
 export enum ColorMode {
-  Light = 'light', Dark = 'dark'
+  Inherit = 'inherit', Light = 'light', Dark = 'dark'
 }

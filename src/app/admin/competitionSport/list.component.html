@@ -1,7 +1,8 @@
 <div class="container-fluid">
   <div class="row justify-content-center">
     <div class="col-sm-12 col-md-10 col-lg-6 pt-1">
-      <div *ngIf="!showCreateSportWithFields">
+      @if(!showCreateSportWithFields) {
+      <div>
         <div class="d-flex justify-content-between mb-1">
           <h2>
             sporten
@@ -12,23 +13,23 @@
             </button>
           </div>
         </div>
-        <h2 *ngIf="processing" class="text-center">
-          <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
+        @if(processing()) {
+        <h2 class="text-center">
+          <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
         </h2>
-        <ngb-alert *ngIf="alert" [type]="alert.type">{{alert.message}}</ngb-alert>
-        <!-- <div *ngIf="!processing && !structure.getFirstRoundNumber().getConfig().getSelfReferee()" class="text-info">
-        "deelnemers zijn scheidsrechter" kun je aanzetten onder <a [routerLink]="" (click)="linkToRoundSettings()">
-          <fa-icon [icon]="['fas', 'cogs']"></fa-icon> <span>instellingen</span>
-        </a>
-      </div> -->
+        }
+        @if(alert()) {
+        <ngb-alert [type]="alert()!.type">{{alert()!.message}}</ngb-alert>
+        }
 
-        <table *ngIf="!processing" class="table">
+        @if(!processing()) {
+        <table class="table">
           <thead>
             <tr>
               <th></th>
               <th>naam</th>
               <th title="aantal">
-                <app-tournament-icon class="d-none d-sm-inline" name="soccer-field"></app-tournament-icon> velden
+                <fa-icon class="d-none d-sm-inline" [icon]="facSoccerField"></fa-icon> velden
               </th>
               <th>
                 <button title="wedstrijd-modus" class="btn btn-sm btn-outline-info" (click)="openGameModeInfoModal()">
@@ -38,20 +39,25 @@
               <th class="d-none d-sm-table-cell">
                 <span>wedstrijd-plaatsen</span>
               </th>
-              <th class="text-end" *ngIf="!hasBegun">
-                <button *ngIf="!maxReached" type="button" class="btn btn-sm btn-primary"
-                  (click)="showCreateSportWithFields = true" [disabled]="processing">
-                  <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+              <th class="text-end">
+                @if(!hasBegun) {
+                @if(!maxReached) {
+                <button type="button" class="btn btn-sm btn-primary"
+                  (click)="showCreateSportWithFields = true" [disabled]="processing()">
+                  <fa-icon [icon]="faPlus"></fa-icon>
                 </button>
+                }
+                }
               </th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let competitionSport of competitionSports; let last = last;">
+            @for(competitionSport of competitionSports; track competitionSport.getId(); let last = $last) {
+            <tr>
               <td>
                 <button type="button" class="btn btn-sm btn-outline-primary"
                   [routerLink]="['/admin/competitionsport', tournament.getId(), competitionSport.getId(), TabFields]">
-                  <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
+                  <fa-icon [icon]="faPencilAlt"></fa-icon>
                 </button>
               </td>
               <td>
@@ -64,30 +70,43 @@
               <td class="d-none d-sm-table-cell">
                 {{getNrOfGamePlacesDescription(competitionSport.getVariant())}}
               </td>
-              <td class="text-end" *ngIf="!hasBegun">
-                <button *ngIf="competitionSports.length > 1" type="button" class="btn btn-sm btn-danger"
-                  [disabled]="processing" (click)="openRemoveModal(content, competitionSport)">
-                  <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
+              <td class="text-end">
+                @if(!hasBegun) {
+                @if(competitionSports.length > 1) {
+                <button type="button" class="btn btn-sm btn-danger"
+                  [disabled]="processing()" (click)="openRemoveModal(content, competitionSport)">
+                  <fa-icon [icon]="faTrashAlt"></fa-icon>
                 </button>
+                }
+                }
               </td>
             </tr>
+            }
           </tbody>
         </table>
+        }
 
         <div class="d-flex justify-content-center">
-          <button *ngIf="!processing && competitionSports.length > 1" type="button" class="btn btn-outline-secondary"
+          @if(!processing() && competitionSports.length > 1) {
+          <button type="button" class="btn btn-outline-secondary"
             (click)="linkToPlanningConfig()">aantal wed. per deelnemer aanpassen</button>
+          }
         </div>
         
       </div>
-      <app-tournament-create-sportwithfields *ngIf="!processing" [hidden]="!showCreateSportWithFields"
+      }
+      @if(!processing()) {
+      <app-tournament-create-sportwithfields [hidden]="!showCreateSportWithFields"
         [smallestNrOfPoulePlaces]="smallestNrOfPoulePlaces" (onCreate)="add($event)"
         [existingSportVariants]="competition.getSportVariants()" (goToPrevious)="showCreateSportWithFields = false">
       </app-tournament-create-sportwithfields>
+      }
     </div>
   </div>
 </div>
-<app-tournament-navbar *ngIf="tournament" [tournament]="tournament" [theme]="getTheme(tournament)"></app-tournament-navbar>
+@if(tournament) {
+<app-tournament-navbar [tournament]="tournament" [theme]="getTheme(tournament)"></app-tournament-navbar>
+}
 
 <ng-template #content let-modal>
   <div class="modal-header">
@@ -113,7 +132,7 @@
       elkaar.
       Hieronder een voorbeeld.</p>
 
-    <table class="table" [ngClass]="{'text-white': true }">
+    <table class="table" ngClass="{'text-white': true }">
       <tbody>
         <tr>
           <td>Aantal deelnemers per poule</td>
@@ -126,7 +145,7 @@
       </tbody>
     </table>
 
-    <table class="table" [ngClass]="{'text-white': true }">
+    <table class="table" ngClass="{'text-white': true }">
       <tbody>
         <tr>
           <td>sport</td>
@@ -148,11 +167,3 @@
           <td>Trefbal</td>
           <td class="text-end">1</td>
         </tr>
-        <tr>
-          <td></td>
-          <td class="text-end fw-bold">5</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</ng-template>

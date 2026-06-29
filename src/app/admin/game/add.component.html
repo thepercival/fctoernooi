@@ -4,85 +4,123 @@
       <h2 class="text-center">
         wedstrijd toevoegen
       </h2>
-      <h2 *ngIf="processing" class="text-center">
-        <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
-      </h2>
-      <ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
-      <form *ngIf="!processing" [formGroup]="form" (ngSubmit)="save()" #f="ngForm" novalidate>
+      @if (processing()) {
+        <h2 class="text-center">
+          <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
+        </h2>
+      }
+      @if (alert()) {
+        <ngb-alert [type]="alert()!.type">{{ alert()!.message }}</ngb-alert>
+      }
+      @if (!processing()) {
+        <form [formGroup]="form" (ngSubmit)="save()" #f="ngForm" novalidate>
 
-        <div *ngIf="categories.length > 1" class="row mb-3">
-          <label for="category" class="col-6 col-form-label pointer">categorie</label>
-          <div class="col-6">
-            <select class="form-control" formControlName="category" required (ngModelChange)="changeCategory($event)">
-              <option *ngFor="let category of categories" [ngValue]="category">
-                {{category.getName()}}</option>
-            </select>
-          </div>
-        </div>
+          @if (categories.length > 1) {
+            <div class="row mb-3">
+              <label for="category" class="col-6 col-form-label pointer">categorie</label>
+              <div class="col-6">
+                <select class="form-control" formControlName="category" required (ngModelChange)="changeCategory($event)">
+                  @for (category of categories; track category) {
+                    <option [ngValue]="category">
+                      {{category.getName()}}</option>
+                  }
+                </select>
+              </div>
+            </div>
+          }
 
-        <div *ngIf="form.value['category']" class="row mb-3">
-          <label for="poule" class="col-6 col-form-label pointer">poule</label>
-          <div class="col-6">
-            <select class="form-control" formControlName="poule" required (ngModelChange)="changePoule($event, form.value['category'], form.value['competitionSport'])">
-              <option *ngFor="let poule of poules" [ngValue]="poule">
-                {{structureNameService.getPouleName(poule, true)}}</option>
-            </select>
-          </div>
-        </div>
-        <div *ngIf="form.value['poule']" class="row mb-3">
-          <label for="competitionSport" class="col-6 col-form-label pointer">sport</label>
-          <div class="col-6">
-            <select class="form-control" formControlName="competitionSport" required
-              (ngModelChange)="changeCompetitionSport($event, form.value['poule'], form.value['category'])">
-              <option *ngFor="let competitionSport of competitionSports" [ngValue]="competitionSport">
-                {{competitionSport.getSport().getName()}}</option>
-            </select>
-          </div>
-        </div>
-        <div *ngIf="form.value['poule'] && againstSportVariant" formGroupName="homeGamePlaces">
-          <div *ngFor="let homeNr of getPlaceNrs(againstSportVariant.getNrOfHomePlaces())" class="row mb-3">
-            <label for="{{homeNr}}" class="col-6 col-form-label pointer">thuis {{homeNr}}</label>
+          @if (form.value['category']) {
+            <div class="row mb-3">
+              <label for="poule" class="col-6 col-form-label pointer">poule</label>
+              <div class="col-6">
+                <select class="form-control" formControlName="poule" required (ngModelChange)="changePoule($event, form.value['category'], form.value['competitionSport'])">
+                  @for (poule of poules; track poule) {
+                    <option [ngValue]="poule">
+                      {{structureNameService.getPouleName(poule, true)}}</option>
+                  }
+                </select>
+              </div>
+            </div>
+          }
+          @if (form.value['poule']) {
+            <div class="row mb-3">
+              <label for="competitionSport" class="col-6 col-form-label pointer">sport</label>
+              <div class="col-6">
+                <select class="form-control" formControlName="competitionSport" required
+                  (ngModelChange)="changeCompetitionSport($event, form.value['poule'], form.value['category'])">
+                  @for (competitionSport of competitionSports; track competitionSport) {
+                    <option [ngValue]="competitionSport">
+                      {{competitionSport.getSport().getName()}}</option>
+                  }
+                </select>
+              </div>
+            </div>
+          }
+          @if (form.value['poule'] && againstSportVariant) {
+            <div formGroupName="homeGamePlaces">
+              @for (homeNr of getPlaceNrs(againstSportVariant.getNrOfHomePlaces()); track homeNr) {
+                <div class="row mb-3">
+                  <label for="{{homeNr}}" class="col-6 col-form-label pointer">thuis {{homeNr}}</label>
+                  <div class="col-6">
+                    <select class="form-control" formControlName="{{homeNr}}" required>
+                      @for (place of form.value['poule'].getPlaces(); track place) {
+                        <option [ngValue]="place">
+                          {{structureNameService.getPlaceName(place, false, true)}}</option>
+                      }
+                    </select>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+          @if (form.value['poule'] && againstSportVariant) {
+            <div formGroupName="awayGamePlaces">
+              @for (awayNr of getPlaceNrs(againstSportVariant.getNrOfAwayPlaces()); track awayNr) {
+                <div class="row mb-3">
+                  <label for="{{awayNr}}" class="col-6 col-form-label pointer">uit {{awayNr}}</label>
+                  <div class="col-6">
+
+                    <select class="form-control" formControlName="{{awayNr}}" required>
+                      @for (place of form.value['poule'].getPlaces(); track place) {
+                        <option [ngValue]="place">
+                          {{structureNameService.getPlaceName(place, false, true)}}</option>
+                      }
+                    </select>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+          @if (form.value['poule'] && singleSportVariant) {
+            <div formGroupName="gamePlaces">
+              @for (placeNr of getPlaceNrs(singleSportVariant.getNrOfGamePlaces()); track placeNr) {
+                <div class="row mb-3">
+                  <label for="{{placeNr}}" class="col-6 col-form-label pointer">deelnemer {{placeNr}}</label>
+                  <div class="col-6">
+                    <select class="form-control" formControlName="{{placeNr}}" required>
+                      @for (place of form.value['poule'].getPlaces(); track place) {
+                        <option [ngValue]="place">
+                          {{structureNameService.getPlaceName(place, false, true)}}</option>
+                      }
+                    </select>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+          <div class="row mb-3 justify-content-end">
             <div class="col-6">
-              <select class="form-control" formControlName="{{homeNr}}" required>
-                <option *ngFor="let place of form.value['poule'].getPlaces()" [ngValue]="place">
-                  {{structureNameService.getPlaceName(place, false, true)}}</option>
-              </select>
+              <button type="submit" [disabled]="form.invalid || !allPlacesAreValid()"
+                class="btn btn-outline-primary">wedstrijd toevoegen</button>
             </div>
           </div>
-        </div>
-        <div *ngIf="form.value['poule'] && againstSportVariant" formGroupName="awayGamePlaces">
-          <div *ngFor="let awayNr of getPlaceNrs(againstSportVariant.getNrOfAwayPlaces())" class="row mb-3">
-            <label for="{{awayNr}}" class="col-6 col-form-label pointer">uit {{awayNr}}</label>
-            <div class="col-6">
-
-              <select class="form-control" formControlName="{{awayNr}}" required>
-                <option *ngFor="let place of form.value['poule'].getPlaces()" [ngValue]="place">
-                  {{structureNameService.getPlaceName(place, false, true)}}</option>
-              </select>
-            </div>
-          </div>
-        </div>
-        <div *ngIf="form.value['poule'] && singleSportVariant" formGroupName="gamePlaces">
-          <div *ngFor="let placeNr of getPlaceNrs(singleSportVariant.getNrOfGamePlaces())" class="row mb-3">
-            <label for="{{placeNr}}" class="col-6 col-form-label pointer">deelnemer {{placeNr}}</label>
-            <div class="col-6">
-              <select class="form-control" formControlName="{{placeNr}}" required>
-                <option *ngFor="let place of form.value['poule'].getPlaces()" [ngValue]="place">
-                  {{structureNameService.getPlaceName(place, false, true)}}</option>
-              </select>
-            </div>
-          </div>
-        </div>
-        <div class="row mb-3 justify-content-end">
-          <div class="col-6">
-            <button type="submit" [disabled]="form.invalid || !allPlacesAreValid()"
-              class="btn btn-outline-primary">wedstrijd toevoegen</button>
-          </div>
-        </div>
-      </form>
+        </form>
+      }
     </div>
   </div>
 </div>
 
-<app-tournament-navbar [public]="false" *ngIf="tournament" [tournament]="tournament" [theme]="getTheme(tournament)">
-</app-tournament-navbar>
+@if (tournament) {
+  <app-tournament-navbar [public]="false" [tournament]="tournament" [theme]="getTheme(tournament)">
+  </app-tournament-navbar>
+}

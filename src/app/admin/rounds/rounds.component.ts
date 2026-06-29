@@ -1,14 +1,19 @@
 import { Component, Input, output, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { StructureEditor, StructureNameService } from 'ngx-sport';
 import { DefaultService } from '../../lib/ngx-sport/defaultService';
 import { CSSService } from '../../shared/common/cssservice';
 import { SelectableRoundNode } from './selector.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { EscapeHtmlPipe } from '../../shared/common/escapehtmlpipe';
+import { faCogs } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-  selector: 'app-tournament-select-round',
-  templateUrl: './rounds.component.html',
-  styleUrls: ['./rounds.component.css']
+    selector: 'app-tournament-select-round',
+    templateUrl: './rounds.component.html',
+    styleUrls: ['./rounds.component.css'],
+    standalone: true,
+    imports: [FontAwesomeModule, EscapeHtmlPipe, ReactiveFormsModule]
 })
 export class StructureSelectRoundComponent implements OnInit {
   @Input() selectableRoundNode!: SelectableRoundNode;
@@ -21,6 +26,8 @@ export class StructureSelectRoundComponent implements OnInit {
   public typedForm: FormGroup<{
     selected: FormControl<boolean>
   }>;
+
+  faCogs = faCogs;
 
   constructor(
     public cssService: CSSService,

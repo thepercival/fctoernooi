@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 
 import { AuthService } from '../../lib/auth/auth.service';
 import { IAlertType } from '../../shared/common/alert';
@@ -8,17 +10,24 @@ import { User } from '../../lib/user';
 import { UserComponent } from '../component';
 import { UserRepository } from '../../lib/user/repository';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
+import { UserTitleComponent } from '../title/title.component';
+import { faKey, faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-  selector: 'app-passwordreset',
-  templateUrl: './passwordreset.component.html',
-  styleUrls: ['./passwordreset.component.css']
+    selector: 'app-passwordreset',
+    templateUrl: './passwordreset.component.html',
+    styleUrls: ['./passwordreset.component.css'],
+    standalone: true,
+  imports: [FontAwesomeModule, NgbAlert, ReactiveFormsModule, RouterModule, UserTitleComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PasswordresetComponent extends UserComponent implements OnInit {
   codeSend = false;
   public typedForm: FormGroup<{
     emailaddress: FormControl<string>
   }>;
+  public faSpinner = faSpinner;
+  faKey = faKey;
 
   validations: any = {
     minlengthemailaddress: User.MIN_LENGTH_EMAIL,
@@ -47,11 +56,11 @@ export class PasswordresetComponent extends UserComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.processing = false;
+    this.processing.set(false);
   }
 
   sendCode(): boolean {
-    this.processing = true;
+    this.processing.set(true);
     this.setAlert(IAlertType.Info, 'de code wordt verstuurd');
 
     const emailaddress = this.typedForm.controls.emailaddress.value;
@@ -63,9 +72,9 @@ export class PasswordresetComponent extends UserComponent implements OnInit {
         this.resetAlert();
       },
       error: (e: string) => {
-        this.setAlert(IAlertType.Danger, 'het verzenden van de code is niet gelukt: ' + e); this.processing = false;
+        this.setAlert(IAlertType.Danger, 'het verzenden van de code is niet gelukt: ' + e); this.processing.set(false);
       },
-      complete: () => this.processing = false
+      complete: () => this.processing.set(false)
     });
     return false;
   }

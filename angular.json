@@ -25,7 +25,8 @@
             },
             "index": "src/index.html",
             "polyfills": [
-              "src/polyfills.ts"
+              "src/polyfills.ts",
+              "@angular/localize/init"
             ],
             "tsConfig": "src/tsconfig.app.json",
             "inlineStyleLanguage": "sass",
@@ -35,8 +36,9 @@
                 "input": "src/assets",
                 "output": "assets"
               },
-              "src//assets/favicon/favicon.ico",
+              "src/assets/favicon/favicon.ico",
               "src/manifest.webmanifest",
+              "src/.well-known/assetlinks.json",
               "src/robots.txt"
             ],
             "styles": [
@@ -44,7 +46,7 @@
             ],
             "stylePreprocessorOptions": {
               "includePaths": [
-                "./node_modules/bootstrap/scss"
+                "node_modules/bootstrap/scss"
               ]
             },            
             "scripts": [],
@@ -150,7 +152,10 @@
           "options": {
             "main": "src/test.ts",
             "karmaConfig": "./karma.conf.js",
-            "polyfills": "src/polyfills.ts",
+            "polyfills": [
+              "src/polyfills.ts",
+              "@angular/localize/init"
+            ],
             "tsConfig": "src/tsconfig.spec.json",
             "scripts": [],
             "styles": [
@@ -158,12 +163,12 @@
             ],
             "stylePreprocessorOptions": {
               "includePaths": [
-                "../../node_modules/bootstrap/scss"
+                "node_modules/bootstrap/scss"
               ]
             },
             "assets": [
               "src/assets",
-              "src//assets/favicon/favicon.ico",
+              "src/assets/favicon/favicon.ico",
               "src/manifest.webmanifest"
             ]
           }

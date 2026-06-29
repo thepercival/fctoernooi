@@ -2,7 +2,7 @@
   <h1>nieuw toernooi</h1>
   <h1 class="me-1">
     <button [routerLink]="['']" type="button" class="btn btn-outline-secondary">
-      <fa-icon [icon]="['fas', 'level-up-alt']" [rotate]="270"></fa-icon>
+      <fa-icon [icon]="faLevelUpAlt" [rotate]="270"></fa-icon>
       <span class="ms-1 d-none d-md-inline"> terug</span>
     </button>
   </h1>
@@ -12,8 +12,8 @@
     <label for="name" class="col-4 col-form-label">naam</label>
     <div class="col-8">
       <input class="form-control"
-        [ngClass]="{ 'is-invalid': typedForm.controls.name.invalid, 'is-valid': typedForm.controls.name.valid }" type="text"
-        formControlName="name" placeholder="max. {{validations.maxlengthname}} karakters">
+        [class.is-invalid]="typedForm.controls.name.invalid" [class.is-valid]="typedForm.controls.name.valid " type="text"
+        formControlName="name" placeholder="{{validations.minlengthname}}-{{validations.maxlengthname}} karakters">
     </div>
   </div>
   <div class="row mb-3">
@@ -21,11 +21,11 @@
     <div class="col-8">
       <div class="input-group input-group-date">
         <input class="form-control"
-          [ngClass]="{ 'is-invalid': typedForm.controls.date.invalid, 'is-valid': typedForm.controls.date.valid }"
+          [class.is-invalid]="typedForm.controls.date.invalid" [class.is-valid]="typedForm.controls.date.valid "
           placeholder="yyyy-mm-dd" formControlName="date" ngbDatepicker #d="ngbDatepicker" [minDate]="minDateStruct"
           container="body">
         <span class="input-group-text pointer" (click)="d.toggle()">
-          <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
+          <fa-icon [icon]="faCalendarAlt"></fa-icon>
         </span>
       </div>
     </div>
@@ -39,10 +39,10 @@
   </div>
   <div class="row mb-3">
     <label class="col-4 col-form-label pointer" (click)="openInfoModal('publiek', contentInfo)">publiek
-      <fa-icon [icon]="['fas', 'info-circle']" class="text-info"></fa-icon>
+      <fa-icon [icon]="faInfoCircle" class="text-info"></fa-icon>
     </label>
     <div class="col-8">
-      <div class="form-control form-check form-switch">
+      <div class="form-check form-switch">
         <input type="checkbox" class="form-check-input" id="public" formControlName="public">
         <label class="form-check-label" for="public"></label>
       </div>

@@ -1,5 +1,5 @@
-import { Component, Input, OnInit, output } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, Input, OnInit, output, signal, WritableSignal } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AgainstGpp, AgainstH2h, AllInOneGame, GameMode, NameService, Single, Sport, VoetbalRange } from 'ngx-sport';
 
 import { IAlert, IAlertType } from '../../shared/common/alert';
@@ -7,15 +7,24 @@ import { CSSService } from '../../shared/common/cssservice';
 import { TranslateSportService } from '../../lib/translate/sport';
 import { TranslateFieldService } from '../../lib/translate/field';
 import { GameModeModalComponent } from '../gameMode/modal.component';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlert, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DefaultService } from '../../lib/ngx-sport/defaultService';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faInfoCircle, faLevelUpAlt, faPencilAlt } from '@fortawesome/free-solid-svg-icons';
+import { SportToAddComponent } from './toAdd.component';
 
 @Component({
     selector: 'app-tournament-create-sportwithfields',
     templateUrl: './createSportWithFields.component.html',
-    styleUrls: ['./createSportWithFields.component.scss']
+    styleUrls: ['./createSportWithFields.component.scss'],
+    standalone: true,
+    imports: [FontAwesomeModule,ReactiveFormsModule, NgbAlert,SportToAddComponent]
 })
 export class CreateSportWithFieldsComponent implements OnInit {
+    faLevelUpAlt = faLevelUpAlt;
+    faPencilAlt = faPencilAlt;
+    faInfoCircle = faInfoCircle;
+
     @Input() labelBtnNext: string = 'toevoegen';
     @Input() sport: Sport | undefined;
     @Input() smallestNrOfPoulePlaces: number | undefined;
@@ -25,7 +34,7 @@ export class CreateSportWithFieldsComponent implements OnInit {
     goToPrevious = output<void>();
 
     public sportWithFields: SportWithFields | undefined;
-    processing = true;
+    public readonly processing: WritableSignal<boolean> = signal(true);
     public typedForm: FormGroup<{
         sportName: FormControl<string>,
         nrOfFields: FormControl<number>,
@@ -61,7 +70,7 @@ export class CreateSportWithFieldsComponent implements OnInit {
 
     ngOnInit() {
         this.nameService = new NameService();
-        this.processing = true;
+        this.processing.set(true);
     }
 
     sportChanged(newSport: Sport) {

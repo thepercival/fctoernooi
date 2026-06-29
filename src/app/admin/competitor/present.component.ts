@@ -1,22 +1,26 @@
-import { Component, Input, OnChanges, output, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, output, signal, SimpleChanges, WritableSignal } from '@angular/core';
 import { Router } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 import { Category, Place, StartLocationMap, StructureNameService } from 'ngx-sport';
-import { forkJoin, Observable } from 'rxjs';
 import { TournamentCompetitor } from '../../lib/competitor';
-import { LockerRoomValidator } from '../../lib/lockerroom/validator';
 import { CompetitorRepository } from '../../lib/ngx-sport/competitor/repository';
 import { PlaceCompetitorItem } from '../../lib/ngx-sport/placeCompetitorItem';
 import { Tournament } from '../../lib/tournament';
-import { IAlert, IAlertType } from '../../shared/common/alert';
+import { IAlert } from '../../shared/common/alert';
 import { TournamentCompetitorMapper } from '../../lib/competitor/mapper';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { EscapeHtmlPipe } from '../../shared/common/escapehtmlpipe';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-  selector: 'app-tournament-competitors-present',
-  templateUrl: './present.component.html',
-  styleUrls: ['./present.component.scss']
+    selector: 'app-tournament-competitors-present',
+    templateUrl: './present.component.html',
+    styleUrls: ['./present.component.scss'],
+    standalone: true,
+    imports: [NgbAlert,FontAwesomeModule,EscapeHtmlPipe]
 })
 export class CompetitorPresentListComponent implements OnChanges {
+  faSpinner = faSpinner;
   @Input() tournament!: Tournament;
   @Input() category!: Category;
   @Input() showHeader!: boolean;
@@ -27,12 +31,13 @@ export class CompetitorPresentListComponent implements OnChanges {
   onCompetitorsUpdate = output();
 
   public placeCompetitorItems: PlaceCompetitorItem[] = [];
+  public poulePlaceCompetitorItems: { pouleNr: number, items: PlaceCompetitorItem[] }[] = [];
   public orderMode = false;
   public swapItem: PlaceCompetitorItem | undefined;
   private startLocationMap!: StartLocationMap;
   // public alert: IAlert | undefined;
-  public processing = false;
-
+  public readonly processingCompetitorIds: WritableSignal<(string | number)[]> = signal([]);
+  
   constructor(
     private router: Router,
     private competitorRepository: CompetitorRepository,
@@ -60,6 +65,25 @@ export class CompetitorPresentListComponent implements OnChanges {
       }
       return { place, competitor: <TournamentCompetitor | undefined>this.startLocationMap.getCompetitor(startLocation) };
     });
+
+    const pouleMap = new Map<number, PlaceCompetitorItem[]>();
+    this.placeCompetitorItems.forEach((item: PlaceCompetitorItem) => {
+      const startLocation = item.place.getStartLocation();
+      if (startLocation === undefined) {
+        return;
+      }
+      const pouleNr = startLocation.getPouleNr();
+      const existing = pouleMap.get(pouleNr);
+      if (existing === undefined) {
+        pouleMap.set(pouleNr, [item]);
+        return;
+      }
+      existing.push(item);
+    });
+
+    this.poulePlaceCompetitorItems = Array.from(pouleMap.entries())
+      .sort((a, b) => a[0] - b[0])
+      .map(([pouleNr, items]) => ({ pouleNr, items }));
   }
 
   somePlaceHasACompetitor(): boolean {
@@ -69,9 +93,14 @@ export class CompetitorPresentListComponent implements OnChanges {
   }
 
   setPresency(competitor: TournamentCompetitor): void {
-    this.processing = true;
+    const competitorId = competitor.getId();
+    this.processingCompetitorIds.update((ids: (string | number)[]) => {
+      return ids.includes(competitorId) ? ids : [...ids, competitorId];
+    });
+    const previousPresent = competitor.getPresent();
     const jsonCompetitor = this.competitorMapper.toJson(competitor);
-    jsonCompetitor.present = competitor.getPresent() === true ? false : true;
+    jsonCompetitor.present = previousPresent === true ? false : true;
+    competitor.setPresent(jsonCompetitor.present);
 
     // const prefix = jsonCompetitor.present ? 'aan' : 'af';
     // const message = 'deelnemer ' + competitor.getName() + ' wordt ' + prefix + 'gemeld';
@@ -80,8 +109,17 @@ export class CompetitorPresentListComponent implements OnChanges {
 
     this.competitorRepository.editObject(jsonCompetitor, competitor, this.tournament.getId())
       .subscribe({
-        complete: () => this.processing = false
+        next: () => this.onCompetitorsUpdate.emit(),
+        error: () => {
+          competitor.setPresent(previousPresent);
+          this.processingCompetitorIds.update((ids: (string | number)[]) => ids.filter((id) => id !== competitorId));
+        },
+        complete: () => this.processingCompetitorIds.update((ids: (string | number)[]) => ids.filter((id) => id !== competitorId))
       });
+  }
+
+  isProcessing(competitor: TournamentCompetitor): boolean {
+    return this.processingCompetitorIds().includes(competitor.getId());
   }
 
   getPresentId(place: Place): string {

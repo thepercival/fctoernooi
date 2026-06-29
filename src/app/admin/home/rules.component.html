@@ -7,58 +7,77 @@
       </h2>
       <div>
         <button role="button" (click)="linkToHome()" class="btn btn-sm btn-outline-primary ms-1">
-          naar <fa-icon [icon]="['fas', 'home']"></fa-icon> thuispagina
+          naar <fa-icon [icon]="faHome"></fa-icon> thuispagina
         </button>
       </div>
     </div>
-    <h2 *ngIf="processing" class="text-center">
-      <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
-    </h2>
-    <table *ngIf="!processing && rules" class="table mt-3">
-      <thead>
-        <tr>
-          <th></th>
-          <th *ngIf="rules.length > 1" class="text-center">
-            <fa-icon [icon]="['fas', 'sort']"></fa-icon>
-          </th>
-          <th>omschrijving</th>
-          <th class="text-end">
-            <button type="button" class="btn btn-sm btn-primary" (click)="addRule()"
-              [disabled]="processing">
-              <fa-icon [icon]="['fas', 'plus']"></fa-icon>
-            </button>
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let rule of rules; let first = first;">
-          <td>
-            <button type="button" class="btn btn-sm btn-primary" [disabled]="processing"
-              (click)="editRule(rule)">
-              <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
-            </button>
-          </td>
-          <td *ngIf="rules.length > 1" class="text-center">
-            <button *ngIf="!first" type="button" class="btn btn-sm btn-outline-secondary"
-              [disabled]="processing" (click)="upgradePriority(rule)">
-              <fa-icon [icon]="['fas', 'level-up-alt']"></fa-icon>
-            </button>
-          </td>
-          <td>
-            <span>{{rule.text}}</span>
-          </td>
-          <td class="text-end">
-            <button type="button" class="btn btn-sm btn-danger" [disabled]="processing"
-              (click)="removeRule(rule);">
-              <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    @if (processing()) {
+      <h2 class="text-center">
+        <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
+      </h2>
+    }
+    @if (alert()) {
+      <ngb-alert [type]="alert()!.type">{{ alert()!.message }}</ngb-alert>
+    }
+    @if (!processing() && rules) {
+      <table class="table mt-3">
+        <thead>
+          <tr>
+            <th>{{rules.length}}</th>
+            @if (rules.length > 1) {
+              <th class="text-center">
+                <fa-icon [icon]="faSort"></fa-icon>
+              </th>
+            }
+            <th>omschrijving</th>
+            <th class="text-end">
+              @if (rules.length < MaxPerTournament) {
+                <button type="button" class="btn btn-sm btn-primary" (click)="addRule()"
+                  [disabled]="processing()">
+                  <fa-icon [icon]="faPlus"></fa-icon>
+                </button>
+              }
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (rule of rules; track rule; let first = $first) {
+            <tr>
+              <td>
+                <button type="button" class="btn btn-sm btn-primary" [disabled]="processing()"
+                  (click)="editRule(rule)">
+                  <fa-icon [icon]="faPencilAlt"></fa-icon>
+                </button>
+              </td>
+              @if (rules.length > 1) {
+                <td class="text-center">
+                  @if (!first) {
+                    <button type="button" class="btn btn-sm btn-outline-secondary"
+                      [disabled]="processing()" (click)="upgradePriority(rule)">
+                      <fa-icon [icon]="faLevelUpAlt"></fa-icon>
+                    </button>
+                  }
+                </td>
+              }
+              <td>
+                <span>{{rule.text}}</span>
+              </td>
+              <td class="text-end">
+                <button type="button" class="btn btn-sm btn-danger" [disabled]="processing()"
+                  (click)="removeRule(rule);">
+                  <fa-icon [icon]="faTrashAlt"></fa-icon>
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
   </div>
 </div>
-<app-tournament-navbar *ngIf="tournament" [tournament]="tournament" [theme]="getTheme(tournament)"></app-tournament-navbar>
+@if (tournament) {
+  <app-tournament-navbar [tournament]="tournament" [theme]="getTheme(tournament)"></app-tournament-navbar>
+}
 
 <ng-template #contentInfo let-activeModal>
   <ul class="list-group">

@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Component, signal, WritableSignal } from '@angular/core';
+import { NgbActiveModal, NgbModal, NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 import { PlaceCompetitorItem } from '../../../lib/ngx-sport/placeCompetitorItem';
 import { TournamentRegistration } from '../../../lib/tournament/registration';
 import { JsonTournamentCompetitor } from '../../../lib/competitor/json';
@@ -10,17 +10,22 @@ import { IAlert, IAlertType } from '../../../shared/common/alert';
 import { RegistrationState } from '../../../lib/tournament/registration/state';
 import { TournamentRegistrationRepository } from '../../../lib/tournament/registration/repository';
 import { TournamentRegistrationMapper } from '../../../lib/tournament/registration/mapper';
+import { FaIconComponent } from "@fortawesome/angular-fontawesome";
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-ngbd-modal-process-tournamentregistration',
     templateUrl: './processmodal.component.html',
-    styleUrls: ['./processmodal.component.scss']
+    styleUrls: ['./processmodal.component.scss'],
+    imports: [FaIconComponent, NgbAlert],
+    
 })
 export class TournamentRegistrationProcessModalComponent {
+    faSpinner = faSpinner;
     tournament!: Tournament;    
     registration!: TournamentRegistration;    
     public competitor: TournamentCompetitor|undefined;
-    public processing = false;
+    public readonly processing: WritableSignal<boolean> = signal(true);
     public errorAlert: IAlert|undefined;
     
     constructor(
@@ -36,7 +41,7 @@ export class TournamentRegistrationProcessModalComponent {
 
     accept(): void {
       
-        this.processing = true;
+        this.processing.set(true);
         this.errorAlert = undefined;
         this.competitorRepository.createObjectFromRegistration(this.registration, this.tournament)
             .subscribe({
@@ -47,9 +52,9 @@ export class TournamentRegistrationProcessModalComponent {
                   },
                   error: (e: string) => {
                       this.errorAlert = { type: IAlertType.Danger, message: e };
-                      this.processing = false;
+                      this.processing.set(false);
                   },
-                  complete: () => this.processing = false
+                  complete: () => this.processing.set(false)
               });          
     }
 
@@ -62,7 +67,7 @@ export class TournamentRegistrationProcessModalComponent {
     }
 
     updateState(state: RegistrationState): void {
-        this.processing = true;
+        this.processing.set(true);
         this.errorAlert = undefined;
         const json = this.registrationMapper.toJson(this.registration, state);
         this.registrationRepository.editObject(json, this.registration, this.tournament)
@@ -73,14 +78,14 @@ export class TournamentRegistrationProcessModalComponent {
                 },
                 error: (e: string) => {
                     this.errorAlert = { type: IAlertType.Danger, message: e };
-                    this.processing = false;
+                    this.processing.set(false);
                 },
-                complete: () => this.processing = false
+                complete: () => this.processing.set(false)
             });     
     }
 
     remove(): void {
-        this.processing = true;
+        this.processing.set(true);
         this.errorAlert = undefined;
         const json = this.registrationMapper.toJson(this.registration, RegistrationState.Declined);
         this.registrationRepository.removeObject(this.registration, this.tournament)
@@ -90,9 +95,9 @@ export class TournamentRegistrationProcessModalComponent {
                 },
                 error: (e: string) => {
                     this.errorAlert = { type: IAlertType.Danger, message: e };
-                    this.processing = false;
+                    this.processing.set(false);
                 },
-                complete: () => this.processing = false
+                complete: () => this.processing.set(false)
             });         
     }
   

@@ -1,35 +1,46 @@
-import { Component, Input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Competitor, StructureEditor, Category, StructureNameService } from 'ngx-sport';
 import { CategoryProperties, StructureAction } from '../../../admin/structure/edit.component';
 import { CSSService } from '../../common/cssservice';
 import { CategoryModalComponent } from './categorymodal/categorymodal.component';
+import { TOURNAMENT_UI_IMPORTS } from '../tournament.ui-imports';
+import { StructureRoundComponent } from './round.component';
+import { faLevelUpAlt, faPencilAlt, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-  selector: 'app-tournament-structurecategory',
-  templateUrl: './category.component.html',
-  styleUrls: ['./category.component.scss']
+    selector: 'app-tournament-structurecategory',
+    templateUrl: './category.component.html',
+    styleUrls: ['./category.component.scss'],
+    standalone: true,
+    imports: [TOURNAMENT_UI_IMPORTS, StructureRoundComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StructureCategoryComponent  {
-  @Input() structureEditor!: StructureEditor;
-  @Input() categories!: Category[];
-  @Input() category!: Category;
-  @Input() showHeader!: boolean;
-  @Input() editable: boolean = false;
-  @Input() filterActive: boolean = false;
-  @Input() showCompetitors!: boolean;
-  @Input() favoriteCompetitors: Competitor[] = [];
-  @Input() structureNameService!: StructureNameService;
-  @Input() lastAction: StructureAction | undefined;
+  public structureEditor = input.required<StructureEditor>();
+  public categories = input.required<Category[]>();
+  public category = input.required<Category>();
+  public showHeader = input.required<boolean>();
+  public editable = input(false);
+  public filterActive = input(false);
+  public showCompetitors = input.required<boolean>();
+  public favoriteCompetitors = input<Competitor[]>([]);
+  public structureNameService = input.required<StructureNameService>();
+  public lastAction = input<StructureAction | undefined>(undefined);
+  public faPencilAlt = faPencilAlt;
+  public faLevelUpAlt = faLevelUpAlt;
+  public faTrashAlt = faTrashAlt;
   
-  onActionAdd = output<StructureAction>();
-  onCategoryRemove = output<Category>();
-  onCategoryUpdate = output<CategoryProperties>();
-  onCategoryMoveUp = output<Category>();
+  readonly onActionAdd = output<StructureAction>();
+  readonly onCategoryRemove = output<Category>();
+  readonly onCategoryUpdate = output<CategoryProperties>();
+  readonly onCategoryMoveUp = output<Category>();
 
   public canEdit: boolean = false;
 
-  constructor(public cssService: CSSService, private modalService: NgbModal) {
+  private modalService = inject(NgbModal);
+
+  constructor(public cssService: CSSService) {
 
   }
 
@@ -42,7 +53,7 @@ export class StructureCategoryComponent  {
     });
   }
 
-  get movable(): boolean { return this.editable && !this.filterActive && this.category.getNumber() > 1 };
+  get movable(): boolean { return this.editable() && !this.filterActive && this.category().getNumber() > 1 };
 
   getCategoryModel(category: Category): NgbModalRef {
     const activeModal = this.modalService.open(CategoryModalComponent);

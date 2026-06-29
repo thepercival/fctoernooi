@@ -1,103 +1,127 @@
-<h2 *ngIf="processing" class="text-center">
-  <fa-icon [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
-</h2>
-<ngb-alert *ngIf="alert" [type]="alert.type">{{ alert.message }}</ngb-alert>
-<form *ngIf="!processing" name="form" (ngSubmit)="save()" [formGroup]="typedForm" novalidate>
-  <div class="row mb-3">
-    <label for="pointsCalculation" class="col-7 col-form-label pointer"
-      (click)="openInfoModal('punten berekening', contentInfo)">berekening
-      <fa-icon [icon]="['fas', 'info-circle']" class="text-info"></fa-icon>
-    </label>
-    <div class="col-5">
-      <select class="form-control" formControlName="pointsCalculation" required (change)="updateDisabled()">
-        <option *ngFor="let pointsCalculation of pointsCalculations" [ngValue]="pointsCalculation">
-          {{nameService.getPointsCalculationName(pointsCalculation)}}</option>
-      </select>
+@if (processing()) {
+  <h2 class="text-center">
+    <fa-icon [icon]="faSpinner" spin="true"></fa-icon>
+  </h2>
+}
+@if (alert) {
+  <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
+}
+@if (!processing()) {
+  <form name="form" (ngSubmit)="save()" [formGroup]="typedForm" novalidate>
+    <div class="row mb-3">
+      <label for="pointsCalculation" class="col-7 col-form-label pointer"
+        (click)="openInfoModal('punten berekening', contentInfo)">berekening
+        <fa-icon [icon]="faInfoCircle" class="text-info"></fa-icon>
+      </label>
+      <div class="col-5">
+        <select class="form-control" formControlName="pointsCalculation" required (change)="updateDisabled()">
+          @for (pointsCalculation of pointsCalculations; track pointsCalculation) {
+            <option [ngValue]="pointsCalculation">
+              {{nameService.getPointsCalculationName(pointsCalculation)}}</option>
+          }
+        </select>
+      </div>
     </div>
-  </div>
-  <div class="row mb-3">
-    <div class="col-7">
-      <label for="winPoints" class="col-form-label">punten bij overwinning</label>
+    <div class="row mb-3">
+      <div class="col-7">
+        <label for="winPoints" class="col-form-label">punten bij overwinning</label>
+      </div>
+      <div class="col-5">
+        <select class="form-control" formControlName="winPoints" required
+          [class.is-invalid]="typedForm.controls.winPoints.invalid" [class.is-valid]="typedForm.controls.winPoints.valid">
+          @for (winpoints of ranges.winPoints; track winpoints) {
+            <option [ngValue]="winpoints">{{winpoints}}</option>
+          }
+        </select>
+      </div>
     </div>
-    <div class="col-5">
-      <select class="form-control" formControlName="winPoints" required
-        [ngClass]="{ 'is-invalid': typedForm.controls.winPoints.invalid, 'is-valid': typedForm.controls.winPoints.valid }">
-        <option *ngFor="let winpoints of ranges.winPoints" [ngValue]="winpoints">{{winpoints}}</option>
-      </select>
+    <div class="row mb-3">
+      <div class="col-7">
+        <label for="drawPoints" class="col-form-label">punten bij gelijkspel</label>
+      </div>
+      <div class="col-5">
+        <select class="form-control" formControlName="drawPoints" required
+          [class.is-invalid]="typedForm.controls.drawPoints.invalid" [class.is-valid]="typedForm.controls.drawPoints.valid">
+          @for (drawpoints of ranges.drawPoints; track drawpoints) {
+            <option [ngValue]="drawpoints">{{drawpoints}}</option>
+          }
+        </select>
+      </div>
     </div>
-  </div>
-  <div class="row mb-3">
-    <div class="col-7">
-      <label for="drawPoints" class="col-form-label">punten bij gelijkspel</label>
+    <div class="row">
+      <div class="col-12">
+        <label class="col-form-label"><span class="fw-bold">na verlenging</span><small> (als
+            ingesteld is)</small></label>
+      </div>
     </div>
-    <div class="col-5">
-      <select class="form-control" formControlName="drawPoints" required
-        [ngClass]="{ 'is-invalid': typedForm.controls.drawPoints.invalid, 'is-valid': typedForm.controls.drawPoints.valid }">
-        <option *ngFor="let drawpoints of ranges.drawPoints" [ngValue]="drawpoints">{{drawpoints}}</option>
-      </select>
+    <div class="row mb-3">
+      <div class="col-7">
+        <label for="winPointsExt" class="col-form-label">punten bij overwinning</label>
+      </div>
+      <div class="col-5">
+        <select class="form-control" formControlName="winPointsExt" required
+          [class.is-invalid]="typedForm.controls.winPoints.invalid" [class.is-valid]="typedForm.controls.winPointsExt.valid">
+          @for (winpointsext of ranges.winPoints; track winpointsext) {
+            <option [ngValue]="winpointsext">{{winpointsext}}</option>
+          }
+        </select>
+      </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="col-12">
-      <label class="col-form-label"><span class="fw-bold">na verlenging</span><small> (als
-          ingesteld is)</small></label>
+    <div class="row mb-3">
+      <div class="col-7">
+        <label for="drawPointsExt" class="col-form-label">punten bij gelijkspel</label>
+      </div>
+      <div class="col-5">
+        <select class="form-control" formControlName="drawPointsExt" required
+          [class.is-invalid]="typedForm.controls.drawPointsExt.invalid" [class.is-valid]="typedForm.controls.drawPointsExt.valid">
+          @for (drawpointsext of ranges.drawPoints; track drawpointsext) {
+            <option [ngValue]="drawpointsext">{{drawpointsext}}
+            </option>
+          }
+        </select>
+      </div>
     </div>
-  </div>
-  <div class="row mb-3">
-    <div class="col-7">
-      <label for="winPointsExt" class="col-form-label">punten bij overwinning</label>
+    <div class="row mb-3">
+      <div class="col-7">
+        <label for="losePointsExt" class="col-form-label">punten bij verlies</label>
+      </div>
+      <div class="col-5">
+        <select class="form-control" formControlName="losePointsExt" required
+          [class.is-invalid]="typedForm.controls.losePointsExt.invalid" [class.is-valid]="typedForm.controls.losePointsExt.valid">
+          @for (losepointsext of ranges.losePoints; track losepointsext) {
+            <option [ngValue]="losepointsext">{{losepointsext}}
+            </option>
+          }
+        </select>
+      </div>
     </div>
-    <div class="col-5">
-      <select class="form-control" formControlName="winPointsExt" required
-        [ngClass]="{ 'is-invalid': typedForm.controls.winPoints.invalid, 'is-valid': typedForm.controls.winPointsExt.valid }">
-        <option *ngFor="let winpointsext of ranges.winPoints" [ngValue]="winpointsext">{{winpointsext}}</option>
-      </select>
+    <div class="row mb-3">
+      <div class="col-7 d-flex justify-content-end">
+        @if (structureHasMultipleRounds()) {
+          <button type="button" (click)="openSelectRoundsModal()"
+            class="btn btn-outline-primary">
+            selecteer ronden
+          </button>
+        }
+      </div>
+      @if (!readonly) {
+        <div class="col-5">
+          <button type="submit" class="btn btn-primary" [disabled]="typedForm.invalid">opslaan</button>
+        </div>
+      }
     </div>
-  </div>
-  <div class="row mb-3">
-    <div class="col-7">
-      <label for="drawPointsExt" class="col-form-label">punten bij gelijkspel</label>
-    </div>
-    <div class="col-5">
-      <select class="form-control" formControlName="drawPointsExt" required
-        [ngClass]="{ 'is-invalid': typedForm.controls.drawPointsExt.invalid, 'is-valid': typedForm.controls.drawPointsExt.valid }">
-        <option *ngFor="let drawpointsext of ranges.drawPoints" [ngValue]="drawpointsext">{{drawpointsext}}
-        </option>
-      </select>
-    </div>
-  </div>
-  <div class="row mb-3">
-    <div class="col-7">
-      <label for="losePointsExt" class="col-form-label">punten bij verlies</label>
-    </div>
-    <div class="col-5">
-      <select class="form-control" formControlName="losePointsExt" required
-        [ngClass]="{ 'is-invalid': typedForm.controls.losePointsExt.invalid, 'is-valid': typedForm.controls.losePointsExt.valid }">
-        <option *ngFor="let losepointsext of ranges.losePoints" [ngValue]="losepointsext">{{losepointsext}}
-        </option>
-      </select>
-    </div>
-  </div>
-  <div class="row mb-3">
-    <div class="col-7 d-flex justify-content-end">
-      <button *ngIf="structureHasMultipleRounds()" type="button" (click)="openSelectRoundsModal()"
-        class="btn btn-outline-primary">
-        selecteer ronden
-      </button>
-    </div>
-    <div *ngIf="!readonly" class="col-5">
-      <button type="submit" class="btn btn-primary" [disabled]="typedForm.invalid">opslaan</button>
-    </div>
-  </div>
-</form>
+  </form>
+}
 
 <ng-template #contentInfo>
   <table class="table text-white">
     <tbody>
-      <tr *ngFor="let pointsCalculation of pointsCalculations">
-        <td class="fw-bold border-white">{{getPointsCalculationDef(pointsCalculation)}}</td>
-        <td class="border-white">{{getPointsCalculationDef(pointsCalculation)}}</td>
-      </tr>
+      @for (pointsCalculation of pointsCalculations; track pointsCalculation) {
+        <tr>
+          <td class="fw-bold border-white">{{getPointsCalculationDef(pointsCalculation)}}</td>
+          <td class="border-white">{{getPointsCalculationDef(pointsCalculation)}}</td>
+        </tr>
+      }
     </tbody>
     <tfoot>
       <tr>

@@ -6,7 +6,7 @@
         <h1>nieuw toernooi</h1>
         <h1 class="me-1">
           <button [routerLink]="['']" type="button" class="btn btn-outline-secondary">
-            <fa-icon [icon]="['fas', 'level-up-alt']" [rotate]="270"></fa-icon>
+            <fa-icon [icon]="faLevelUpAlt" [rotate]="270"></fa-icon>
             <span class="ms-1 d-none d-md-inline"> terug</span>
           </button>
         </h1>
@@ -18,10 +18,10 @@
       <div>
         <div class="d-flex justify-content-around">
           <button type="button" class="btn btn-outline-primary" [routerLink]="['/user/register']">
-            <fa-icon [icon]="['fas', 'user-circle']"></fa-icon> registreer
+            <fa-icon [icon]="faUserCircle"></fa-icon> registreer
           </button>
           <button type="button" class="btn btn-outline-primary" [routerLink]="['/user/login']">
-            <fa-icon [icon]="['fas', 'sign-in-alt']"></fa-icon> inloggen
+            <fa-icon [icon]="faSignInAlt"></fa-icon> inloggen
           </button>
         </div>
       </div>

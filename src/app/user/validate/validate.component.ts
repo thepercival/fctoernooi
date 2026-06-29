@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ActivatedRoute, NavigationExtras, Router, Params } from '@angular/router';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 
 import { IAlertType } from '../../shared/common/alert';
 import { User } from '../../lib/user';
@@ -8,11 +10,16 @@ import { UserRepository } from '../../lib/user/repository';
 import { AuthService } from '../../lib/auth/auth.service';
 import { UserComponent } from '../component';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
+import { UserTitleComponent } from '../title/title.component';
+import { faSpinner, faUserCircle } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-  selector: 'app-validate',
-  templateUrl: './validate.component.html',
-  styleUrls: ['./validate.component.css']
+    selector: 'app-validate',
+    templateUrl: './validate.component.html',
+    styleUrls: ['./validate.component.css'],
+    standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [FontAwesomeModule, ReactiveFormsModule, UserTitleComponent, NgbAlert]
 })
 export class ValidateComponent extends UserComponent implements OnInit {
   code: string = '';
@@ -25,6 +32,8 @@ export class ValidateComponent extends UserComponent implements OnInit {
     minlengthcode: 100000,
     maxlengthcode: 999999
   };
+  faSpinner = faSpinner;
+  faUserCircle = faUserCircle;
 
   constructor(
     route: ActivatedRoute,
@@ -49,7 +58,7 @@ export class ValidateComponent extends UserComponent implements OnInit {
 
   ngOnInit() {
 
-    this.route.params.subscribe(params => {
+    this.route.params.subscribe((params: Params) => {
       if (params.code && params.code.length > 0) {
         this.code = params.code;
       }
@@ -83,29 +92,29 @@ export class ValidateComponent extends UserComponent implements OnInit {
                   this.router.navigate([''], navigationExtras);
                   return;
                 },
-                error: (e: string) => { this.setAlert(IAlertType.Danger, e); this.processing = false; }
+                error: (e: string) => { this.setAlert(IAlertType.Danger, e); this.processing.set(false); }
               });
           } else {
-            this.processing = false;
+            this.processing.set(false);
           }
         },
-        error: (e: string) => { this.setAlert(IAlertType.Danger, e); this.processing = false; }
+        error: (e: string) => { this.setAlert(IAlertType.Danger, e); this.processing.set(false); }
       });
   }
 
   sendValidationRequest(): boolean {
 
-    this.processing = true;
+    this.processing.set(true);
     this.authService.validationRequest()
       .subscribe({
         next: () => {
           this.sentValidationRequest = true;
         },
         error: (e: string) => {
-          this.setAlert(IAlertType.Danger, 'het opslaan is niet gelukt: ' + e); this.processing = false;
+          this.setAlert(IAlertType.Danger, 'het opslaan is niet gelukt: ' + e); this.processing.set(false);
         },
         complete: () => {
-          this.processing = false
+          this.processing.set(false)
         }
       });
     return false;

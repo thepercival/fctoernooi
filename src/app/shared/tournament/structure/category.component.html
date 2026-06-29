@@ -1,29 +1,37 @@
-<div *ngIf="category">
-  <div class="card border-secondary" [ngClass]="{ 'border-0': !showHeader }">
+@if(category()) {
+  <div class="card border-secondary" ngClass="{ 'border-0': !showHeader }">
 
-    <div *ngIf="showHeader" class="card-cat-header px-3">
+    @if(showHeader()) {
+    <div class="card-cat-header px-3">
       <div class="d-flex justify-content-between">
         <h5 class="my-0">
-          <span class="fw-bold align-middle">{{category.getName()}}</span>
-          <button *ngIf="editable" class="btn btn-sm btn-primary ms-1" (click)="updateCategoryAction(category)">
-            <fa-icon [icon]="['fas', 'pencil-alt']"></fa-icon>
+          <span class="fw-bold align-middle">{{category().getName()}}</span>
+          @if(editable()) {
+          <button class="btn btn-sm btn-primary ms-1" (click)="updateCategoryAction(category())">
+            <fa-icon [icon]="faPencilAlt"></fa-icon>
           </button>
-          <button *ngIf="movable" class="btn btn-sm btn-secondary ms-1" (click)="onCategoryMoveUp.emit(category)">
-            <fa-icon [icon]="['fas', 'level-up-alt']"></fa-icon>
+          }
+          @if(movable) {
+          <button class="btn btn-sm btn-secondary ms-1" (click)="onCategoryMoveUp.emit(category())">
+            <fa-icon [icon]="faLevelUpAlt"></fa-icon>
           </button>
+          }
         </h5>
-        <button *ngIf="editable" class="btn btn-sm btn-danger ms-1" (click)="onCategoryRemove.emit(category)">
-          <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
+        @if(editable()) {
+        <button class="btn btn-sm btn-danger ms-1" (click)="onCategoryRemove.emit(category())">
+          <fa-icon [icon]="faTrashAlt"></fa-icon>
         </button>
+        }
       </div>
     </div>
+    }
 
     <div class="card-body pb-0 pt-1 px-1">
-      <app-tournament-structureround [editable]="editable" [round]="category.getRootRound()" class="px-0"
-        (onActionAdd)="onActionAdd.emit($event)" [structureNameService]="structureNameService"
-        [structureEditor]="structureEditor" [lastAction]="lastAction" [showCompetitors]="showCompetitors"
-        [favorites]="favoriteCompetitors">
+      <app-tournament-structureround [editable]="editable()" [round]="category().getRootRound()" class="px-0"
+        (onActionAdd)="onActionAdd.emit($event)" [structureNameService]="structureNameService()"
+        [structureEditor]="structureEditor()" [lastAction]="lastAction()" [showCompetitors]="showCompetitors()"
+        [favorites]="favoriteCompetitors()">
       </app-tournament-structureround>
     </div>
   </div>
-</div>
+}

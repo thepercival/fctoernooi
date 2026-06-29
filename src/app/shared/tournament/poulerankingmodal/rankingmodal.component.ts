@@ -1,12 +1,19 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, TemplateRef } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Poule, NameService, CompetitionSport, AgainstGpp, AgainstH2h, StructureNameService } from 'ngx-sport';
 import { Favorites } from '../../../lib/favorites';
 import { InfoModalComponent } from '../infomodal/infomodal.component';
+import { TOURNAMENT_UI_IMPORTS } from '../tournament.ui-imports';
+import { RankingPouleComponent } from '../ranking/poule.component';
+import { AgainstQualifyInfoComponent } from '../againstQualifyConfig/info.component';
+import { RankingRulesComponent } from '../rankingrules/rankingrules.component';
 @Component({
     selector: 'app-ngbd-modal-poule-ranking',
     templateUrl: './rankingmodal.component.html',
-    styleUrls: ['./rankingmodal.component.scss']
+    styleUrls: ['./rankingmodal.component.scss'],
+    standalone: true,
+    imports: [TOURNAMENT_UI_IMPORTS, AgainstQualifyInfoComponent, RankingPouleComponent, RankingRulesComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PouleRankingModalComponent {
     public poule!: Poule;
@@ -17,10 +24,11 @@ export class PouleRankingModalComponent {
     public nameService!: NameService;
     public structureNameService!: StructureNameService;
     // public rankingService!: RankingService;
+    private modalService = inject(NgbModal);
+    public activeModal = inject(NgbActiveModal);
 
     constructor(
-        private modalService: NgbModal,
-        public activeModal: NgbActiveModal) {
+        ) {
     }
 
     getHeader(): string {
@@ -39,9 +47,9 @@ export class PouleRankingModalComponent {
             header += '<small> per sport</small>';
         }
         const activeModal = this.modalService.open(InfoModalComponent, { windowClass: 'info-modal' });
-        activeModal.componentInstance.header = header;
-        activeModal.componentInstance.noHeaderBorder = true;
-        activeModal.componentInstance.modalContent = modalContent;
+        activeModal.componentInstance.header = () => header;
+        activeModal.componentInstance.noHeaderBorder = () => true;
+        activeModal.componentInstance.modalContent = () => modalContent;
     }
 
     get singleAgainstCompetitionSport(): CompetitionSport | undefined {

@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Router, RoutesRecognized, Scroll } from '@angular/router';
 import { filter, pairwise } from 'rxjs/operators';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class MyNavigation {
     private previousUrl: string | undefined;
     scrollPosition: [number, number] = [0, 0];

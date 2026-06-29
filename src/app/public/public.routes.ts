@@ -1,20 +1,17 @@
-import { NgModule } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
-import { RouterModule, Routes } from '@angular/router';
-
-import { LiveboardComponent } from '../public/liveboard/liveboard.component';
-import { PreNewComponent } from './prenew/prenew.component';
-import { StructureViewComponent } from '../public/structure/view.component';
-import { GamesComponent } from './games/view.component';
-import { RankingViewComponent } from './ranking/view.component';
+import { Routes } from '@angular/router';
 import { SelectFavoritesComponent } from './competitors/select.component';
-import { PublicShellsComponent } from './shells/shells.component';
 import { ExamplesComponent } from './examples/examples.component';
-import { RegistrationComponent } from './registration-form/registration-form.component';
-import { PrivacyComponent } from './privacy.component';
+import { GamesComponent } from './games/view.component';
 import { HomeViewComponent } from './home/homeview.component';
+import { LiveboardComponent } from './liveboard/liveboard.component';
+import { PreNewComponent } from './prenew/prenew.component';
+import { PrivacyComponent } from './privacy.component';
+import { RankingViewComponent } from './ranking/view.component';
+import { RegistrationComponent } from './registration-form/registration-form.component';
+import { PublicShellsComponent } from './shells/shells.component';
+import { StructureViewComponent } from './structure/view.component';
 
-const routes: Routes = [
+export const publicRoutes: Routes = [
   { path: 'prenew', component: PreNewComponent },
   { path: 'shells', component: PublicShellsComponent },
   { path: 'games/:id', component: GamesComponent },
@@ -28,9 +25,3 @@ const routes: Routes = [
   { path: 'privacy', component: PrivacyComponent },  
   { path: ':id', redirectTo: 'home/:id', pathMatch: 'full' },
 ];
-
-@NgModule({
-  imports: [RouterModule.forChild(routes), ReactiveFormsModule],
-  exports: [RouterModule]
-})
-export class RoutingModule { }

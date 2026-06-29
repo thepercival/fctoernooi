@@ -3,37 +3,50 @@
     <button type="button" class="btn-close" aria-label="sluiten" (click)="activeModal.dismiss('close')"></button>
 </div>
 <div class="modal-body">
-    <table class="table fixed" [ngClass]="{'text-white': !defaultGameMode }">
+    <table class="table fixed" [class.text-white]="!defaultGameMode">
         <thead>
             <tr>
                 <th class="w-30"></th>
-                <th *ngFor="let def of gameModeDefinitions" class="fw-bold">
-                    <span *ngIf="!defaultGameMode">{{getName(def.value)}}</span>
-                    <button *ngIf="defaultGameMode" type="button"
-                        class="btn btn{{def.value === defaultGameMode ? '' : '-outline'}}-primary" data-dismiss="modal"
-                        (click)="activeModal.close(def.value)">
-                        {{getName(def.value)}}</button>
-                </th>
+                @for (def of gameModeDefinitions; track def.value) {
+                    <th class="fw-bold">
+                        @if (!defaultGameMode) {
+                            <span>{{getName(def.value)}}</span>
+                        }
+                        @if (defaultGameMode) {
+                            <button type="button"
+                                class="btn btn{{def.value === defaultGameMode ? '' : '-outline'}}-primary" data-dismiss="modal"
+                                (click)="activeModal.close(def.value)">
+                                {{getName(def.value)}}
+                            </button>
+                        }
+                    </th>
+                }
             </tr>
         </thead>
         <tbody>
             <tr>
                 <td class="fw-bold">voorbeeld</td>
-                <td *ngFor="let def of gameModeDefinitions">
-                    {{def.examples}}
-                </td>
+                @for (def of gameModeDefinitions; track def.value) {
+                    <td>
+                        {{def.examples}}
+                    </td>
+                }
             </tr>
             <tr>
                 <td class="fw-bold">punten-telling</td>
-                <td *ngFor="let def of gameModeDefinitions">
-                    {{def.scoreConfig}}
-                </td>
+                @for (def of gameModeDefinitions; track def.value) {
+                    <td>
+                        {{def.scoreConfig}}
+                    </td>
+                }
             </tr>
             <tr>
                 <td class="fw-bold">aantal wedstrijden</td>
-                <td *ngFor="let def of gameModeDefinitions">
-                    {{def.gameAmount}}
-                </td>
+                @for (def of gameModeDefinitions; track def.value) {
+                    <td>
+                        {{def.gameAmount}}
+                    </td>
+                }
             </tr>
         </tbody>
     </table>

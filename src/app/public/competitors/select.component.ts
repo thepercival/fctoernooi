@@ -10,7 +10,6 @@ import { TournamentComponent } from '../../shared/tournament/component';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { TournamentScreen } from '../../shared/tournament/screenNames';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
 import { LockerRoom } from '../../lib/lockerroom';
 import { TournamentCompetitor } from '../../lib/competitor';
@@ -18,13 +17,23 @@ import { AuthService } from '../../lib/auth/auth.service';
 import { Role } from '../../lib/role';
 import { WebsitePart } from '../../shared/tournament/structure/admin-public-switcher.component';
 import { CompetitorTab } from '../../shared/common/tab-ids';
+import { AdminPublicSwitcherComponent } from '../../shared/tournament/structure/admin-public-switcher.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { NgbAlert, NgbNav, NgbNavContent, NgbNavItem, NgbNavLink, NgbNavOutlet } from '@ng-bootstrap/ng-bootstrap';
+import { TournamentNavBarComponent } from '../../shared/tournament/tournamentNavBar/tournamentNavBar.component';
+import { CompetitorsCategoryComponent } from './category.component';
+import { CommonModule } from '@angular/common';
+import { facReferee } from '../../shared/customicons';
 
 @Component({
     selector: 'app-tournament-select-favorites',
     templateUrl: './select.component.html',
-    styleUrls: ['./select.component.scss']
+    styleUrls: ['./select.component.scss'],
+    imports: [AdminPublicSwitcherComponent, FontAwesomeModule, NgbAlert, NgbNav, NgbNavItem, NgbNavLink, NgbNavContent, NgbNavOutlet, TournamentNavBarComponent, CompetitorsCategoryComponent, CommonModule]
+    
 })
 export class SelectFavoritesComponent extends TournamentComponent implements OnInit {
+    facReferee = facReferee;
     public favorites!: Favorites;
     public structureNameService!: StructureNameService;
     public showLockerRoom = false;
@@ -36,13 +45,11 @@ export class SelectFavoritesComponent extends TournamentComponent implements OnI
         tournamentRepository: TournamentRepository,
         sructureRepository: StructureRepository,
         globalEventsManager: GlobalEventsManager,
-        modalService: NgbModal,
-        favRepository: FavoritesRepository,
         private myNavigation: MyNavigation,
         private authService: AuthService,
     ) {
-        super(route, router, tournamentRepository, sructureRepository, globalEventsManager, modalService, favRepository);
-        this.resetAlert();
+        super(route, router, tournamentRepository, sructureRepository, globalEventsManager);
+        this.alert.set(undefined);
     }
 
     ngOnInit() {
@@ -52,13 +59,15 @@ export class SelectFavoritesComponent extends TournamentComponent implements OnI
             this.structureNameService = new StructureNameService(startLocationMap);
             this.favorites = this.favRepository.getObject(this.tournament, this.structure.getCategories());
             if (this.hasCompetitors() === false) {
-                this.router.navigate(['/public/games', this.tournament.getId()]);
+                this.router.navigate(['/public/games', this.tournament.getId()], {
+                    skipLocationChange: true 
+                });
                 return;
             }
             
             this.fillMap();
             this.showLockerRoom = this.tournament.getLockerRooms().length > 0;
-            this.processing = false;
+            this.processing.set(false);
         });
     }
 
@@ -89,12 +98,12 @@ export class SelectFavoritesComponent extends TournamentComponent implements OnI
 
     openHelpModal(modalContent: TemplateRef<any>) {
         const activeModal = this.modalService.open(InfoModalComponent, { windowClass: 'info-modal' });
-        activeModal.componentInstance.header = 'uitleg';
-        activeModal.componentInstance.modalContent = modalContent;
+            activeModal.componentInstance.header = () => 'uitleg';
+            activeModal.componentInstance.modalContent = () => modalContent;
         // activeModal.componentInstance.noHeaderBorder = true;
-        activeModal.result.then((result) => {
+        activeModal.result.then(() => {
             //  this.linkToPlanningConfig();
-        }, (reason) => { });
+        }, () => { });
     }
 
     fillMap(): void {

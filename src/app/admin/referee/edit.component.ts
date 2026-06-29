@@ -1,10 +1,7 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import {
-    JsonReferee,
-    Referee,
-} from 'ngx-sport';
+import { JsonReferee, Referee } from 'ngx-sport';
 
 import { MyNavigation } from '../../shared/common/navigation';
 import { TournamentRepository } from '../../lib/tournament/repository';
@@ -14,25 +11,33 @@ import { RefereeRepository } from '../../lib/ngx-sport/referee/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { PlanningRepository } from '../../lib/ngx-sport/planning/repository';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 import { IAlertType } from '../../shared/common/alert';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
-import { FavoritesRepository } from '../../lib/favorites/repository';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { TournamentNavBarComponent } from '../../shared/tournament/tournamentNavBar/tournamentNavBar.component';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { facReferee } from '../../shared/customicons';
+import { FocusDirective } from '../../shared/common/focus';
 
 @Component({
     selector: 'app-tournament-referee-edit',
     templateUrl: './edit.component.html',
-    styleUrls: ['./edit.component.css']
+    styleUrls: ['./edit.component.css'],
+    standalone: true,
+    imports: [NgbAlert, FontAwesomeModule, TournamentNavBarComponent, ReactiveFormsModule, FocusDirective]
 })
 export class RefereeEditComponent extends TournamentComponent implements OnInit {
+    faSpinner = faSpinner;
+    facReferee = facReferee;
     public typedForm: FormGroup<{
         initials: FormControl<string>,
-        name: FormControl<string|null>,
-        emailaddress: FormControl<string|null>,
-        info: FormControl<string|null>,
-      }>;
+        name: FormControl<string | null>,
+        emailaddress: FormControl<string | null>,
+        info: FormControl<string | null>,
+    }>;
     originalReferee: Referee | undefined;
-    invite: boolean = false;
+    invite = false;
 
     validations: RefValidations = {
         minlengthinitials: Referee.MIN_LENGTH_INITIALS,
@@ -49,48 +54,33 @@ export class RefereeEditComponent extends TournamentComponent implements OnInit 
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         globalEventsManager: GlobalEventsManager,
-        modalService: NgbModal,
-        favRepository: FavoritesRepository,
         private refereeRepository: RefereeRepository,
         private planningRepository: PlanningRepository,
         private myNavigation: MyNavigation
     ) {
-
-        // EditPermissions, EmailAddresses
-        // andere groep moet dan zijn getEditPermission, wanneer ingelogd, bij gewone view
-        super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
+        super(route, router, tournamentRepository, structureRepository, globalEventsManager);
         this.typedForm = new FormGroup({
-            initials: new FormControl('', { nonNullable: true, validators: 
-                [
+            initials: new FormControl('', {
+                nonNullable: true, validators: [
                     Validators.required,
                     Validators.minLength(this.validations.minlengthinitials),
                     Validators.maxLength(this.validations.maxlengthinitials)
-                ] 
+                ]
             }),
-            name: new FormControl('', { validators: 
-                [
-                    Validators.maxLength(this.validations.maxlengthname)
-                ] 
+            name: new FormControl('', {
+                validators: [Validators.maxLength(this.validations.maxlengthname)]
             }),
-            emailaddress: new FormControl('', { validators: 
-                [
+            emailaddress: new FormControl('', {
+                validators: [
                     Validators.minLength(this.validations.minlengthemailaddress),
                     Validators.maxLength(this.validations.maxlengthemailaddress)
-                ] 
+                ]
             }),
-            info: new FormControl('', { validators: 
-                [
-                    Validators.maxLength(this.validations.maxlengthinfo)
-                ] 
+            info: new FormControl('', {
+                validators: [Validators.maxLength(this.validations.maxlengthinfo)]
             }),
         });
     }
-
-    // initialsValidator(control: FormControl): { [s: string]: boolean } {
-    //     if (control.value.length < this.validations.minlengthinitials || control.value.length < this.validations.maxlengthinitials) {
-    //         return { invalidInitials: true };
-    //     }
-    // }
 
     ngOnInit() {
         this.route.params.subscribe(params => {
@@ -109,7 +99,7 @@ export class RefereeEditComponent extends TournamentComponent implements OnInit 
             }
             this.typedForm.controls.info.setValue(this.originalReferee.getInfo() ?? null);
         }
-        this.processing = false;
+        this.processing.set(false);
     }
 
     formToJson(): JsonReferee {
@@ -136,44 +126,46 @@ export class RefereeEditComponent extends TournamentComponent implements OnInit 
     }
 
     add(): boolean {
-        this.processing = true;
-        this.setAlert(IAlertType.Info, 'de scheidsrechter wordt toegevoegd');
+        this.processing.set(true);
+        this.alert.set({ type: IAlertType.Info, message: 'de scheidsrechter wordt toegevoegd' });
 
         const jsonReferee: JsonReferee = this.formToJson();
         if (this.isInitialsDuplicate(jsonReferee.initials)) {
-            this.setAlert(IAlertType.Danger, 'de initialen bestaan al voor dit toernooi');
-            this.processing = false;
+            this.alert.set({ type: IAlertType.Danger, message: 'de initialen bestaan al voor dit toernooi' });
+            this.processing.set(false);
             return false;
         }
 
         this.refereeRepository.createObject(jsonReferee, this.tournament, this.invite)
             .subscribe({
-                next: (refereeRes: Referee) => {
+                next: () => {
                     this.planningRepository.create(this.structure, this.tournament)
                         .subscribe({
                             next: () => {
-                                this.processing = false;
+                                this.processing.set(false);
                                 this.navigateBack();
                             },
                             error: (e) => {
-                                this.setAlert(IAlertType.Danger, e); this.processing = false;
+                                this.alert.set({ type: IAlertType.Danger, message: e });
+                                this.processing.set(false);
                             }
                         });
                 },
                 error: (e) => {
-                    this.setAlert(IAlertType.Danger, e); this.processing = false;
+                    this.alert.set({ type: IAlertType.Danger, message: e });
+                    this.processing.set(false);
                 }
             });
         return false;
     }
 
     edit(originalReferee: Referee): boolean {
-        this.processing = true;
-        this.setAlert(IAlertType.Info, 'de scheidsrechter wordt gewijzigd');
+        this.processing.set(true);
+        this.alert.set({ type: IAlertType.Info, message: 'de scheidsrechter wordt gewijzigd' });
         const jsonReferee: JsonReferee = this.formToJson();
         if (this.isInitialsDuplicate(jsonReferee.initials, originalReferee)) {
-            this.setAlert(IAlertType.Danger, 'de initialen bestaan al voor dit toernooi');
-            this.processing = false;
+            this.alert.set({ type: IAlertType.Danger, message: 'de initialen bestaan al voor dit toernooi' });
+            this.processing.set(false);
             return false;
         }
         this.refereeRepository.editObject(jsonReferee, originalReferee, this.tournament, this.invite)
@@ -182,9 +174,10 @@ export class RefereeEditComponent extends TournamentComponent implements OnInit 
                     this.navigateBack();
                 },
                 error: (e) => {
-                    this.setAlert(IAlertType.Danger, e); this.processing = false;
+                    this.alert.set({ type: IAlertType.Danger, message: e });
+                    this.processing.set(false);
                 },
-                complete: () => this.processing = false
+                complete: () => this.processing.set(false)
             });
         return false;
     }
@@ -196,14 +189,14 @@ export class RefereeEditComponent extends TournamentComponent implements OnInit 
     isInitialsDuplicate(initials: string, referee?: Referee): boolean {
         const referees = this.competition.getReferees();
         return referees.find(refereeIt => {
-            return (initials === refereeIt.getInitials() && (referee === undefined || refereeIt.getId() === undefined));
+            return initials === refereeIt.getInitials() && (referee === undefined || refereeIt.getId() !== referee.getId());
         }) !== undefined;
     }
 
     openInfoModal(modalContent: TemplateRef<any>) {
         const activeModal = this.modalService.open(InfoModalComponent, { windowClass: 'info-modal' });
-        activeModal.componentInstance.header = 'emailadres scheidsrechter';
-        activeModal.componentInstance.modalContent = modalContent;
+        activeModal.componentInstance.header = () => 'emailadres scheidsrechter';
+        activeModal.componentInstance.modalContent = () => modalContent;
     }
 }
 

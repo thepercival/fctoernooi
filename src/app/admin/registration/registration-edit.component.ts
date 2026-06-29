@@ -1,5 +1,6 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   Category,
@@ -12,7 +13,7 @@ import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentCompetitor } from '../../lib/competitor';
 import { IAlertType } from '../../shared/common/alert';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlert, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FavoritesRepository } from '../../lib/favorites/repository';
 import { NameValidator } from '../../lib/nameValidator';
 import { TournamentRegistration } from '../../lib/tournament/registration';
@@ -22,13 +23,20 @@ import { TournamentRegistrationRepository } from '../../lib/tournament/registrat
 import { AuthService } from '../../lib/auth/auth.service';
 import { JsonTournamentRegistration } from '../../lib/tournament/registration/json';
 import { Role } from '../../lib/role';
+import { TournamentNavBarComponent } from '../../shared/tournament/tournamentNavBar/tournamentNavBar.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { FocusDirective } from '../../shared/common/focus';
 
 @Component({
-  selector: 'app-tournament-registration-edit',
-  templateUrl: './registration-edit.component.html',
-  styleUrls: ['./registration-edit.component.scss']
+    selector: 'app-tournament-registration-edit',
+    templateUrl: './registration-edit.component.html',
+    styleUrls: ['./registration-edit.component.scss'],
+    standalone: true,
+    imports: [NgbAlert, TournamentNavBarComponent,FontAwesomeModule, FormsModule, ReactiveFormsModule, FocusDirective]
 })
 export class TournamentRegistrationEditComponent extends TournamentComponent implements OnInit {
+  faSpinner = faSpinner;
   public settings!: TournamentRegistrationSettings;
   public registration: TournamentRegistration | undefined;
   public category: Category | undefined; 
@@ -56,15 +64,13 @@ export class TournamentRegistrationEditComponent extends TournamentComponent imp
     tournamentRepository: TournamentRepository,
     sructureRepository: StructureRepository,
     globalEventsManager: GlobalEventsManager,
-    modalService: NgbModal,
-    favRepository: FavoritesRepository,
     private tournamentRegistrationRepository: TournamentRegistrationRepository,
     private nameValidator: NameValidator,
     private myNavigation: MyNavigation,
     private authService: AuthService,
   ) {
-    super(route, router, tournamentRepository, sructureRepository, globalEventsManager, modalService, favRepository);
-    this.resetAlert();
+    super(route, router, tournamentRepository, sructureRepository, globalEventsManager);
+    this.alert.set(undefined);
   }
 
   ngOnInit() {
@@ -76,7 +82,7 @@ export class TournamentRegistrationEditComponent extends TournamentComponent imp
   private postInit(categoryNr: number, registrationId: number) {
    const category = this.structure.getCategory(categoryNr) 
    if (category === undefined) {
-     this.setAlert(IAlertType.Danger, 'de categorie (' + categoryNr  + ') )kan niet gevonden worden');
+     this.alert.set({ type: IAlertType.Danger, message: 'de categorie (' + categoryNr  + ') )kan niet gevonden worden' });
     return;
   }
   this.category = category;
@@ -86,11 +92,11 @@ export class TournamentRegistrationEditComponent extends TournamentComponent imp
       next: (registration: TournamentRegistration) => {
         this.registration = registration;
         this.initForm(category, registration);
-        this.processing = false;
+        this.processing.set(false);
       },
       error: (e: string) => {
-        this.setAlert(IAlertType.Danger, e + ', instellingen niet gevonden');
-        this.processing = false;
+        this.alert.set({ type: IAlertType.Danger, message: e + ', instellingen niet gevonden' });
+        this.processing.set(false);
       }
     });
   }
@@ -154,12 +160,12 @@ export class TournamentRegistrationEditComponent extends TournamentComponent imp
     const jsonRegistration = this.formToJson(registration);
     const message = this.nameValidator.validateName(jsonRegistration.name);
     if (message) {
-      this.setAlert(IAlertType.Danger, message);
+      this.alert.set({ type: IAlertType.Danger, message });
       return false;
     }
     
-    this.processing = true;
-    this.setAlert(IAlertType.Info, 'de inschrijving wordt opgeslagen');
+    this.processing.set(true);
+    this.alert.set({ type: IAlertType.Info, message: 'de inschrijving wordt opgeslagen' });
 
     this.tournamentRegistrationRepository.editObject(jsonRegistration, registration, this.tournament)
       .subscribe({
@@ -168,9 +174,9 @@ export class TournamentRegistrationEditComponent extends TournamentComponent imp
           this.navigateBack();
         },
         error: (e) => {
-          this.setAlert(IAlertType.Danger, e); this.processing = false;
+          this.alert.set({ type: IAlertType.Danger, message: e }); this.processing.set(false);
         },
-        complete: () => this.processing = false
+        complete: () => this.processing.set(false)
       });
     return false;
   }
@@ -179,21 +185,21 @@ export class TournamentRegistrationEditComponent extends TournamentComponent imp
     const jsonRegistration = this.formToJson(registration);
     const message = this.nameValidator.validateName(jsonRegistration.name);
     if (message) {
-      this.setAlert(IAlertType.Danger, message);
+      this.alert.set({ type: IAlertType.Danger, message });
       return false;
     }
 
-    this.processing = true;
-    this.setAlert(IAlertType.Info, 'de inschrijving wordt opgeslagen');
+    this.processing.set(true);
+    this.alert.set({ type: IAlertType.Info, message: 'de inschrijving wordt opgeslagen' });
 
     this.tournamentRegistrationRepository.removeObject(registration, this.tournament)
       .subscribe({
         next: () => {
           this.navigateBack();
-          this.processing = false;
+          this.processing.set(false);
         },
         error: (e) => {
-          this.setAlert(IAlertType.Danger, e); this.processing = false;
+          this.alert.set({ type: IAlertType.Danger, message: e }); this.processing.set(false);
         }
       });
 

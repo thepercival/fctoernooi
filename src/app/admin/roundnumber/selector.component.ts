@@ -1,16 +1,19 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, signal, WritableSignal } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Structure, RoundNumber, NameService, StructureNameService } from 'ngx-sport';
+import { EscapeHtmlPipe } from '../../shared/common/escapehtmlpipe';
 
 @Component({
     selector: 'app-ngbd-modal-roundnumbers',
     templateUrl: './selector.component.html',
+    standalone: true,
+    imports: [EscapeHtmlPipe]
 })
 export class RoundNumbersSelectorModalComponent implements OnInit {
     @Input() structure!: Structure;
     @Input() subject!: string;
     public structureNameService: StructureNameService;
-    processing = true;
+    public readonly processing: WritableSignal<boolean> = signal(true);
 
     constructor(
         public activeModal: NgbActiveModal
@@ -19,14 +22,14 @@ export class RoundNumbersSelectorModalComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.processing = false;
+        this.processing.set(false);
     }
 
     sendRoundNumber(roundNumber: RoundNumber) {
         if (!roundNumber.hasBegun()) {
             this.activeModal.close(roundNumber);
         }
-        this.processing = false;
+        this.processing.set(false);
     }
 
     isFirstChoosable(roundNumber: RoundNumber): boolean {

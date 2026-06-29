@@ -1,27 +1,33 @@
 <div class="modal-header">
     <h4 class="modal-title">
-        <fa-icon [icon]="['fas', 'cogs']"></fa-icon> live scorebord instellingen
+        <fa-icon [icon]="faCogs"></fa-icon> live scorebord instellingen
     </h4>
 </div>
 <div class="modal-body" [formGroup]="typedForm">
-    <div class="row mb-3" *ngFor="let screenConfig of screenConfigs">
+    @for (screenConfig of screenConfigs; track screenConfig) {
+        <div class="row mb-3">
 
-        <label [for]="getNrOfSecondsId(screenConfig)"
-            class="col-5 col-form-label">{{getDescription(screenConfig)}}</label>
+            <label [for]="getNrOfSecondsId(screenConfig)"
+                class="col-5 col-form-label">{{getDescription(screenConfig)}}</label>
 
-        <div class="col-4 form-check form-switch">
-            <input type="checkbox" class=" mt-2 form-check-input" [formControlName]="getEnabledId(screenConfig)">
+            <div class="col-4 form-check form-switch">
+                <input type="checkbox" class=" mt-2 form-check-input" [formControlName]="getEnabledId(screenConfig)">
+            </div>
+
+
+            <div class="col-3">
+                @if (getEnabled(screenConfig)) {
+                    <select class="form-control"
+                        [formControlName]="getNrOfSecondsId(screenConfig)" required>
+                        @for (n of getRefreshRange(); track n) {
+                            <option [ngValue]="n">{{n}}</option>
+                        }
+                    </select>
+                }
+            </div>
+
         </div>
-
-
-        <div class="col-3">
-            <select *ngIf="getEnabled(screenConfig)" class="form-control"
-                [formControlName]="getNrOfSecondsId(screenConfig)" required>
-                <option *ngFor="let n of getRefreshRange()" [ngValue]="n">{{n}}</option>
-            </select>
-        </div>
-
-    </div>
+    }
     <ngb-alert class="mb-0" [type]="'info'">deze instellingen gelden alleen voor dit apparaat</ngb-alert>
 </div>
 <div class="modal-footer d-flex justify-content-bewteen border-top-0">

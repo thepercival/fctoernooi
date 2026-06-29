@@ -19,20 +19,26 @@ import { TournamentCompetitor } from '../../lib/competitor';
 import { IAlertType } from '../../shared/common/alert';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { CategoryChooseModalComponent } from '../../shared/tournament/category/chooseModal.component';
-import { FavoritesRepository } from '../../lib/favorites/repository';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlert, NgbModal, NgbNav, NgbNavContent, NgbNavItem, NgbNavLink, NgbNavOutlet } from '@ng-bootstrap/ng-bootstrap';
 import { TournamentScreen } from '../../shared/tournament/screenNames';
 import { TournamentRegistrationRepository } from '../../lib/tournament/registration/repository';
-import { JsonRegistrationSettings } from '../../lib/tournament/registration/settings/json';
 import { TournamentRegistrationSettings } from '../../lib/tournament/registration/settings';
-import { TournamentRegistrationTextSubject } from '../../lib/tournament/registration/text';
-import { TextEditorModalComponent } from '../textEditor/texteditormodal.component';
 import { CompetitorTab, RegistrationTab } from '../../shared/common/tab-ids';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { CategoryBaseCompetitorListComponent } from "./category.base.component";
+import { ReactiveFormsModule } from '@angular/forms';
+import { CategoryOrderCompetitorListComponent } from "./category.order.component";
+import { RegistrationsNavComponent } from "./registrations/nav.component";
+import { CompetitorPresentListComponent } from "./present.component";
+import { TournamentNavBarComponent } from "../../shared/tournament/tournamentNavBar/tournamentNavBar.component";
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-  selector: 'app-tournament-competitors',
-  templateUrl: './list.component.html',
-  styleUrls: ['./list.component.scss']
+    selector: 'app-tournament-competitors',
+    templateUrl: './list.component.html',
+    styleUrls: ['./list.component.scss'],
+    standalone: true,
+    imports: [NgbAlert, FontAwesomeModule, CategoryBaseCompetitorListComponent, ReactiveFormsModule, NgbNav, NgbNavItem, NgbNavLink, NgbNavContent, NgbNavOutlet, CategoryOrderCompetitorListComponent, RegistrationsNavComponent, CompetitorPresentListComponent, TournamentNavBarComponent]
 })
 export class CompetitorListComponent extends TournamentComponent implements OnInit, AfterViewChecked {
 
@@ -45,20 +51,20 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
   public hasBegun!: boolean;
   public registrationSettings: TournamentRegistrationSettings|undefined;
 
+  faSpinner = faSpinner;
+  
   constructor(
     route: ActivatedRoute,
     router: Router,
     tournamentRepository: TournamentRepository,
     sructureRepository: StructureRepository,
     globalEventsManager: GlobalEventsManager,
-    modalService: NgbModal,
-    favRepository: FavoritesRepository,
     private tournamentRegistrationRepository: TournamentRegistrationRepository,
     private planningRepository: PlanningRepository,
     private competitorRepository: CompetitorRepository,
     private myNavigation: MyNavigation
   ) {
-    super(route, router, tournamentRepository, sructureRepository, globalEventsManager, modalService, favRepository);
+    super(route, router, tournamentRepository, sructureRepository, globalEventsManager);
   }
 
   ngOnInit() {
@@ -82,31 +88,36 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
             this.lockerRoomValidator = new LockerRoomValidator(competitors, this.tournament.getLockerRooms());
             this.initFocus(startLocationMap);
             this.hasBegun = this.structure.getFirstRoundNumber().hasBegun();
-            this.processing = false;
+            this.processing.set(false);
           },
           error: (e: string) => {            
-            this.setAlert(IAlertType.Danger, e + ', instellingen niet gevonden');
-            this.processing = false;
+            this.alert.set({ type: IAlertType.Danger, message: e + ', instellingen niet gevonden' });
+            this.processing.set(false);
           }
         });      
   }
 
 
   get CompetitorsScreen(): TournamentScreen { return TournamentScreen.Competitors }
-  alertType(): string { return this.alert?.type ?? IAlertType.Danger }
-  alertMessage(): string { return this.alert?.message ?? '' }
+  alertType(): string { return this.alert()?.type ?? IAlertType.Danger }
+  alertMessage(): string { return this.alert()?.message ?? '' }
 
   updateProcessing(message: string): void {
     if (message.length === 0) {
-      this.processing = false;
+      this.processing.set(false);
     } else {
-      this.processing = true;
-      this.setAlert(IAlertType.Info, message);
+      this.processing.set(true);
+      this.alert.set({ type: IAlertType.Info, message });
     }
   }
 
   onTabChange(tabId: CompetitorTab) {
-    window.history.replaceState({}, '', 'admin/competitors/' + this.tournament.getId() + '/' + tabId);
+    this.activeTab = tabId;
+    if (tabId === CompetitorTab.Registrations && this.activeRegistrationTab !== undefined) {
+      this.router.navigate(['/admin/competitors', this.tournament.getId(), tabId, this.activeRegistrationTab], { replaceUrl: true });
+      return;
+    }
+    this.router.navigate(['/admin/competitors', this.tournament.getId(), tabId], { replaceUrl: true });
   }
 
   ngAfterViewChecked() {
@@ -127,16 +138,16 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
   }  
 
   removeCompetitor(competitor: TournamentCompetitor): void {
-    this.processing = true;
-    this.setAlert(IAlertType.Info, 'deelnemer ' + competitor.getName() + ' wordt verwijderd');
+    this.processing.set(true);
+    this.alert.set({ type: IAlertType.Info, message: 'deelnemer ' + competitor.getName() + ' wordt verwijderd' });
     this.competitorRepository.removeObject(competitor, this.tournament)
       .subscribe({
         next: () => {
           this.refreshCompetitors();
-          this.setAlert(IAlertType.Success, 'deelnemer ' + competitor + ' is verwijderd');
+          this.alert.set({ type: IAlertType.Success, message: 'deelnemer ' + competitor + ' is verwijderd' });
         },
         error: (e) => {
-          this.setAlert(IAlertType.Danger, e); this.processing = false;
+          this.alert.set({ type: IAlertType.Danger, message: e }); this.processing.set(false);
         }
       });
   }
@@ -145,7 +156,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
     const map = new StartLocationMap(this.tournament.getCompetitors());
     this.structureNameService = new StructureNameService(map);
     this.lockerRoomValidator = new LockerRoomValidator(this.tournament.getCompetitors(), this.tournament.getLockerRooms());
-    this.processing = false;
+    this.processing.set(false);
   }
 
   public saveStructure(message: string) {
@@ -157,16 +168,26 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
           this.planningRepository.create(this.structure, this.tournament)
             .subscribe({
               next: () => {
-                this.setAlert(IAlertType.Success, message);
+                this.alert.set({ type: IAlertType.Success, message });
                 this.refreshCompetitors();
               },
               error: (e: string) => {
-                this.setAlert(IAlertType.Danger, e); this.processing = false;
+                this.alert.set({ type: IAlertType.Danger, message: e }); this.processing.set(false);
               }
             });
         },
-        error: (e) => { this.setAlert(IAlertType.Danger, e); this.processing = false; }
+        error: (e) => { this.alert.set({ type: IAlertType.Danger, message: e }); this.processing.set(false); }
       });
+  }
+
+  openCategoriesChooseModal(structure: Structure) {
+    const activeModal = this.modalService.open(CategoryChooseModalComponent);
+    activeModal.componentInstance.categories = structure.getCategories();
+    activeModal.componentInstance.tournament = this.tournament;
+    activeModal.result.then((result) => {
+    }, (reason) => {
+        this.updateFavoriteCategories(structure);
+    });
   }
 
   get TabBase(): number { return CompetitorTab.Base; }  

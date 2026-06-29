@@ -1,22 +1,31 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, WritableSignal, input, model, signal } from '@angular/core';
 import { Poule, CompetitionSport, AgainstH2h, AgainstGpp, Single, AllInOneGame, StructureNameService } from 'ngx-sport';
 
 import { CSSService } from '../../common/cssservice';
 import { Favorites } from '../../../lib/favorites';
+import { TOURNAMENT_UI_IMPORTS } from '../tournament.ui-imports';
+import { RankingSportsComponent } from './sports/sports.component';
+import { RankingAgainstComponent } from './sports/against.component';
+import { RankingTogetherComponent } from './sports/together.component';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-  selector: 'app-tournament-pouleranking',
-  templateUrl: './poule.component.html',
-  styleUrls: ['./poule.component.scss']
+    selector: 'app-tournament-pouleranking',
+    templateUrl: './poule.component.html',
+    styleUrls: ['./poule.component.scss'],
+    standalone: true,
+    imports: [TOURNAMENT_UI_IMPORTS, RankingAgainstComponent, RankingSportsComponent, RankingAgainstComponent, RankingTogetherComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RankingPouleComponent implements OnInit {
-  @Input() poule!: Poule;
-  @Input() favorites: Favorites | undefined;
-  @Input() competitionSports: CompetitionSport[] = [];
-  @Input() structureNameService!: StructureNameService;
-  @Input() header!: boolean;
+  faSpinner = faSpinner;
+  public poule = input.required<Poule>();
+  public favorites = input<Favorites | undefined>(undefined);
+  public competitionSports = input<CompetitionSport[]>([]);
+  public structureNameService = input.required<StructureNameService>();
+  public header = input.required<boolean>();
 
-  public processing = true;
+  public readonly processing: WritableSignal<boolean> = signal(true);
 
   constructor(
     public cssService: CSSService
@@ -24,8 +33,7 @@ export class RankingPouleComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.processing = true;
-    this.processing = false;
+    this.processing.set(false);
   }
 
   get singleAgainstCompetitionSport(): CompetitionSport | undefined {
@@ -45,7 +53,7 @@ export class RankingPouleComponent implements OnInit {
   }
 
   getSingleCompetitionSport(): CompetitionSport | undefined {
-    return this.competitionSports.length === 1 ? this.competitionSports[0] : undefined;
+    return this.competitionSports().length === 1 ? this.competitionSports()[0] : undefined;
   }
 
   isAgainst(competitionSport: CompetitionSport): boolean {

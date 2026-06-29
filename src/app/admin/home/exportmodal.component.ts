@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, input } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
-import { IconName } from '@fortawesome/fontawesome-svg-core';
-import { NgbActiveModal, NgbAlert, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { IconDefinition, IconName } from '@fortawesome/fontawesome-svg-core';
+import { NgbActiveModal, NgbAlert, NgbModal, NgbProgressbar } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription, timer } from 'rxjs';
 import { PdfRepository, TournamentExportConfig } from '../../lib/pdf/repository';
 import { AppErrorHandler } from '../../lib/repository';
@@ -11,13 +11,20 @@ import { catchError, switchMap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { TournamentRegistrationSettings } from '../../lib/tournament/registration/settings';
 import { PrintServiceModalComponent } from './print-service-modal.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faPrint, faQrcode, faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-ngbd-modal-export-config',
     templateUrl: './exportmodal.component.html',
-    styleUrls: ['./exportmodal.component.scss']
+    styleUrls: ['./exportmodal.component.scss'],
+    standalone: true,
+    imports: [NgbAlert, FontAwesomeModule, NgbProgressbar, ReactiveFormsModule]
 })
 export class ExportModalComponent implements OnInit, OnDestroy {
+    faSpinner = faSpinner;
+    faPrint = faPrint;
+    faQrCode = faQrcode;
     tournament: Tournament|undefined;
     subjects: number = 0;
     readonlySubjects: number = 0;
@@ -59,7 +66,7 @@ export class ExportModalComponent implements OnInit, OnDestroy {
                 label: this.getLabel(+propertyValue),
                 enabled: (this.subjects & +propertyValue) > 0,
                 readonly: (this.readonlySubjects & +propertyValue) > 0,
-                iconName: TournamentExportConfig.qrCode === +propertyValue ? 'qrcode' : undefined
+                iconDef: TournamentExportConfig.qrCode === +propertyValue ? faQrcode : undefined
             };
             this.exportOptions.push(exportOption);
             this.typedForm.addControl(exportOption.key, new FormControl({ value: exportOption.enabled, disabled: exportOption.readonly }));
@@ -192,5 +199,5 @@ interface ExportOption {
     enabled: boolean;
     readonly: boolean;
     value: TournamentExportConfig;
-    iconName: IconName | undefined;
+    iconDef: IconDefinition | undefined;
 }

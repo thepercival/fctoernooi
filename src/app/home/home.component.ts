@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, signal, WritableSignal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthService } from '../lib/auth/auth.service';
@@ -8,11 +8,15 @@ import { Role } from '../lib/role';
 import { TournamentShell } from '../lib/tournament/shell';
 import { GlobalEventsManager } from '../shared/common/eventmanager';
 import { DefaultJsonTheme } from '../lib/tournament/theme';
+import { HomeShellComponent } from './shell.component';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+    selector: 'app-home',
+    standalone: true,
+    imports: [HomeShellComponent],
+    templateUrl: './home.component.html',
+    styleUrls: ['./home.component.scss'],
+    
 })
 export class HomeComponent implements OnInit, AfterViewInit {
   static readonly START_HOUR_IN_PAST = 4;
@@ -24,7 +28,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   showingAllWithRole = false;
 
   alert: IAlert | undefined;
-  processing = true;
+  public readonly processing: WritableSignal<boolean> = signal(true);
 
   constructor(
     private route: ActivatedRoute,
@@ -57,7 +61,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.shellsFromX = [];
 
     if (!this.authService.isLoggedIn()) {
-      this.processing = false;
+      this.processing.set(false);
       return;
     }
 
@@ -66,21 +70,27 @@ export class HomeComponent implements OnInit, AfterViewInit {
       .subscribe({
         next: (myShells) => {
           this.sortShellsByDateDesc(myShells);
+          const nextShellsTillX: TournamentShell[] = [];
+          const nextShellsFromX: TournamentShell[] = [];
           let myShell: TournamentShell | undefined;
           while (myShell = myShells.shift()) {
-            if (this.shellsTillX.length < this.shellsX) {
-              this.shellsTillX.push(myShell);
+            if (nextShellsTillX.length < this.shellsX) {
+              nextShellsTillX.push(myShell);
             } else {
-              this.shellsFromX.push(myShell);
+              nextShellsFromX.push(myShell);
             }
           }
-          this.processing = false;
+          this.shellsTillX = nextShellsTillX;
+          this.shellsFromX = nextShellsFromX;
+          this.processing.set(false);
           this.authService.extendToken();
         },
         error: (e) => {
-          this.setAlert(IAlertType.Danger, e); this.processing = false;
+          this.setAlert(IAlertType.Danger, e); this.processing.set(false);
         },
-        complete: () => this.processing = false
+        complete: () => {
+          this.processing.set(false);
+        }
       });
   }
 
@@ -125,7 +135,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   linkToTournament(shell: TournamentShell) {
-    this.processing = true;
+    this.processing.set(true);
     const module = shell.roles > 0 && shell.roles !== Role.Referee ? '/admin' : '/public';
     this.router.navigate([module, shell.tournamentId]);
   }

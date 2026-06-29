@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HorizontalMultipleQualifyRule, HorizontalPoule, HorizontalSingleQualifyRule, Place, QualifyGroup, QualifyTarget, Round, VerticalMultipleQualifyRule, VerticalSingleQualifyRule } from 'ngx-sport';
 
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class CSSService {
     getQualifyPlace(place: Place): string {
         const horPouleWinners = place.getHorizontalPoule(QualifyTarget.Winners);

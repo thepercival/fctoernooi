@@ -1,22 +1,27 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, WritableSignal, input, signal } from '@angular/core';
 import { Poule, GameAmountConfig, ScoreConfigService, TogetherGame, CompetitionSport, TogetherGamePlace, TogetherSportRoundRankingCalculator, SportRoundRankingItem, PlaceLocation, GameState, Single, AllInOneGame, Place, AgainstH2h, AgainstGpp, StructureNameService } from 'ngx-sport';
 
 import { CSSService } from '../../../common/cssservice';
 import { Favorites } from '../../../../lib/favorites';
 import { FavoritesRepository } from '../../../../lib/favorites/repository';
 import { ViewPort, ViewPortManager, ViewPortNrOfColumnsMap } from '../../../common/viewPortManager';
+import { TOURNAMENT_UI_IMPORTS } from '../../tournament.ui-imports';
+import { EscapeHtmlPipe } from '../../../common/escapehtmlpipe';
 
 @Component({
-  selector: 'app-tournament-ranking-together-table',
-  templateUrl: './together.component.html',
-  styleUrls: ['./together.component.scss']
+    selector: 'app-tournament-ranking-together-table',
+    templateUrl: './together.component.html',
+    styleUrls: ['./together.component.scss'],
+    standalone: true,
+    imports: [TOURNAMENT_UI_IMPORTS, EscapeHtmlPipe],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RankingTogetherComponent implements OnInit {
-  @Input() poule!: Poule;
-  @Input() favorites: Favorites | undefined;
-  @Input() structureNameService!: StructureNameService;
-  @Input() competitionSport!: CompetitionSport;
-  @Input() header!: boolean;
+  readonly _poule = input.required<Poule>();
+  readonly _favorites = input<Favorites | undefined>(undefined);
+  readonly _structureNameService = input.required<StructureNameService>();
+  readonly _competitionSport = input.required<CompetitionSport>();
+  readonly _header = input.required<boolean>();
   protected togetherRankingCalculator!: TogetherSportRoundRankingCalculator;
 
   public sportRankingItems!: SportRoundRankingItem[];
@@ -24,7 +29,7 @@ export class RankingTogetherComponent implements OnInit {
   protected gameAmountConfig!: GameAmountConfig;
   protected scoreMap = new ScoreMap();
   nrOfGameRounds!: number;
-  public processing = true;
+  public readonly processing: WritableSignal<boolean> = signal(true);
 
 
   constructor(
@@ -34,14 +39,14 @@ export class RankingTogetherComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.processing = true;
+    this.processing.set(true);
     this.togetherRankingCalculator = new TogetherSportRoundRankingCalculator(this.competitionSport);
     this.sportRankingItems = this.togetherRankingCalculator.getItemsForPoule(this.poule);
     this.gameAmountConfig = this.poule.getRound().getNumber().getValidGameAmountConfig(this.competitionSport);
     //this.initGameRoundMap();    
     this.viewPortManager = new ViewPortManager(this.getViewPortNrOfColumnsMap(), this.getGameRounds().length);
     this.initTableData();
-    this.processing = false;
+    this.processing.set(false);
   }
 
   protected getViewPortNrOfColumnsMap(): ViewPortNrOfColumnsMap {
@@ -122,6 +127,26 @@ export class RankingTogetherComponent implements OnInit {
   getQualifyPlaceClass(rankingItem: SportRoundRankingItem): string {
     const place = this.poule.getPlace(rankingItem.getUniqueRank());
     return place ? this.cssService.getQualifyPlace(place) : '';
+  }
+
+  get poule(): Poule {
+    return this._poule();
+  }
+
+  get favorites(): Favorites | undefined {
+    return this._favorites();
+  }
+
+  get structureNameService(): StructureNameService {
+    return this._structureNameService();
+  }
+
+  get competitionSport(): CompetitionSport {
+    return this._competitionSport();
+  }
+
+  get header(): boolean {
+    return this._header();
   }
 
   // getViewRange(viewport: number): VoetbalRange {

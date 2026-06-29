@@ -92,7 +92,7 @@ export class TranslateScoreService {
                 return 'sets';
             }
         }
-        return '';
+        return 'sets';
     }
 
 

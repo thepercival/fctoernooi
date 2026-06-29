@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { CSSService } from '../../shared/common/cssservice';
@@ -10,22 +10,31 @@ import { TournamentRepository } from '../../lib/tournament/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { LiveboardLink } from '../../lib/liveboard/link';
-import { Category, StartLocationMap, StructureNameService } from 'ngx-sport';
+import { StartLocationMap, StructureNameService } from 'ngx-sport';
 import { IAlertType } from '../../shared/common/alert';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ScreenConfigRepository } from '../../lib/liveboard/screenConfig/repository';
 import { ScreenConfig } from '../../lib/liveboard/screenConfig/json';
 import { ScreenConfigName } from '../../lib/liveboard/screenConfig/name';
 import { ScreenConfigsModalComponent } from './screenconfigsmodal.component';
 import { Observable, of } from 'rxjs';
-import { FavoritesRepository } from '../../lib/favorites/repository';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
+import { LiveboardNavComponent } from './nav.component';
+import { LiveboardGamesComponent } from './games.liveboard.component';
+import { LiveboardPoulesComponent } from './poules.liveboard.component';
+import { RankingEndComponent } from '../../shared/tournament/ranking/end.component';
+import { LiveboardSponsorsComponent } from './sponsors.liveboard.component';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-tournament-liveboard',
     templateUrl: './liveboard.component.html',
-    styleUrls: ['./liveboard.component.scss']
+    styleUrls: ['./liveboard.component.scss'],
+    imports: [NgbAlert, FontAwesomeModule, LiveboardNavComponent, LiveboardGamesComponent, LiveboardPoulesComponent, RankingEndComponent, LiveboardSponsorsComponent]
+    
 })
-export class LiveboardComponent extends TournamentComponent implements OnInit, OnDestroy {
+export class LiveboardComponent extends TournamentComponent implements OnInit {
+    faSpinner = faSpinner;
     public activeScreen: SponsorScreen | ResultsScreen | ScheduleScreen | EndRankingScreen | PoulesRankingScreen | undefined;
     private screens: (SponsorScreen | ResultsScreen | ScheduleScreen | EndRankingScreen | PoulesRankingScreen)[] = [];
     public screenConfigs: ScreenConfig[] | undefined;
@@ -40,13 +49,11 @@ export class LiveboardComponent extends TournamentComponent implements OnInit, O
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         globalEventsManager: GlobalEventsManager,
-        modalService: NgbModal,
-        favRepository: FavoritesRepository,
         private screenConfigRepository: ScreenConfigRepository,
         public cssService: CSSService,
         private myNavigation: MyNavigation
     ) {
-        super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
+        super(route, router, tournamentRepository, structureRepository, globalEventsManager);
     }
 
     ngOnInit() {
@@ -70,7 +77,7 @@ export class LiveboardComponent extends TournamentComponent implements OnInit, O
                             this.processScreens(screenConfigs);
                         },
                         error: (e) => {
-                            this.setAlert(IAlertType.Danger, e); this.processing = false;
+                            this.alert.set({ type: IAlertType.Danger, message: e }); this.processing.set(false);
                         }
                     });
             }
@@ -100,18 +107,17 @@ export class LiveboardComponent extends TournamentComponent implements OnInit, O
     processScreens(screenConfigs: ScreenConfig[]) {
         this.startLocationMap = new StartLocationMap(this.tournament.getCompetitors());
         const link: LiveboardLink = { showIcon: false, tournamentId: this.tournament.getId(), link: 'wim' };
-        this.globalEventsManager.toggleLiveboardIconInNavBar.emit(link);
         this.structureNameService = new StructureNameService(this.startLocationMap);
         const liveBoard = new Liveboard(screenConfigs);
-        this.screens = liveBoard.getScreens(this.tournament, this.structure.getFirstRoundNumber(), this.favoriteCategories);
+        this.screens = liveBoard.getScreens(this.tournament, this.structure.getFirstRoundNumber(), this.favoriteCategories());
         // console.log(this.screens);
         this.screenConfigs = screenConfigs;
         if (this.screens.length > 0) {
             this.executeScheduledTask(screenConfigs);
         } else {
-            this.setAlert(IAlertType.Danger, 'voor dit toernooi zijn er geen schermen beschikbaar, pas eventueel de tijden aan');
+            this.alert.set({ type: IAlertType.Danger, message: 'voor dit toernooi zijn er geen schermen beschikbaar, pas eventueel de tijden aan' });
         }
-        this.processing = false;
+        this.processing.set(false);
     }
 
     executeScheduledTask(screenConfigs: ScreenConfig[]) {
@@ -119,9 +125,8 @@ export class LiveboardComponent extends TournamentComponent implements OnInit, O
             return;
         }
         const activeScreen = this.screens.shift();
-        // this.processing = false;
         if (activeScreen === undefined) {
-            this.processing = true;
+            this.processing.set(true);
             this.getDataAndProcessScreens(screenConfigs);
         } else {
             this.activeScreen = activeScreen;
@@ -131,10 +136,6 @@ export class LiveboardComponent extends TournamentComponent implements OnInit, O
 
     getDataAndProcessScreens(screenConfigs: ScreenConfig[]) {
         this.setData(this.tournament.getId(), () => { this.processScreens(screenConfigs); });
-    }
-
-    ngOnDestroy() {
-        this.globalEventsManager.toggleLiveboardIconInNavBar.emit({});
     }
 
     isPoulesRankingScreen(): boolean {
@@ -196,18 +197,22 @@ export class LiveboardComponent extends TournamentComponent implements OnInit, O
             this.save(screenConfigs);
         }, (reason) => {
             this.configModalIsOpen = false;
+            this.processing.set(true);
             this.getDataAndProcessScreens(screenConfigs);
         });
     }
 
     save(screenConfigs: ScreenConfig[]): boolean {
-        this.processing = true;
+        this.processing.set(true);
 
         this.screenConfigRepository.saveObjects(this.tournament, screenConfigs).subscribe({
             next: () => {
                 this.getDataAndProcessScreens(screenConfigs);
             },
-            complete: () => this.processing = false
+            error: (e) => {
+                this.alert.set({ type: IAlertType.Danger, message: e });
+                this.processing.set(false);
+            }
         });
         return false;
     }

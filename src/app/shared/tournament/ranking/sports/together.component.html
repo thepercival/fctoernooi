@@ -6,25 +6,31 @@
                 <div class="d-flex justify-content-between">
                     <span class="d-xs-inline d-sm-none">deeln.</span>
                     <span class="d-none d-sm-inline">deelnemer</span>
-                    <ng-template ngFor let-viewPort [ngForOf]="viewPortManager.getViewPorts()">
-                        <button *ngIf="viewPortManager.showBackArrow(viewPort)"
+                    @for(viewPort of viewPortManager.getViewPorts(); track viewPort) {
+                        @if(viewPortManager.showBackArrow(viewPort)) {
+                        <button
                             class="btn btn-sm btn-outline-secondary {{viewPortManager.getSingleVisibleClass(viewPort)}}"
                             (click)="viewPortManager.decrement()">
                             < </button>
-                    </ng-template>
+                        }
+                    }
                 </div>
             </th>
-            <th *ngFor="let gameRound of getGameRounds()" class="text-end ps-0 {{viewPortManager.getClass(gameRound)}}">
+            @for(gameRound of getGameRounds(); track gameRound) {
+            <th class="text-end ps-0 {{viewPortManager.getClass(gameRound)}}">
                 {{gameRound}}</th>
+            }
 
             <th class="ps-0 text-end" title="totaal">
                 <div class="d-flex justify-content-between">
-                    <ng-template ngFor let-viewPort [ngForOf]="viewPortManager.getViewPorts()">
-                        <button *ngIf="viewPortManager.showForwardArrow(viewPort)"
+                    @for(viewPort of viewPortManager.getViewPorts(); track viewPort) {
+                        @if(viewPortManager.showForwardArrow(viewPort)) {
+                        <button
                             class="btn btn-sm btn-outline-secondary {{viewPortManager.getSingleVisibleClass(viewPort)}}"
                             (click)="viewPortManager.increment()">
                             > </button>
-                    </ng-template>
+                        }
+                    }
                     <span> </span>
                     <span class="d-none d-sm-inline">tot.</span>
                 </div>
@@ -32,19 +38,23 @@
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let sportRankingItem of sportRankingItems">
+        @for(sportRankingItem of sportRankingItems; track sportRankingItem) {
+        <tr>
             <td class="rankingnr text-end ps-0">
                 <span
                     class="badge badge-rank {{getQualifyPlaceClass(sportRankingItem)}}">{{sportRankingItem.getUniqueRank()}}</span>
             </td>
             <td class="text-break ps-0"
-                [ngClass]="{ 'favitem': favorites?.hasPlace((sportRankingItem.getPerformance().getPlace())) }">
+                [class.favitem]="favorites?.hasPlace((sportRankingItem.getPerformance().getPlace()))">
                 <span
                     [innerHtml]="structureNameService.getPlaceFromName(sportRankingItem.getPerformance().getPlace(), true, true) | keepHtml"></span>
             </td>
-            <td *ngFor="let gameRound of getGameRounds()" class="text-end ps-0 {{viewPortManager.getClass(gameRound)}}">
+            @for(gameRound of getGameRounds(); track gameRound) {
+            <td class="text-end ps-0 {{viewPortManager.getClass(gameRound)}}">
                 {{getScore(sportRankingItem.getPlaceLocation(), gameRound )}}</td>
+            }
             <td class="text-end ps-0">{{sportRankingItem.getPerformance().getPoints()}}</td>
         </tr>
+        }
     </tbody>
 </table>

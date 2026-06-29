@@ -1,13 +1,20 @@
 import { Component } from '@angular/core';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 import { PlaceCompetitorItem } from '../../lib/ngx-sport/placeCompetitorItem';
+import { FaIconComponent } from "@fortawesome/angular-fontawesome";
+import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { facStructure } from '../../shared/customicons';
 
 @Component({
     selector: 'app-ngbd-modal-listremove',
     templateUrl: './listremovemodal.component.html',
-    styleUrls: ['./listremovemodal.component.scss']
+    styleUrls: ['./listremovemodal.component.scss'],
+    imports: [FaIconComponent, NgbAlert],
+    
 })
 export class CompetitorListRemoveModalComponent {
+    facStructure = facStructure;
+    faTrashAlt = faTrashAlt;
     item!: PlaceCompetitorItem;
     allPlacesAssigned!: boolean;
 

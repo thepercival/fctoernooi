@@ -1,5 +1,5 @@
-import { Component, OnInit, Input, TemplateRef } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit, Input, TemplateRef, inject, WritableSignal, signal } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
     NameService,
     AgainstQualifyConfig,
@@ -12,7 +12,7 @@ import {
     PointsCalculation,
 } from 'ngx-sport';
 import { CSSService } from '../../shared/common/cssservice';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlert, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Tournament } from '../../lib/tournament';
 import { IAlert, IAlertType } from '../../shared/common/alert';
 import { RoundsSelectorModalComponent, SelectableCategory, SelectableRoundNode } from '../rounds/selector.component';
@@ -22,11 +22,16 @@ import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.
 import { Router } from '@angular/router';
 import { RoundsSelection, SelectableCategoriesCreator, SelectableCategoryConverter } from '../scoreConfig/edit.component';
 import { CustomSportId } from '../../lib/ngx-sport/sport/custom';
+import { faSpinner, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+
 
 @Component({
     selector: 'app-tournament-qualifyagainstconfig-edit',
     templateUrl: './edit.component.html',
-    styleUrls: ['./edit.component.scss']
+    standalone: true,
+    imports: [FontAwesomeModule, NgbAlert, ReactiveFormsModule],
+    styleUrls: ['./edit.component.scss'],
 })
 export class AgainstQualifyConfigEditComponent implements OnInit {
     @Input() tournament!: Tournament;
@@ -34,7 +39,7 @@ export class AgainstQualifyConfigEditComponent implements OnInit {
     @Input() competitionSport!: CompetitionSport;
 
     alert: IAlert | undefined;
-    processing: boolean = true;
+    public readonly processing: WritableSignal<boolean> = signal(true);
     public nameService!: NameService;
     public typedForm: FormGroup;/*<{
         pointsCalculation: FormControl<PointsCalculation>;
@@ -57,14 +62,17 @@ export class AgainstQualifyConfigEditComponent implements OnInit {
         maxLosePoints: 5,
     };
 
-    constructor(
-        private againstQualifyConfigRepository: AgainstQualifyConfigRepository,
-        public cssService: CSSService,
-        private competitionSportMapper: CompetitionSportMapper,
-        private mapper: AgainstQualifyConfigMapper,
-        private router: Router,
-        private modalService: NgbModal
-    ) {
+    private againstQualifyConfigRepository = inject(AgainstQualifyConfigRepository);
+    cssService = inject(CSSService);
+    private competitionSportMapper = inject(CompetitionSportMapper);
+    private mapper = inject(AgainstQualifyConfigMapper);
+    private router = inject(Router);
+    private modalService = inject(NgbModal);
+
+    protected readonly faSpinner = faSpinner;
+    protected readonly faInfoCircle = faInfoCircle;
+
+    constructor() {
         this.typedForm = new FormGroup({
             pointsCalculation: new FormControl(PointsCalculation.AgainstGamePoints, { nonNullable: true }),
             winPoints: new FormControl(0, { nonNullable: true }),
@@ -79,7 +87,7 @@ export class AgainstQualifyConfigEditComponent implements OnInit {
         this.nameService = new NameService();
         this.initRanges();
         this.initSelectableCategories();
-        this.processing = false;
+        this.processing.set(false);
     }
 
     updateDisabled(): void {
@@ -182,8 +190,8 @@ export class AgainstQualifyConfigEditComponent implements OnInit {
 
     openInfoModal(header: string, modalContent: TemplateRef<any>) {
         const activeModal = this.modalService.open(InfoModalComponent, { windowClass: 'info-modal' });
-        activeModal.componentInstance.header = header;
-        activeModal.componentInstance.modalContent = modalContent;
+        activeModal.componentInstance.header = () => header;
+        activeModal.componentInstance.modalContent = () => modalContent;
     }
 
     getPointsCalculationDescription(pointsCalculation: PointsCalculation): string {
@@ -238,7 +246,7 @@ export class AgainstQualifyConfigEditComponent implements OnInit {
 
     save(): boolean {
         this.alert = undefined;
-        this.processing = true;
+        this.processing.set(true);
 
         const selectableCategoryConverter = new SelectableCategoryConverter();
         const categoriesSelection = selectableCategoryConverter.createCategoriesSelection(this.selectableCategories);
@@ -264,7 +272,7 @@ export class AgainstQualifyConfigEditComponent implements OnInit {
         forkJoin(reposUpdates).subscribe({
             next: (results) => {
                 if (validAgainstQualifyConfigs.length === 0) {
-                    this.processing = false;
+                    this.processing.set(false);
                     return;
                 }
                 // 3 voeg de qualifyagainstregels toe van de unchangedChildRounds
@@ -272,16 +280,16 @@ export class AgainstQualifyConfigEditComponent implements OnInit {
                     return this.againstQualifyConfigRepository.saveObject(validAgainstQualifyConfig.qualifyagainstConfig, validAgainstQualifyConfig.unchangedChildRound, this.tournament);
                 });
                 forkJoin(reposChildUpdates).subscribe({
-                    next: () => this.processing = false,
+                    next: () => this.processing.set(false),
                     error: (e) => {
                         this.alert = { type: IAlertType.Danger, message: 'de qualifyagainstregels zijn niet opgeslagen: ' + e };
-                        this.processing = false;
+                        this.processing.set(false);
                     }
                 });
             },
             error: (e) => {
                 this.alert = { type: IAlertType.Danger, message: 'de qualifyagainstregels zijn niet opgeslagen: ' + e };
-                this.processing = false;
+                this.processing.set(false);
             }
         });
         return true;

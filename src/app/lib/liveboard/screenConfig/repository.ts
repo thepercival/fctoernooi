@@ -1,8 +1,5 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
-import { APIRepository } from '../../repository';
 import { Tournament } from '../../tournament';
 import { ScreenConfig } from './json';
 import { ScreenConfigName } from './name';

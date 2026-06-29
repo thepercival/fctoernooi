@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, input, model, OnInit, TemplateRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { MyNavigation } from '../../shared/common/navigation';
@@ -6,10 +6,9 @@ import { TournamentRepository } from '../../lib/tournament/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { FavoritesRepository } from '../../lib/favorites/repository';
+import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 import { TournamentScreen } from '../../shared/tournament/screenNames';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IAlertType } from '../../shared/common/alert';
 import { Tournament } from '../../lib/tournament';
 import { JsonTournament } from '../../lib/tournament/json';
@@ -18,15 +17,22 @@ import { TournamentRuleRepository } from '../../lib/tournament/rule/repository';
 import { JsonTournamentRule } from '../../lib/tournament/rule/json';
 import { Observable } from 'rxjs';
 import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { TournamentNavBarComponent } from '../../shared/tournament/tournamentNavBar/tournamentNavBar.component';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-  selector: 'app-tournament-home-edit',
-  templateUrl: './homeedit.component.html',
-  styleUrls: ['./homeedit.component.scss'],
+    selector: 'app-tournament-home-edit',
+    templateUrl: './homeedit.component.html',
+    styleUrls: ['./homeedit.component.scss'],
+    standalone: true,
+    imports: [FontAwesomeModule, TournamentNavBarComponent, NgbAlert, ReactiveFormsModule]
 })
 export class HomeEditComponent extends TournamentComponent implements OnInit {
 
-  public rules!: Observable<JsonTournamentRule[]>;    
+  faSpinner = faSpinner;
+
+  public rules = model<JsonTournamentRule[]>([]);
   
   public form: FormGroup<{
     intro: FormControl<string>, 
@@ -44,14 +50,12 @@ export class HomeEditComponent extends TournamentComponent implements OnInit {
     router: Router,
     tournamentRepository: TournamentRepository,
     structureRepository: StructureRepository,    
-    globalEventsManager: GlobalEventsManager,
-    modalService: NgbModal,
-    favRepository: FavoritesRepository,
+    globalEventsManager: GlobalEventsManager,    
     private tournamentMapper: TournamentMapper,
     private myNavigation: MyNavigation,
     private ruleRepository: TournamentRuleRepository,
   ) {
-    super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
+    super(route, router, tournamentRepository, structureRepository, globalEventsManager);
 
     this.form = new FormGroup({
       intro: new FormControl('', {
@@ -81,8 +85,10 @@ export class HomeEditComponent extends TournamentComponent implements OnInit {
     this.form.controls.intro.setValue(this.tournament.getIntro());
     this.form.controls.location.setValue(this.tournament.getLocation() ?? null);
 
-    this.rules = this.ruleRepository.getObjects(this.tournament);
-
+    this.ruleRepository.getObjects(this.tournament).subscribe((rules: JsonTournamentRule[]) => {
+      this.rules.set(rules);
+    });
+  
     // this.lockerRoomValidator = new LockerRoomValidator(this.tournament.getCompetitors(), this.tournament.getLockerRooms());
     // const firstRoundNumber = this.structure.getFirstRoundNumber();
     // this.hasBegun = firstRoundNumber.hasBegun();
@@ -101,7 +107,7 @@ export class HomeEditComponent extends TournamentComponent implements OnInit {
     //     this.openModalCopied(params.myPreviousId);
     //   }
     // });
-    this.processing = false;
+    this.processing.set(false);
   }
 
   get HomeScreen(): TournamentScreen { return TournamentScreen.Home }
@@ -118,8 +124,8 @@ export class HomeEditComponent extends TournamentComponent implements OnInit {
   }
 
   save(): boolean {
-    this.processing = true;
-    this.setAlert(IAlertType.Info, 'de thuispagina wordt opgeslagen');
+    this.processing.set(true);
+    this.alert.set({ type: IAlertType.Info, message: 'de thuispagina wordt opgeslagen' });
 
     const json = this.formToJson();
     console.log('json', json);
@@ -127,12 +133,12 @@ export class HomeEditComponent extends TournamentComponent implements OnInit {
       next: (tournament: Tournament) => {
         this.tournament = tournament;
         this.router.navigate(['/admin', this.tournament.getId()]);
-        this.processing = false;        
+        this.processing.set(false);        
       },
       error: (e) => {
-        this.setAlert(IAlertType.Danger, e); this.processing = false;
+        this.alert.set({ type: IAlertType.Danger, message: e }); this.processing.set(false);
       },
-      complete: () => this.processing = false
+      complete: () => this.processing.set(false)
     });
     return false;
   }
@@ -143,8 +149,8 @@ export class HomeEditComponent extends TournamentComponent implements OnInit {
 
   openInfoModal(modalContent: TemplateRef<any>) {
     const activeModal = this.modalService.open(InfoModalComponent, { windowClass: 'info-modal' });
-    activeModal.componentInstance.header = 'locatie';
-    activeModal.componentInstance.modalContent = modalContent;
+    activeModal.componentInstance.header = () => 'locatie';
+    activeModal.componentInstance.modalContent = () => modalContent;
   }
 
 }

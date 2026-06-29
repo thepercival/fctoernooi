@@ -7,22 +7,29 @@ import { Role } from '../../lib/role';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { StructureRepository } from '../../lib/ngx-sport/structure/repository';
 import { TournamentComponent } from '../../shared/tournament/component';
-import { FavoritesRepository } from '../../lib/favorites/repository';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { Category, RoundNumber, SelfReferee, StartLocationMap, Structure, StructureNameService } from 'ngx-sport';
 import { Favorites } from '../../lib/favorites';
 import { TournamentScreen } from '../../shared/tournament/screenNames';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { OptionalGameColumn } from '../../shared/tournament/games/roundnumber.component';
 import { TournamentCompetitor } from '../../lib/competitor';
 import { WebsitePart } from '../../shared/tournament/structure/admin-public-switcher.component';
+import { AdminPublicSwitcherComponent } from '../../shared/tournament/structure/admin-public-switcher.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
+import { RoundNumberPlanningComponent } from '../../shared/tournament/games/roundnumber.component';
+import { TournamentNavBarComponent } from '../../shared/tournament/tournamentNavBar/tournamentNavBar.component';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-tournament-games-view',
     templateUrl: './view.component.html',
-    styleUrls: ['./view.component.scss']
+    styleUrls: ['./view.component.scss'],
+    imports: [AdminPublicSwitcherComponent, FontAwesomeModule, NgbAlert, RoundNumberPlanningComponent, TournamentNavBarComponent]
+    
 })
 export class GamesComponent extends TournamentComponent implements OnInit {
+    faSpinner = faSpinner;
     userRefereeId: number | string | undefined;
     roles: number = 0;
     public structureNameService!: StructureNameService;
@@ -37,12 +44,10 @@ export class GamesComponent extends TournamentComponent implements OnInit {
         tournamentRepository: TournamentRepository,
         structureRepository: StructureRepository,
         globalEventsManager: GlobalEventsManager,
-        modalService: NgbModal,
-        favRepository: FavoritesRepository,
         private myNavigation: MyNavigation,
         private authService: AuthService,
     ) {
-        super(route, router, tournamentRepository, structureRepository, globalEventsManager, modalService, favRepository);
+        super(route, router, tournamentRepository, structureRepository, globalEventsManager);
     }
 
     ngOnInit() {
@@ -60,12 +65,12 @@ export class GamesComponent extends TournamentComponent implements OnInit {
                     .subscribe({
                         next: (userRefereeId: number | string) => {
                             this.userRefereeId = userRefereeId;
-                            this.processing = false;
+                            this.processing.set(false);
                         },
-                        error: (e) => this.processing = false
+                        error: () => this.processing.set(false)
                     });
             } else {
-                this.processing = false;
+                this.processing.set(false);
             }
         });
     }

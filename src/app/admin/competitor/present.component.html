@@ -1,62 +1,61 @@
-<div *ngIf="category">
+@if (category) {
 
-  <div class="card border-secondary" [ngClass]="{ 'border-0': !showHeader }">
+  <div class="card border-secondary" [class.border-0]="!showHeader">
 
-    <div *ngIf="showHeader" class="card-cat-header px-3">
-      <div class="d-flex justify-content-between">
-        <h5 class="my-0">
-          <span class="fw-bold align-middle">{{category.getName()}}</span>
-        </h5>
+    @if (showHeader) {
+      <div class="card-cat-header px-3">
+        <div class="d-flex justify-content-between">
+          <h5 class="my-0">
+            <span class="fw-bold align-middle">{{category.getName()}}</span>
+          </h5>
+        </div>
       </div>
-    </div>
+    }
 
     <div class="card-body p-0">
 
-      <ng-container *ngIf="somePlaceHasACompetitor(); else noCompetitors">
-        <table class="table mb-0">
-          <thead>
-            <tr>
-              <th>plek</th>
-              <th colspan="2">
-                <div class="d-flex justify-content-between">
-                  <span>naam</span>
-                  <span>aanwezig</span>
-                </div>              
-              </th>              
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let item of placeCompetitorItems">
-              <td>
-                <span [innerHtml]="structureNameService.getPlaceFromName(item.place, false) | keepHtml"></span>
-              </td>
-              <td>
-                <span *ngIf="item.competitor">{{item.competitor.getName()}}</span>
-              </td>
-              <td>
-                <div class="d-flex justify-content-center">
-                  <ng-container *ngIf="!processing; else isProcessing">
-                    <div *ngIf="item.competitor" class="form-check form-switch">
-                      <input type="checkbox" class="form-check-input" id="{{getPresentId(item.place)}}"
-                        (change)="setPresency(item.competitor)" [checked]="item.competitor.getPresent()">
-                      <label class="form-check-label" for="{{getPresentId(item.place)}}"></label>
+      @if (somePlaceHasACompetitor()) {
+        <div class="d-flex flex-column gap-2 p-2">
+          @for (pouleItem of poulePlaceCompetitorItems; track pouleItem.pouleNr) {
+            <div class="card border-secondary">
+              <div class="card-header py-2 px-3">
+                <span class="fw-bold">{{structureNameService.getPouleName(pouleItem.items[0].place.getPoule(), true)}}</span>
+              </div>
+              <div class="card-body p-0">
+                @for (item of pouleItem.items; track item.place) {
+                  <div class="d-flex align-items-center justify-content-between px-3 py-2 border-bottom">
+                    <div class="me-5">
+                      <span [innerHtml]="structureNameService.getPlaceFromName(item.place, false) | keepHtml"></span>
+                      @if (item.competitor) {
+                        <span class="ms-4">{{item.competitor.getName()}}</span>
+                      } @else {
+                        <span class="ms-4 text-muted">- leeg -</span>
+                      }
                     </div>
-                  </ng-container>
-                  <ng-template #isProcessing>
-                    <fa-icon *ngIf="item.competitor" [icon]="['fas', 'spinner']" animations="spin"></fa-icon>
-                  </ng-template>
-
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </ng-container>
-      <ng-template #noCompetitors>
+                    <div class="d-flex justify-content-center">
+                      @if (item.competitor) {
+                        @if (!isProcessing(item.competitor)) {
+                          <div class="form-check form-switch mb-0">
+                            <input type="checkbox" class="form-check-input" [id]="getPresentId(item.place)"
+                              (change)="setPresency(item.competitor)" [checked]="item.competitor.getPresent()">
+                            <label class="form-check-label" [for]="getPresentId(item.place)"></label>
+                          </div>
+                        } @else {
+                          <fa-icon [icon]="faSpinner" animation="spin"></fa-icon>
+                        }
+                      }
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      } @else {
         <ngb-alert class="m-0" type="warning">
           er zijn nog geen deelnemers om aanwezig te melden
         </ngb-alert>
-      </ng-template>
+      }
     </div>
   </div>
-</div>
+}

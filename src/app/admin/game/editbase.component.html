@@ -1,4 +1,4 @@
-<div [formGroup]="form">
+<div>
   <div class="row mb-3">
     <div class="col-3">
       <label class="col-form-label">poule</label>
@@ -10,76 +10,99 @@
       <label class="col-form-label me-1"
         [innerHTML]="structureNameService.getPouleName( game.getPoule(), true) | keepHtml"></label>
 
-      <span *ngIf="structure.getCategories().length > 1"
-        class="badge bg-dark text-light">{{game.getRound().getCategory().getName()}}</span>
-
-    </div>
-  </div>
-  <div *ngIf="getPlanningConfig().getEnableTime() && !manualEditMode()" class="row mb-3">
-    <div class="col-3">
-      <label class="col-form-label">start</label>
-    </div>
-    <div class="col-9 col-sm-6">
-      <label class="col-form-label">{{dateFormatter.toString(game.getStartDateTime(),dateFormatter.datetime())}}</label>
+      @if (structure.getCategories().length > 1) {
+        <span class="badge bg-dark text-light">{{game.getRound().getCategory().getName()}}</span>
+      }
     </div>
   </div>
 
-  <div *ngIf="getPlanningConfig().getEnableTime() && manualEditMode()" class="row mb-3">
-    <div class="col-3">
-      <label for="date" class="col-form-label">datum</label>
-    </div>
-    <div class="col-9 col-sm-6">
-      <div class="input-group input-group-date">
-        <input class="form-control"
-          [ngClass]="{ 'is-invalid': form.controls.date.invalid, 'is-valid': form.controls.date.valid }"
-          placeholder="yyyy-mm-dd" formControlName="date" ngbDatepicker #d="ngbDatepicker" required container="body">
-        <span class="input-group-text pointer" (click)="d.toggle()">
-          <fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon>
-        </span>
+  @if (getPlanningConfig().getEnableTime() && !manualEditMode()) {
+    <div class="row mb-3">
+      <div class="col-3">
+        <label class="col-form-label">start</label>
+      </div>
+      <div class="col-9 col-sm-6">
+        <label class="col-form-label">{{dateFormatter.toString(game.getStartDateTime(),dateFormatter.datetime())}}</label>
       </div>
     </div>
-  </div>
-  <div *ngIf="getPlanningConfig().getEnableTime() && manualEditMode()" class="row mb-3">
-    <div class="col-3">
-      <label for="time" class="col-form-label">tijd</label>
-    </div>
-    <div class="col-9 col-sm-6">
-      <ngb-timepicker formControlName="time" [spinners]="false" required>
-      </ngb-timepicker>
-    </div>
-  </div>
+  }
 
-  <div *ngIf="game.getCompetition().getFields().length > 1" class="row mb-3">
-    <label for="field" class="col-3 col-form-label">{{getFieldDescription()}}</label>
-    <div class="col-9 col-sm-6">
-      <select *ngIf="manualEditMode()" class="form-control" formControlName="field" required>
-        <option *ngFor="let field of game.getCompetitionSport().getFields()" [ngValue]="field">
-          {{field.getName()}}</option>
-      </select>
-
-      <div *ngIf="!manualEditMode()" class="col-form-label text-break">
-        {{getFieldName(game.getField())}}
+  @if (getPlanningConfig().getEnableTime() && manualEditMode()) {
+    <div class="row mb-3">
+      <div class="col-3">
+        <label for="date" class="col-form-label">datum</label>
       </div>
+      <div class="col-9 col-sm-6">
+        <div class="input-group input-group-date">
+          <input class="form-control"
+            [class.is-invalid]="form.controls.date.invalid"
+            [class.is-valid]="form.controls.date.valid"
+            placeholder="yyyy-mm-dd" [formControl]="control('date')" ngbDatepicker #d="ngbDatepicker" required container="body">
+          <span class="input-group-text pointer" (click)="d.toggle()">
+            <fa-icon [icon]="faCalendarAlt"></fa-icon>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-3">
+        <label for="time" class="col-form-label">tijd</label>
+      </div>
+      <div class="col-9 col-sm-6">
+        <ngb-timepicker [formControl]="control('time')" [spinners]="false" required>
+        </ngb-timepicker>
+      </div>
+    </div>
+  }
 
+  @if (game.getCompetition().getFields().length > 1) {
+    <div class="row mb-3">
+      <label for="field" class="col-3 col-form-label">{{getFieldDescription()}}</label>
+      <div class="col-9 col-sm-6">
+        @if (manualEditMode()) {
+          <select class="form-control" [formControl]="control('field')" required>
+            @for (field of game.getCompetitionSport().getFields(); track field.getId()) {
+              <option [ngValue]="field">
+                {{field.getName()}}
+              </option>
+            }
+          </select>
+        } @else {
+          <div class="col-form-label text-break">
+            {{getFieldName(game.getField())}}
+          </div>
+        }
+      </div>
     </div>
-  </div>
-  <div *ngIf="areRefereesEnabled()" class="row mb-3">
-    <label for="field" class="col-3 col-form-label">scheidsrechter</label>
-    <div class="col-9 col-sm-6">
-      <select class="form-control" formControlName="referee">
-        <option *ngFor="let referee of game.getCompetition().getReferees()" [ngValue]="referee">
-          {{referee.getInitials()}}</option>
-      </select>
+  }
+
+  @if (areRefereesEnabled()) {
+    <div class="row mb-3">
+      <label for="field" class="col-3 col-form-label">scheidsrechter</label>
+      <div class="col-9 col-sm-6">
+        <select class="form-control" [formControl]="control('referee')">
+          @for (referee of game.getCompetition().getReferees(); track referee.getId()) {
+            <option [ngValue]="referee">
+              {{referee.getInitials()}}
+            </option>
+          }
+        </select>
+      </div>
     </div>
-  </div>
-  <div *ngIf="areRefereePlacesEnabled()" class="row mb-3">
-    <label for="field" class="col-3 col-form-label">scheidsrechter</label>
-    <div class="col-9 col-sm-6">
-      <select class="form-control" formControlName="refereePlace">
-        <option *ngFor="let refereePlace of getRefereePlaces()" [ngValue]="refereePlace">
-          <span [innerHtml]="structureNameService.getPlaceFromName(refereePlace, true, true) | keepHtml"></span>
-        </option>
-      </select>
+  }
+
+  @if (areRefereePlacesEnabled()) {
+    <div class="row mb-3">
+      <label for="field" class="col-3 col-form-label">scheidsrechter</label>
+      <div class="col-9 col-sm-6">
+        <select class="form-control" [formControl]="control('refereePlace')">
+          @for (refereePlace of getRefereePlaces(); track refereePlace.getId()) {
+            <option [ngValue]="refereePlace">
+              <span [innerHtml]="structureNameService.getPlaceFromName(refereePlace, true, true) | keepHtml"></span>
+            </option>
+          }
+        </select>
+      </div>
     </div>
-  </div>
+  }
 </div>
