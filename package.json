@@ -61,7 +61,7 @@
     "karma-coverage-istanbul-reporter": "^3.0",
     "karma-jasmine": "^5.1",
     "ts-node": "^10.9",
-    "typescript": "^5.9.3",
+    "typescript": "^6.0",
     "@typescript-eslint/eslint-plugin": "^8.0",
     "@typescript-eslint/parser": "^8.0",
     "webpack-dev-server": "^5.0"
