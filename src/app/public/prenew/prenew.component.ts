@@ -20,6 +20,6 @@ export class PreNewComponent {
   constructor(
     globalEventsManager: GlobalEventsManager
   ) {
-    globalEventsManager.showFooter.emit(false);
+    globalEventsManager.showFooter.emit(true);
   }
 }

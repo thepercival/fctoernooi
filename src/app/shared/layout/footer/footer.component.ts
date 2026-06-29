@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, signal, input } from '@angular/core';
 import { GlobalEventsManager } from '../../common/eventmanager';
 
 @Component({
@@ -11,14 +11,14 @@ import { GlobalEventsManager } from '../../common/eventmanager';
 })
 export class FooterComponent implements OnInit {
 
-  public showFooter: boolean = false;
+  public showFooter = signal(false);
 
   constructor(private globalEventsManager: GlobalEventsManager) {
   }
 
   ngOnInit() {
     this.globalEventsManager.showFooter.subscribe((showFooter: boolean) => {
-      this.showFooter = showFooter;
+      this.showFooter.set(showFooter);
     });
   }
 }
