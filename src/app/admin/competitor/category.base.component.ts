@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, output, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, output, SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbAlert, NgbDropdown, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Category, Competitor, Place, StartLocationMap, StructureEditor, StructureNameService } from 'ngx-sport';
@@ -18,6 +18,7 @@ import { faCopy, faPlus } from '@fortawesome/free-solid-svg-icons';
     templateUrl: './category.base.component.html',
     styleUrls: ['./category.base.component.scss'],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgbAlert, FontAwesomeModule, CompetitorListLineComponent,NgbDropdown]
 })
 export class CategoryBaseCompetitorListComponent implements OnChanges {

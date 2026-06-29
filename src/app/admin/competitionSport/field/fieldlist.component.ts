@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, signal, WritableSignal, Injector } from '@angular/core';
+import { Component, OnInit, Input, signal, WritableSignal, Injector, ChangeDetectionStrategy } from '@angular/core';
 import { Field, CompetitionSport, JsonField, Structure } from 'ngx-sport';
 
 import { FieldRepository } from '../../../lib/ngx-sport/field/repository';
@@ -15,6 +15,7 @@ import { faArrowUp, faPencil, faPlus, faSort, faSpinner, faTrashCan } from '@for
     selector: 'app-tournament-fields',
     templateUrl: './fieldlist.component.html',
     styleUrls: ['./fieldlist.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgbAlert, FaIconComponent],
 })
 export class FieldListComponent implements OnInit {

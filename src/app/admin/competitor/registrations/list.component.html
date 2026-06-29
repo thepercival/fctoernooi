@@ -65,7 +65,7 @@
                     }
                     @if (registration.getStartLocation()) {
                       <button type="button" class="btn btn-sm btn-outline-secondary"
-                      [routerLink]="['/admin/competitor', tournament.getId(), registration.getCategory().getNumber(), registration.getStartLocation()?.getPouleNr(), registration.getStartLocation()?.getPlaceNr() ]">
+                      [routerLink]="['/admin/competitor', tournament.getId(), registration.getCategory().getNumber(), $safeNavigationMigration(registration.getStartLocation()?.getPouleNr()), $safeNavigationMigration(registration.getStartLocation()?.getPlaceNr()) ]">
                         <fa-icon class="text-success" [icon]="faCheckCircle"></fa-icon> naar deeln<span class="d-xs-inline d-sm-none">.</span><span class="d-none d-sm-inline">emer</span>
                       </button>
                     }

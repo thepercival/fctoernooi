@@ -1,4 +1,4 @@
-import { Component, Input, ModelSignal, OnDestroy, OnInit, TemplateRef, WritableSignal, input, model, output, signal } from '@angular/core';
+import { Component, Input, ModelSignal, OnDestroy, OnInit, TemplateRef, WritableSignal, input, model, output, signal, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { IAlert, IAlertType } from '../../../shared/common/alert';
 import { JsonRegistrationSettings } from '../../../lib/tournament/registration/settings/json';
@@ -18,6 +18,7 @@ import { faCalendarDays, faCircleInfo, faSpinner } from '@fortawesome/free-solid
     templateUrl: './settings.component.html',
     styleUrls: ['./settings.component.scss'],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ReactiveFormsModule, NgbAlert, FontAwesomeModule, NgbTimepicker, NgbInputDatepicker]
 })
 export class RegistrationSettingsComponent implements OnInit, OnDestroy {

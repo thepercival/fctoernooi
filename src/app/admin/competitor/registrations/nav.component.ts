@@ -1,4 +1,4 @@
-import { Component, OnInit, WritableSignal, input, output, signal} from '@angular/core';
+import { Component, OnInit, WritableSignal, input, output, signal, ChangeDetectionStrategy } from '@angular/core';
 
 import { TournamentRegistrationSettings } from '../../../lib/tournament/registration/settings';
 import { TournamentRegistrationRepository } from '../../../lib/tournament/registration/repository';
@@ -15,6 +15,7 @@ import { NgbNav, NgbNavContent, NgbNavItem, NgbNavLink, NgbNavOutlet } from '@ng
     selector: 'app-tournament-registrations-nav',
     templateUrl: './nav.component.html',
     styleUrls: ['./nav.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [RegistrationListComponent, RegistrationFormComponent, RegistrationSettingsComponent, NgbNav, NgbNavItem, NgbNavLink, NgbNavContent, NgbNavOutlet],
     
 })

@@ -1,4 +1,4 @@
-import { Component, signal, WritableSignal } from '@angular/core';
+import { Component, signal, WritableSignal, ChangeDetectionStrategy } from '@angular/core';
 import { NgbActiveModal, NgbModal, NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 import { PlaceCompetitorItem } from '../../../lib/ngx-sport/placeCompetitorItem';
 import { TournamentRegistration } from '../../../lib/tournament/registration';
@@ -17,6 +17,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
     selector: 'app-ngbd-modal-process-tournamentregistration',
     templateUrl: './processmodal.component.html',
     styleUrls: ['./processmodal.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FaIconComponent, NgbAlert],
     
 })

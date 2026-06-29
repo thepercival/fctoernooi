@@ -1,4 +1,4 @@
-import { AfterViewChecked, Component, ElementRef, Input, output, signal, TemplateRef, ViewChild, WritableSignal } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, Input, output, signal, TemplateRef, ViewChild, WritableSignal, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Place, StructureNameService } from 'ngx-sport';
@@ -16,6 +16,7 @@ import { faCircleCheck, faDoorClosed, faPencil, faTrashCan } from '@fortawesome/
     templateUrl: './listline.component.html',
     styleUrls: ['./listline.component.css'],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FontAwesomeModule, EscapeHtmlPipe]
 })
 export class CompetitorListLineComponent implements AfterViewChecked {

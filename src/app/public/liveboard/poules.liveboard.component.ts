@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { AgainstRuleSet, AgainstSportRoundRankingCalculator, AgainstVariant, Poule, SportRoundRankingItem, StructureNameService, TogetherSportRoundRankingCalculator } from 'ngx-sport';
 
 import { CSSService } from '../../shared/common/cssservice';
@@ -10,6 +10,7 @@ import { NgTemplateOutlet } from '@angular/common';
     selector: 'app-tournament-liveboard-poules',
     templateUrl: './poules.liveboard.component.html',
     styleUrls: ['./poules.liveboard.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [EscapeHtmlPipe, NgTemplateOutlet]
     
 })

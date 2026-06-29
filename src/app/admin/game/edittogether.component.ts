@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { AbstractControl, FormArray, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -37,6 +37,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
     templateUrl: './edittogether.component.html',
     styleUrls: ['./edittogether.component.scss'],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgbAlert, FontAwesomeModule, ScoreTogetherCardComponent, EscapeHtmlPipe, TournamentNavBarComponent, GameBaseEditComponent,ReactiveFormsModule]
 })
 export class GameTogetherEditComponent extends GameEditComponent implements OnInit, AfterViewInit {

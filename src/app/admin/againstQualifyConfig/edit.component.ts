@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, TemplateRef, inject, WritableSignal, signal } from '@angular/core';
+import { Component, OnInit, Input, TemplateRef, inject, WritableSignal, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
     NameService,
@@ -31,6 +31,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     templateUrl: './edit.component.html',
     standalone: true,
     imports: [FontAwesomeModule, NgbAlert, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./edit.component.scss'],
 })
 export class AgainstQualifyConfigEditComponent implements OnInit {

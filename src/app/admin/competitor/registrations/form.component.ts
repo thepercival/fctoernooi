@@ -1,4 +1,4 @@
-import { Component, OnInit, WritableSignal, input, model, signal } from '@angular/core';
+import { Component, OnInit, WritableSignal, input, model, signal, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { TournamentCompetitor } from '../../../lib/competitor';
 import { IAlert } from '../../../shared/common/alert';
@@ -19,6 +19,7 @@ import { RouterLink } from '@angular/router';
     templateUrl: './form.component.html',
     styleUrls: ['./form.component.scss'],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgbAlert, FontAwesomeModule, RouterLink, ReactiveFormsModule]
 })
 export class RegistrationFormComponent implements OnInit{

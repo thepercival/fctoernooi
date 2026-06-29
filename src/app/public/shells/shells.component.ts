@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, WritableSignal } from '@angular/core';
+import { Component, OnInit, signal, WritableSignal, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { DateFormatter } from '../../lib/dateFormatter';
 import { FavoritesRepository } from '../../lib/favorites/repository';
@@ -21,6 +21,7 @@ import { CustomSportId } from '../../lib/ngx-sport/sport/custom';
     templateUrl: './shells.component.html',
     styleUrls: ['./shells.component.scss'],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FontAwesomeModule, NgbInputDatepicker, ReactiveFormsModule]
 })
 export class PublicShellsComponent implements OnInit{

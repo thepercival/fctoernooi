@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { CSSService } from '../../shared/common/cssservice';
@@ -30,6 +30,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
     selector: 'app-tournament-liveboard',
     templateUrl: './liveboard.component.html',
     styleUrls: ['./liveboard.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgbAlert, FontAwesomeModule, LiveboardNavComponent, LiveboardGamesComponent, LiveboardPoulesComponent, RankingEndComponent, LiveboardSponsorsComponent]
     
 })

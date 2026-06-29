@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AgainstGame, Field, Place, PlanningConfig, PlanningEditMode, Structure, StructureNameService, TogetherGame } from 'ngx-sport';
 import { DateFormatter } from '../../lib/dateFormatter';
@@ -14,6 +14,7 @@ import { faCalendarDays } from '@fortawesome/free-solid-svg-icons';
     templateUrl: './editbase.component.html',
     styleUrls: ['./editbase.component.scss'],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [EscapeHtmlPipe, NgbTimepicker, NgbInputDatepicker, FontAwesomeModule, ReactiveFormsModule]
 })
 export class GameBaseEditComponent implements OnInit {

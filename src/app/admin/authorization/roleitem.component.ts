@@ -1,4 +1,4 @@
-import { Component, OnInit, output, input, WritableSignal } from '@angular/core';
+import { Component, OnInit, output, input, WritableSignal, ChangeDetectionStrategy } from '@angular/core';
 import { getRoleName } from '../../lib/role';
 import { TournamentAuthorizationRole } from './list.component';
 import { FaIconComponent } from "@fortawesome/angular-fontawesome";
@@ -9,6 +9,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
     templateUrl: './roleitem.component.html',
     styleUrls: ['./roleitem.component.scss'],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FaIconComponent],
 })
 export class RoleItemComponent implements OnInit {

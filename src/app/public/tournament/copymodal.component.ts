@@ -1,4 +1,4 @@
-import { Component, inject, Input, OnInit, TemplateRef } from '@angular/core';
+import { Component, inject, Input, OnInit, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgbActiveModal, NgbAlert, NgbDateStruct, NgbInputDatepicker, NgbModal, NgbTimepicker, NgbTimeStruct } from '@ng-bootstrap/ng-bootstrap';
 import { League } from 'ngx-sport';
@@ -11,6 +11,7 @@ import { FocusDirective } from '../../shared/common/focus';
     templateUrl: './copymodal.component.html',
     styleUrls: ['./copymodal.component.scss'],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgbAlert, FontAwesomeModule, NgbTimepicker, NgbInputDatepicker, ReactiveFormsModule, FocusDirective]
 })
 export class CopyModalComponent implements OnInit {

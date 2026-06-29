@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, TemplateRef } from '@angular/core';
+import { Component, inject, OnInit, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -23,6 +23,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
     templateUrl: './name-and-theme.component.html',
     styleUrls: ['./name-and-theme.component.scss'],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FontAwesomeModule, NgbAlert, TournamentNavBarComponent, ReactiveFormsModule]
 })
 export class TournamentNameAndThemeComponent extends TournamentComponent implements OnInit {

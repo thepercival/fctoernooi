@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, signal, WritableSignal } from '@angular/core';
+import { Component, Input, OnInit, signal, WritableSignal, ChangeDetectionStrategy } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Structure, RoundNumber, NameService, StructureNameService } from 'ngx-sport';
 import { EscapeHtmlPipe } from '../../shared/common/escapehtmlpipe';
@@ -7,6 +7,7 @@ import { EscapeHtmlPipe } from '../../shared/common/escapehtmlpipe';
     selector: 'app-ngbd-modal-roundnumbers',
     templateUrl: './selector.component.html',
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [EscapeHtmlPipe]
 })
 export class RoundNumbersSelectorModalComponent implements OnInit {

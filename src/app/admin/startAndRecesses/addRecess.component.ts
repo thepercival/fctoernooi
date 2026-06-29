@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Period } from 'ngx-sport';
@@ -26,6 +26,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
     templateUrl: './addRecess.component.html',
     styleUrls: ['./addRecess.component.css'],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [TournamentNavBarComponent,NgbAlert,NgbTimepicker,NgbInputDatepicker,FontAwesomeModule,ReactiveFormsModule]
 })
 export class RecessAddComponent extends TournamentComponent implements OnInit {

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, output, signal, WritableSignal } from '@angular/core';
+import { Component, Input, OnInit, output, signal, WritableSignal, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AgainstGpp, AgainstH2h, AllInOneGame, GameMode, NameService, Single, Sport, VoetbalRange } from 'ngx-sport';
 
@@ -18,6 +18,7 @@ import { SportToAddComponent } from './toAdd.component';
     templateUrl: './createSportWithFields.component.html',
     styleUrls: ['./createSportWithFields.component.scss'],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FontAwesomeModule,ReactiveFormsModule, NgbAlert,SportToAddComponent]
 })
 export class CreateSportWithFieldsComponent implements OnInit {

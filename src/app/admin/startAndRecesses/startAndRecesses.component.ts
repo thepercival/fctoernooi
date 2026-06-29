@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnInit, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
 import { AbstractControl, FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router, RouterLink } from '@angular/router';
 import { NgbAlert, NgbDateStruct, NgbInputDatepicker, NgbTimepicker } from '@ng-bootstrap/ng-bootstrap';
@@ -27,6 +27,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
     templateUrl: './startAndRecesses.component.html',
     styleUrls: ['./startAndRecesses.component.scss'],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [TournamentNavBarComponent,NgbAlert, NgbTimepicker, NgbInputDatepicker, FontAwesomeModule, ReactiveFormsModule, RouterLink]
 })
 export class StartAndRecessesComponent extends TournamentComponent implements OnInit {

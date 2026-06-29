@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -37,6 +37,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
     selector: 'app-tournament-againstgame-edit',
     templateUrl: './editagainst.component.html',
     styleUrls: ['./editagainst.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [GameBaseEditComponent, NgbAlert,TournamentNavBarComponent,EscapeHtmlPipe,FontAwesomeModule,ReactiveFormsModule],
     
 })

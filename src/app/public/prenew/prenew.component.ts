@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
@@ -9,6 +9,7 @@ import { faLevelUpAlt, faSignInAlt, faUserCircle } from '@fortawesome/free-solid
     selector: 'app-tournament-prenew',
     templateUrl: './prenew.component.html',
     styleUrls: ['./prenew.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [FontAwesomeModule, NgbAlert, RouterModule],
 })
 export class PreNewComponent {

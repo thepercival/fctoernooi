@@ -1,4 +1,4 @@
-import { Component, inject, Injector, OnInit } from '@angular/core';
+import { Component, inject, Injector, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { NgbModal, NgbModalRef, NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from '../../lib/auth/auth.service';
@@ -26,6 +26,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
     selector: 'app-tournament-lockerrooms-edit',
     templateUrl: './lockerrooms.component.html',
     styleUrls: ['./lockerrooms.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [TournamentNavBarComponent, LockerRoomComponent, NgbAlert, FaIconComponent, RouterLink],
     
 })

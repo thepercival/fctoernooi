@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { DateFormatter } from '../lib/dateFormatter';
 import { TournamentShell } from '../lib/tournament/shell';
 import { TranslateSportService } from '../lib/translate/sport';
@@ -6,6 +6,7 @@ import { TranslateSportService } from '../lib/translate/sport';
 @Component({
     selector: '[app-home-shell]',
     templateUrl: './shell.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./shell.component.css'],
     
 })

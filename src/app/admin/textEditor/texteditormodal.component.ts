@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { NgbActiveModal, NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 import { TournamentCompetitor } from '../../lib/competitor';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators, FormGroupDirective, FormControlName } from '@angular/forms';
@@ -12,6 +12,7 @@ import { IAlert, IAlertType } from '../../shared/common/alert';
     templateUrl: './texteditormodal.component.html',
     styleUrls: ['./texteditormodal.component.scss'],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgbAlert, ReactiveFormsModule]
 })
 export class TextEditorModalComponent implements OnInit {

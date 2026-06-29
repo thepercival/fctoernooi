@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild, WritableSignal, signal } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, WritableSignal, signal, ChangeDetectionStrategy } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Validators, FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 import {
@@ -28,6 +28,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
     templateUrl: './edit.component.html',
     styleUrls: ['./edit.component.scss'],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FontAwesomeModule, NgbAlert, ReactiveFormsModule]
 })
 export class ScoreConfigEditComponent implements OnInit {

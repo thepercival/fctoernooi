@@ -1,4 +1,4 @@
-import { Component, inject, Injector, OnInit, WritableSignal, output, signal } from '@angular/core';
+import { Component, inject, Injector, OnInit, WritableSignal, output, signal, ChangeDetectionStrategy } from '@angular/core';
 import { AgainstGpp, AgainstH2h, AllInOneGame, Single, Sport } from 'ngx-sport';
 
 import { IAlert, IAlertType } from '../../shared/common/alert';
@@ -17,6 +17,7 @@ import { CustomSportId } from '../../lib/ngx-sport/sport/custom';
     templateUrl: './toAdd.component.html',
     styleUrls: ['./toAdd.component.scss'],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgbAlert, FaIconComponent]
 })
 export class SportToAddComponent implements OnInit {

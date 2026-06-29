@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, output } from '@angular/core';
+import { Component, Input, OnInit, output, ChangeDetectionStrategy } from '@angular/core';
 import { AbstractControl, FormArray, FormControl, FormGroup, ReactiveFormsModule, FormGroupDirective, FormArrayName, FormControlName } from '@angular/forms';
 import { ScoreConfig, ScoreDirection, StructureNameService, TogetherGamePlace, TogetherScore } from 'ngx-sport';
 import { TranslateScoreService } from '../../lib/translate/score';
@@ -11,6 +11,7 @@ import { faTrashCan } from '@fortawesome/free-solid-svg-icons';
     templateUrl: './togetherscorecard.component.html',
     styleUrls: ['./togetherscorecard.component.css'],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FontAwesomeModule, EscapeHtmlPipe, ReactiveFormsModule]
 })
 export class ScoreTogetherCardComponent implements OnInit {

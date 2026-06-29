@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, output, signal, SimpleChanges, WritableSignal } from '@angular/core';
+import { Component, Input, OnChanges, output, signal, SimpleChanges, WritableSignal, ChangeDetectionStrategy } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { NgbAlert, NgbDropdown, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Category, StartLocationMap, StructureNameService } from 'ngx-sport';
@@ -19,6 +19,7 @@ import { faCheckCircle, faFileLines, faPencilAlt, faRegistered, faTimesCircle } 
     templateUrl: './list.component.html',
     styleUrls: ['./list.component.scss'],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FontAwesomeModule, NgbAlert, NgbDropdown, RouterLink]
 })
 export class RegistrationListComponent implements OnChanges  {

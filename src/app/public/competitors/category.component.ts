@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, TemplateRef } from '@angular/core';
+import { Component, Input, OnInit, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
 
 import { Category, Competitor, Place, StartLocationMap, StructureNameService } from 'ngx-sport';
 import { AuthService } from '../../lib/auth/auth.service';
@@ -19,6 +19,7 @@ import { EscapeHtmlPipe } from '../../shared/common/escapehtmlpipe';
     templateUrl: './category.component.html',
     styleUrls: ['./category.component.scss'],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FontAwesomeModule,EscapeHtmlPipe]
     
 })

@@ -1,4 +1,4 @@
-import { AfterContentInit, Component, ElementRef, OnInit, input, output } from '@angular/core';
+import { AfterContentInit, Component, ElementRef, OnInit, input, output, ChangeDetectionStrategy } from '@angular/core';
 
 import { Router } from '@angular/router';
 import { DefaultJsonTheme } from '../../lib/tournament/theme';
@@ -18,6 +18,7 @@ import { CustomSportId } from '../../lib/ngx-sport/sport/custom';
     selector: 'app-liveboard-nav',
     templateUrl: './nav.component.html',
     styleUrls: ['./nav.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [EscapeHtmlPipe, ProgressComponent, FontAwesomeModule]
     
 })

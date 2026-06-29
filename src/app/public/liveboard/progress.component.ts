@@ -1,12 +1,13 @@
 import {
-    ChangeDetectorRef,
-    Component,
-    effect,
-    ElementRef,
-    input,
-    NgZone,
-    OnDestroy,
-    output,
+  ChangeDetectorRef,
+  Component,
+  effect,
+  ElementRef,
+  input,
+  NgZone,
+  OnDestroy,
+  output,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { Subscription, timer } from 'rxjs';
 import { DefaultJsonTheme, JsonTheme } from '../../lib/tournament/theme';
@@ -14,6 +15,7 @@ import { DefaultJsonTheme, JsonTheme } from '../../lib/tournament/theme';
 @Component({
     selector: 'app-progress',
     templateUrl: './progress.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./progress.component.scss'],
     
 })

@@ -1,4 +1,4 @@
-import { AfterViewChecked, Component, OnInit } from '@angular/core';
+import { AfterViewChecked, Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   Place,
@@ -38,6 +38,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
     templateUrl: './list.component.html',
     styleUrls: ['./list.component.scss'],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgbAlert, FontAwesomeModule, CategoryBaseCompetitorListComponent, ReactiveFormsModule, NgbNav, NgbNavItem, NgbNavLink, NgbNavContent, NgbNavOutlet, CategoryOrderCompetitorListComponent, RegistrationsNavComponent, CompetitorPresentListComponent, TournamentNavBarComponent]
 })
 export class CompetitorListComponent extends TournamentComponent implements OnInit, AfterViewChecked {

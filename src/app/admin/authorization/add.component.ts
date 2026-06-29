@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { TournamentRepository } from '../../lib/tournament/repository';
@@ -23,6 +23,7 @@ import { TournamentNavBarComponent } from '../../shared/tournament/tournamentNav
     templateUrl: './add.component.html',
     styleUrls: ['./add.component.scss'],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FontAwesomeModule,NgbAlert, ReactiveFormsModule, TournamentNavBarComponent]
 })
 export class AuthorizationAddComponent extends TournamentComponent implements OnInit {

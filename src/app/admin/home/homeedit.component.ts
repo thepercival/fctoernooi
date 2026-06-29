@@ -1,4 +1,4 @@
-import { Component, input, model, OnInit, TemplateRef } from '@angular/core';
+import { Component, input, model, OnInit, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { MyNavigation } from '../../shared/common/navigation';
@@ -26,6 +26,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
     templateUrl: './homeedit.component.html',
     styleUrls: ['./homeedit.component.scss'],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FontAwesomeModule, TournamentNavBarComponent, NgbAlert, ReactiveFormsModule]
 })
 export class HomeEditComponent extends TournamentComponent implements OnInit {

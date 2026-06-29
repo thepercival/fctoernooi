@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnInit, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -26,6 +26,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
     templateUrl: './edit.component.html',
     styleUrls: ['./edit.component.css'],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgbAlert, FontAwesomeModule, TournamentNavBarComponent, FormsModule, ReactiveFormsModule]
 })
 export class SponsorEditComponent extends TournamentComponent implements OnInit {

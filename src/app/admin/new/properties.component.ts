@@ -1,4 +1,4 @@
-import { Component, OnInit, output, TemplateRef } from '@angular/core';
+import { Component, OnInit, output, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FormGroup, FormControl, Validators, AbstractControl, ReactiveFormsModule } from '@angular/forms';
 import { NgbDateStruct, NgbInputDatepicker, NgbModal, NgbTimepicker, NgbTimeStruct } from '@ng-bootstrap/ng-bootstrap';
@@ -16,6 +16,7 @@ import { faCalendarAlt, faInfoCircle, faLevelUpAlt } from '@fortawesome/free-sol
     templateUrl: './properties.component.html',
     styleUrls: ['./properties.component.scss'],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FontAwesomeModule,NgbInputDatepicker,NgbTimepicker,ReactiveFormsModule,RouterLink]
 })
 export class TournamentPropertiesComponent implements OnInit {

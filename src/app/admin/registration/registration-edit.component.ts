@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnInit, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -33,6 +33,7 @@ import { FocusDirective } from '../../shared/common/focus';
     templateUrl: './registration-edit.component.html',
     styleUrls: ['./registration-edit.component.scss'],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgbAlert, TournamentNavBarComponent,FontAwesomeModule, FormsModule, ReactiveFormsModule, FocusDirective]
 })
 export class TournamentRegistrationEditComponent extends TournamentComponent implements OnInit {

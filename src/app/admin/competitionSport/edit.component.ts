@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
     AgainstVariant,
@@ -28,6 +28,7 @@ import { CustomSportId } from '../../lib/ngx-sport/sport/custom';
     selector: 'app-tournament-sportconfig-edit',
     templateUrl: './edit.component.html',
     styleUrls: ['./edit.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FaIconComponent, NgbAlert, NgbNav, NgbNavItem, NgbNavLink, NgbNavContent, NgbNavOutlet, FieldListComponent, ScoreConfigEditComponent, TournamentNavBarComponent, AgainstQualifyConfigEditComponent],
 })
 export class CompetitionSportEditComponent extends TournamentComponent implements OnInit {

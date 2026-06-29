@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, WritableSignal } from '@angular/core';
+import { Component, OnInit, signal, WritableSignal, ChangeDetectionStrategy } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import { TournamentShell } from '../../lib/tournament/shell';
 import { TournamentShellRepository } from '../../lib/tournament/shell/repository';
@@ -16,6 +16,7 @@ import { faCopy, faSpinner } from '@fortawesome/free-solid-svg-icons';
     selector: 'app-tournament-examples',
     templateUrl: './examples.component.html',
     styleUrls: ['./examples.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [FontAwesomeModule]
     
 })

@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnInit, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router, RouterLink } from '@angular/router';
 
 import { TournamentRepository } from '../../lib/tournament/repository';
@@ -24,6 +24,7 @@ import { faPlusCircle, faSpinner } from '@fortawesome/free-solid-svg-icons';
     selector: 'app-tournament-authorization-list',
     templateUrl: './list.component.html',
     styleUrls: ['./list.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [TournamentNavBarComponent, RoleItemComponent, FaIconComponent, NgbAlert, RouterLink],
 })
 export class AuthorizationListComponent extends TournamentComponent implements OnInit {

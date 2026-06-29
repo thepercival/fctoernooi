@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, output, signal, SimpleChanges, WritableSignal } from '@angular/core';
+import { Component, Input, OnChanges, output, signal, SimpleChanges, WritableSignal, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 import { Category, Place, StartLocationMap, StructureNameService } from 'ngx-sport';
@@ -17,6 +17,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
     templateUrl: './present.component.html',
     styleUrls: ['./present.component.scss'],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgbAlert,FontAwesomeModule,EscapeHtmlPipe]
 })
 export class CompetitorPresentListComponent implements OnChanges {

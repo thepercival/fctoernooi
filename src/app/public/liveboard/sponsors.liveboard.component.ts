@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
 
 import { Sponsor } from '../../lib/sponsor';
 import { SponsorRepository } from '../../lib/sponsor/repository';
@@ -6,6 +6,7 @@ import { SponsorRepository } from '../../lib/sponsor/repository';
 @Component({
     selector: 'app-tournament-liveboard-sponsors',
     templateUrl: './sponsors.liveboard.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./sponsors.liveboard.component.scss'],
     
 })

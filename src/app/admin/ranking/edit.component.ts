@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnInit, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { TournamentRepository } from '../../lib/tournament/repository';
@@ -27,6 +27,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
     templateUrl: './edit.component.html',
     styleUrls: ['./edit.component.scss'],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [EscapeHtmlPipe,NgbAlert,RankingCategoryComponent,FontAwesomeModule,RankingRulesComponent,TournamentNavBarComponent]
 })
 export class RankingEditComponent extends TournamentComponent implements OnInit {

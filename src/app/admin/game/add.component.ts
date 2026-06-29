@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -47,6 +47,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
     templateUrl: './add.component.html',
     styleUrls: ['./add.component.scss'],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgbAlert,FontAwesomeModule,TournamentNavBarComponent,ReactiveFormsModule]
 })
 export class GameAddComponent extends TournamentComponent implements OnInit {

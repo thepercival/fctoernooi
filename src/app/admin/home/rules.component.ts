@@ -1,4 +1,4 @@
-import { Component, inject, Injector, OnInit } from '@angular/core';
+import { Component, inject, Injector, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { IAlertType } from '../../shared/common/alert';
@@ -18,6 +18,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
     selector: 'app-tournament-rules',
     templateUrl: './rules.component.html',
     styleUrls: ['./rules.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [TournamentNavBarComponent, FaIconComponent, NgbAlert],
     
 })

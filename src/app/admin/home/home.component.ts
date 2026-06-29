@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnInit, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Params, Router, RouterLink } from '@angular/router';
 import { NgbAlert, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CompetitionSport, PlanningEditMode, RoundNumber } from 'ngx-sport';
@@ -41,6 +41,7 @@ import { CustomSportId } from '../../lib/ngx-sport/sport/custom';
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.css'],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [TournamentNavBarComponent, NgbAlert, FontAwesomeModule, AdminPublicSwitcherComponent, RouterLink]
 })
 export class HomeAdminComponent extends TournamentComponent implements OnInit {

@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnInit, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { NgbAlert, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
@@ -36,6 +36,7 @@ import { facSoccerField } from '../../shared/customicons';
     templateUrl: './list.component.html',
     styleUrls: ['./list.component.scss'],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [TournamentNavBarComponent,FontAwesomeModule,NgbAlert,CreateSportWithFieldsComponent,RouterLink]
 })
 export class CompetitionSportListComponent extends TournamentComponent implements OnInit {

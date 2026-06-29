@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, TemplateRef, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
     RoundNumber,
@@ -52,6 +52,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
     templateUrl: './edit.component.html',
     styleUrls: ['./edit.component.css'],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgbAlert,GameAmountConfigEditComponent,FontAwesomeModule,EscapeHtmlPipe,TournamentNavBarComponent,ReactiveFormsModule]
 })
 export class PlanningConfigComponent extends TournamentComponent implements OnInit {

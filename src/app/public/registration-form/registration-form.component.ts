@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Category } from 'ngx-sport';
 
@@ -32,6 +32,7 @@ import { FocusDirective } from '../../shared/common/focus';
     templateUrl: './registration-form.component.html',
     styleUrls: ['./registration-form.component.scss'],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FontAwesomeModule, AdminPublicSwitcherComponent, NgbAlert, FormsModule, ReactiveFormsModule, RouterLink, FocusDirective]
 })
 export class RegistrationComponent extends TournamentComponent implements OnInit {

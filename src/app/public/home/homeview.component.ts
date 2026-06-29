@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { TournamentRepository } from '../../lib/tournament/repository';
@@ -32,6 +32,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
     selector: 'app-tournament-home-view',
     templateUrl: './homeview.component.html',
     styleUrls: ['./homeview.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FontAwesomeModule, NgbAlert, AdminPublicSwitcherComponent, TournamentNavBarComponent, RouterModule]
     
 })

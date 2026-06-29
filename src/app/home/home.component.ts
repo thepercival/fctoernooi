@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, signal, WritableSignal } from '@angular/core';
+import { Component, OnInit, AfterViewInit, signal, WritableSignal, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthService } from '../lib/auth/auth.service';
@@ -15,6 +15,7 @@ import { HomeShellComponent } from './shell.component';
     standalone: true,
     imports: [HomeShellComponent],
     templateUrl: './home.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./home.component.scss'],
     
 })

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   BalancedPouleStructure,
@@ -43,6 +43,7 @@ import { facStructure } from '../../shared/customicons';
     templateUrl: './edit.component.html',
     styleUrls: ['./edit.component.scss'],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [StructureRoundComponent,NgbAlert,StructureCategoryComponent,FontAwesomeModule, TournamentNavBarComponent, PlanningNavBarComponent, StructureCategoryComponent, StructureRoundComponent]
 })
 export class StructureEditComponent extends TournamentComponent implements OnInit {

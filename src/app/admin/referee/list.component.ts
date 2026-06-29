@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal, TemplateRef, WritableSignal } from '@angular/core';
+import { Component, inject, OnInit, signal, TemplateRef, WritableSignal, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Referee } from 'ngx-sport';
 
@@ -21,6 +21,7 @@ import { facReferee } from '../../shared/customicons';
     templateUrl: './list.component.html',
     styleUrls: ['./list.component.scss'],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgbAlert,FontAwesomeModule,TournamentNavBarComponent]
 })
 export class RefereeListComponent extends TournamentComponent implements OnInit {

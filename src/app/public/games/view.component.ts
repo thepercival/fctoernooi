@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthService } from '../../lib/auth/auth.service';
@@ -25,6 +25,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
     selector: 'app-tournament-games-view',
     templateUrl: './view.component.html',
     styleUrls: ['./view.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [AdminPublicSwitcherComponent, FontAwesomeModule, NgbAlert, RoundNumberPlanningComponent, TournamentNavBarComponent]
     
 })

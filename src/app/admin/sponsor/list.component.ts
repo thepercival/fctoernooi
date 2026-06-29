@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, TemplateRef } from '@angular/core';
+import { Component, inject, OnInit, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { Sponsor } from '../../lib/sponsor';
@@ -25,6 +25,7 @@ import { faInfoCircle, faMoneyBillAlt, faSpinner } from '@fortawesome/free-solid
     templateUrl: './list.component.html',
     styleUrls: ['./list.component.scss'],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [TournamentNavBarComponent, FontAwesomeModule, NgbAlert, RouterLink]
 })
 export class SponsorListComponent extends TournamentComponent implements OnInit {

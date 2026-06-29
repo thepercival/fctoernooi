@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, WritableSignal, signal } from '@angular/core';
+import { Component, Input, OnInit, WritableSignal, signal, ChangeDetectionStrategy } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Round, CompetitionSport, StructureNameService, Category } from 'ngx-sport';
 import { StructureSelectRoundComponent } from "./rounds.component";
@@ -7,6 +7,7 @@ import { StructureSelectRoundComponent } from "./rounds.component";
     selector: 'app-ngbd-modal-rounds',
     templateUrl: './selector.component.html',
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [StructureSelectRoundComponent],    
 })
 export class RoundsSelectorModalComponent implements OnInit {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { AuthService } from '../../lib/auth/auth.service';
@@ -25,6 +25,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
     templateUrl: './list.component.html',
     styleUrls: ['./list.component.css'],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgbAlert,FontAwesomeModule,RoundNumberPlanningComponent,TournamentNavBarComponent,RouterLink]
 })
 export class GameListComponent extends TournamentComponent implements OnInit {

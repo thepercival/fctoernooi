@@ -8,6 +8,12 @@
     ]
   },
   "angularCompilerOptions": {
+    "extendedDiagnostics": {
+      "checks": {
+        "nullishCoalescingNotNullable": "suppress",
+        "optionalChainNotNullable": "suppress"
+      }
+    },
     "strictInjectionParameters": true
   },
   "files": [

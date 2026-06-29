@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnInit, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Referee, StructureNameService, StartLocationMap } from 'ngx-sport';
 
@@ -29,6 +29,7 @@ import { facReferee } from '../../shared/customicons';
     selector: 'app-tournament-select-favorites',
     templateUrl: './select.component.html',
     styleUrls: ['./select.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [AdminPublicSwitcherComponent, FontAwesomeModule, NgbAlert, NgbNav, NgbNavItem, NgbNavLink, NgbNavContent, NgbNavOutlet, TournamentNavBarComponent, CompetitorsCategoryComponent, CommonModule]
     
 })

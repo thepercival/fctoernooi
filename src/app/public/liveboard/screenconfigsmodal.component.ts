@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { NgbActiveModal, NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 import { ScreenConfig } from '../../lib/liveboard/screenConfig/json';
@@ -10,6 +10,7 @@ import { faCogs } from '@fortawesome/free-solid-svg-icons';
     selector: 'app-ngbd-modal-screenconfigs',
     templateUrl: './screenconfigsmodal.component.html',
     styleUrls: ['./screenconfigsmodal.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ReactiveFormsModule, FontAwesomeModule, NgbAlert]
     
 })

@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, output, signal, SimpleChanges, WritableSignal } from '@angular/core';
+import { Component, Input, OnChanges, output, signal, SimpleChanges, WritableSignal, ChangeDetectionStrategy } from '@angular/core';
 import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 import { Category, Competitor, Place, StartLocationMap, StructureNameService } from 'ngx-sport';
 import { forkJoin, Observable } from 'rxjs';
@@ -16,6 +16,7 @@ import { faShuffle, faSort, faSpinner } from '@fortawesome/free-solid-svg-icons'
     templateUrl: './category.order.component.html',
     styleUrls: ['./category.order.component.scss'],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgbAlert,FontAwesomeModule,EscapeHtmlPipe]
 })
 export class CategoryOrderCompetitorListComponent implements OnChanges {

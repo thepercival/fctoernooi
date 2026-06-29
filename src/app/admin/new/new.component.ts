@@ -1,4 +1,4 @@
-import { Component, input, model, OnInit, signal, WritableSignal } from '@angular/core';
+import { Component, input, model, OnInit, signal, WritableSignal, ChangeDetectionStrategy } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 
 import { IAlert, IAlertType } from '../../shared/common/alert';
@@ -26,6 +26,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
     templateUrl: './new.component.html',
     styleUrls: ['./new.component.scss'],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [TournamentPropertiesComponent, NgbAlert, CreateSportWithFieldsComponent, FaIconComponent,ReactiveFormsModule]
 })
 export class NewComponent implements OnInit {

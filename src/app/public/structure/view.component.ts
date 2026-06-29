@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { MyNavigation } from '../../shared/common/navigation';
@@ -25,6 +25,7 @@ import { facStructure } from '../../shared/customicons';
     selector: 'app-tournament-structure-view',
     templateUrl: './view.component.html',
     styleUrls: ['./view.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [AdminPublicSwitcherComponent, FontAwesomeModule, StructureRoundComponent, StructureCategoryComponent, TournamentNavBarComponent]
     
 })

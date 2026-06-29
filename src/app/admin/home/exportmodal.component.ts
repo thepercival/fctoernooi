@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, input } from '@angular/core';
+import { Component, OnDestroy, OnInit, input, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { IconDefinition, IconName } from '@fortawesome/fontawesome-svg-core';
 import { NgbActiveModal, NgbAlert, NgbModal, NgbProgressbar } from '@ng-bootstrap/ng-bootstrap';
@@ -19,6 +19,7 @@ import { faPrint, faQrcode, faSpinner } from '@fortawesome/free-solid-svg-icons'
     templateUrl: './exportmodal.component.html',
     styleUrls: ['./exportmodal.component.scss'],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgbAlert, FontAwesomeModule, NgbProgressbar, ReactiveFormsModule]
 })
 export class ExportModalComponent implements OnInit, OnDestroy {
