@@ -569,8 +569,9 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
 
     openModalSelectStartRoundNumber() {
         const modalRef = this.modalService.open(RoundNumbersSelectorModalComponent);
-        modalRef.componentInstance.structure = this.structure;
-        modalRef.componentInstance.subject = 'de score-regels';
+        modalRef.componentInstance.structure = () => this.structure;
+        modalRef.componentInstance.subject = () => 'de planning-instellingen';
+        modalRef.componentInstance.initialRoundNumber = () => this.startRoundNumber;
         modalRef.result.then((startRoundNumber: RoundNumber) => {
             this.processing.set(true);
             this._changingStartRoundNumber.next(startRoundNumber);

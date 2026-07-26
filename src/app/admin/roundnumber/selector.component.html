@@ -4,8 +4,11 @@
 </div>
 <div class="modal-body">
   <ul class="list-group">
-    @for (roundNumber of structure.getRoundNumbers(); track roundNumber.getNumber()) {
-      <li class="list-group-item border-primary" [class.pointer]="!roundNumber.hasBegun()" (click)="sendRoundNumber(roundNumber)">
+    @for (roundNumber of structure().getRoundNumbers(); track roundNumber.getNumber()) {
+      <li class="list-group-item border-primary"
+          [class.list-group-item-primary]="isSelected(roundNumber)"
+          [class.pointer]="!roundNumber.hasBegun()"
+          (click)="selectRoundNumber(roundNumber)">
         <div class="d-flex justify-content-between">
           <label for="roundNumber-{{roundNumber.getNumber()}}" class="mb-0">
             <span [innerHTML]="getRoundNumbersName( roundNumber ) | keepHtml"></span>
@@ -18,7 +21,8 @@
           </label>
           @if (!roundNumber.hasBegun()) {
             <div class="form-check form-switch">
-              <input type="checkbox" class="form-check-input" id="roundNumber-{{roundNumber.getNumber()}}">
+              <input type="checkbox" class="form-check-input" id="roundNumber-{{roundNumber.getNumber()}}"
+                [checked]="isSelected(roundNumber)" readonly>
               <label class="form-check-label" for="roundNumber-{{roundNumber.getNumber()}}"></label>
             </div>
           } @else {
@@ -28,4 +32,9 @@
       </li>
     }
   </ul>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-primary" [disabled]="selectedNumber() === undefined" (click)="confirm()">
+    kiezen
+  </button>
 </div>
