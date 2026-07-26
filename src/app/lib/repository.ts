@@ -70,6 +70,7 @@ export class AppErrorHandler {
 
     public handleError(error: HttpErrorResponse | Error): Observable<any> {
         let errortext: string = 'onbekende fout(';
+
         if (!navigator.onLine) {
             errortext = 'er kan geen internet verbinding gemaakt worden';
         } else if (error instanceof HttpErrorResponse) {
@@ -77,7 +78,9 @@ export class AppErrorHandler {
             if (error.status === 0) {
                 errortext = 'er kan geen verbinding met de data-service gemaakt worden, ververs de pagina';
             } else if (error.status === 401) {
-                if (error.error && error.error.message === 'Expired token') {
+                if (error.error 
+                    && (    error.error.message === 'Expired token'
+                        || error.error.message === 'Signature verification failed')) {
                     this.router.navigate(['user/logout']);
                     errortext = 'de sessie is verlopen, log uit en log daarna opnieuw in';
                 } else {
