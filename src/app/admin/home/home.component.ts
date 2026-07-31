@@ -35,6 +35,11 @@ import { faSpinner, faTv } from '@fortawesome/free-solid-svg-icons';
 import { getSportIconDef } from '../../shared/tournament/sport/icon.mapper';
 import { facReferee } from '../../shared/customicons';
 import { CustomSportId } from '../../lib/ngx-sport/sport/custom';
+import { EXPORT_MODAL_INPUTS } from '../../shared/modal-input-interfaces/export-modal-inputs.interface';
+import { COPY_MODAL_INPUTS } from '../../shared/modal-input-interfaces/copy-modal-inputs.interface';
+import { COPIED_MODAL_INPUTS } from '../../shared/modal-input-interfaces/copied-modal-inputs.interface';
+import { SHARE_MODAL_INPUTS } from '../../shared/modal-input-interfaces/share-modal-inputs.interface';
+import { createModalInjector } from '../../shared/modal-input-interfaces/create-modal-injector';
 
 @Component({
     selector: 'app-tournament-home-admin',
@@ -232,15 +237,16 @@ export class HomeAdminComponent extends TournamentComponent implements OnInit {
     }
 
     isAdmin(): boolean {
-        return this.hasRole(this.authService, Role.Admin);
+        return this.authService.loggedInUserHasRole(this.tournament, Role.Admin);        
     }
 
     isRoleAdmin(): boolean {
-        return this.hasRole(this.authService, Role.RoleAdmin);
+        return this.authService.loggedInUserHasRole(this.tournament, Role.RoleAdmin);
     }
 
     isRefereeOrGameResultAdmin(): boolean {
-        return this.hasRole(this.authService, Role.GameResultAdmin + Role.Referee);
+        return this.authService.loggedInUserHasRole(this.tournament, Role.GameResultAdmin)
+            || this.authService.loggedInUserHasRole(this.tournament, Role.Referee);
     }
 
     remove() {
@@ -301,17 +307,19 @@ export class HomeAdminComponent extends TournamentComponent implements OnInit {
     }
 
     openModalExport(withRegistrations: boolean = false) {
-        const activeModal = this.modalService.open(ExportModalComponent, { backdrop: 'static' });
-        activeModal.componentInstance.tournament = this.tournament;
         const readonlySubjects = this.getExportReadOnlySubjects();
-        activeModal.componentInstance.settings = this.settings;
         let subjects = this.getExportSubjectsFromDevice(readonlySubjects);
         if (withRegistrations && this.settings?.isEnabled()) {
             subjects |= TournamentExportConfig.registrationForm;
         }
-        activeModal.componentInstance.subjects = subjects;
-        activeModal.componentInstance.readonlySubjects = readonlySubjects;
-        activeModal.componentInstance.fieldDescription = this.getFieldDescription();
+        const modalInjector = createModalInjector(this.injector, EXPORT_MODAL_INPUTS, {
+            tournament: this.tournament,
+            settings: this.settings,
+            subjects,
+            readonlySubjects,
+            fieldDescription: this.getFieldDescription()
+        });
+        const activeModal = this.modalService.open(ExportModalComponent, { backdrop: 'static', injector: modalInjector });
         activeModal.result.then((url: string) => {
             
         }, (reason) => { });
@@ -336,10 +344,12 @@ export class HomeAdminComponent extends TournamentComponent implements OnInit {
                         this.router.navigate(['/user/buycredits']);
                         return;
                     }
-                    const activeModal = this.modalService.open(CopyModalComponent, { scrollable: false });
-                    activeModal.componentInstance.name = this.tournament.getName();
-                    activeModal.componentInstance.startDateTime = newStartDate;
-                    activeModal.componentInstance.showLowCreditsWarning = nrOfCredits === 1;
+                    const modalInjector = createModalInjector(this.injector, COPY_MODAL_INPUTS, {
+                        name: this.tournament.getName(),
+                        startDateTime: newStartDate,
+                        showLowCreditsWarning: nrOfCredits === 1
+                    });
+                    const activeModal = this.modalService.open(CopyModalComponent, { scrollable: false, injector: modalInjector });
 
                     activeModal.result.then((result) => {
                         this.copy(result);
@@ -352,9 +362,11 @@ export class HomeAdminComponent extends TournamentComponent implements OnInit {
     }
 
     openModalCopied(previousId: string) {        
-        const activeModal = this.modalService.open(CopiedModalComponent, { scrollable: false });
-        activeModal.componentInstance.previousId = previousId;
-        activeModal.componentInstance.title = this.tournament.getName(); 
+        const modalInjector = createModalInjector(this.injector, COPIED_MODAL_INPUTS, {
+            previousId,
+            title: this.tournament.getName()
+        });
+        const activeModal = this.modalService.open(CopiedModalComponent, { scrollable: false, injector: modalInjector });
 
         activeModal.result.then((previousId: string) => {
             this.router.navigate(['/admin', previousId ]);
@@ -375,10 +387,12 @@ export class HomeAdminComponent extends TournamentComponent implements OnInit {
     }
 
     openModalShare() {
-        const activeModal = this.modalService.open(ShareModalComponent);
-        activeModal.componentInstance.tournament = this.tournament;
         const publicInitial = this.tournament.getPublic();
-        activeModal.componentInstance.publicInitial = publicInitial; 
+        const modalInjector = createModalInjector(this.injector, SHARE_MODAL_INPUTS, {
+            tournament: this.tournament,
+            publicInitial
+        });
+        const activeModal = this.modalService.open(ShareModalComponent, { injector: modalInjector });
         activeModal.result.then((publicEnabled: boolean) => {
             const sendToHomeAdmin = publicInitial === false && publicEnabled;
             this.share(publicEnabled, sendToHomeAdmin);

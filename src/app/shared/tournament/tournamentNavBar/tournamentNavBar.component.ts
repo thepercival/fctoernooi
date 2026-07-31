@@ -59,16 +59,15 @@ export class TournamentNavBarComponent implements AfterViewChecked {
   get CompetitorsScreen(): TournamentScreen { return TournamentScreen.Competitors }
   get SettingsScreen(): TournamentScreen { return TournamentScreen.Settings }
   get CompetitorTabBase(): CompetitorTab { return CompetitorTab.Base }   
+  get AdminRole(): Role { return Role.Admin }   
+  get RoleAdminRole(): Role { return Role.RoleAdmin }   
+  get GameResultAdminRole(): Role { return Role.GameResultAdmin }   
 
   getBtnClass(screen: TournamentScreen): string {
     if (this.currentScreen() === screen) {
       return this.getTextContrastColorClass();
     }
     return 'btn-navbar';
-  }
-
-  linkToStructure() {
-    this.router.navigate(['/' + (this.public() ? 'public' : 'admin') + '/structure', this.tournament().getId()]);
   }
 
   linkToLockerRooms() {
@@ -79,10 +78,10 @@ export class TournamentNavBarComponent implements AfterViewChecked {
     this.router.navigate(['/' + (this.public() ? 'public' : 'admin') + '/games', this.tournament().getId()]);
   }
 
-  hasRole(roles: number): boolean {
+  hasRole(role: Role): boolean {
     const loggedInUserId = this.authService.getLoggedInUserId();
     const tournamentUser = loggedInUserId ? this.tournament().getUser(loggedInUserId) : undefined;
-    return tournamentUser ? tournamentUser.hasARole(roles) : false;
+    return tournamentUser ? tournamentUser.hasRole(role) : false;
   }
         
   getTextContrastColorClass(): ContrastColorClass {    

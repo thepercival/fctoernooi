@@ -9,6 +9,7 @@ import { TournamentUserMapper } from './mapper';
 import { TournamentUser } from '../user';
 import { JsonTournamentUser } from './json';
 import { Router } from '@angular/router';
+import { Role } from '../../role';
 
 @Injectable({
     providedIn: 'root'
@@ -31,11 +32,35 @@ export class TournamentUserRepository extends APIRepository {
         return super.getApiUrl() + 'tournaments/' + tournament.getId() + '/' + this.getUrlpostfix();
     }
 
-    editObject(tournamentUser: TournamentUser): Observable<TournamentUser> {
+    // editObject(tournamentUser: TournamentUser): Observable<TournamentUser> {
+    //     const tournament = tournamentUser.getTournament();
+    //     const url = this.getUrl(tournament) + '/' + tournamentUser.getId();
+    //     return this.http.put<JsonTournamentUser>(url, this.mapper.toJson(tournamentUser), this.getOptions()).pipe(
+    //         map((res: JsonTournamentUser) => this.mapper.toObject(res, tournament, tournamentUser)),
+    //         catchError((err: HttpErrorResponse) => this.handleError(err))
+    //     );
+    // }
+
+    addRole(tournamentUser: TournamentUser, role: Role): Observable<TournamentUser> {
         const tournament = tournamentUser.getTournament();
-        const url = this.getUrl(tournament) + '/' + tournamentUser.getId();
-        return this.http.put<JsonTournamentUser>(url, this.mapper.toJson(tournamentUser), this.getOptions()).pipe(
-            map((res: JsonTournamentUser) => this.mapper.toObject(res, tournament, tournamentUser)),
+        const url = this.getUrl(tournament) + '/' + tournamentUser.getId() + '/roles/' + role;
+        return this.http.post<JsonTournamentUser>(url, undefined, this.getOptions()).pipe(
+            map((res: JsonTournamentUser) => {
+                tournamentUser.addRole(role);
+                return tournamentUser;
+            }),
+            catchError((err: HttpErrorResponse) => this.handleError(err))
+        );
+    }
+
+    removeRole(tournamentUser: TournamentUser, role: Role): Observable<TournamentUser> {
+        const tournament = tournamentUser.getTournament();
+        const url = this.getUrl(tournament) + '/' + tournamentUser.getId() + '/roles/' + role;
+        return this.http.delete<JsonTournamentUser>(url, this.getOptions()).pipe(
+            map((res: JsonTournamentUser) => {
+                tournamentUser.removeRole(role);
+                return tournamentUser;
+            }),
             catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }

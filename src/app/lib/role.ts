@@ -1,5 +1,5 @@
 export enum Role {
-    Admin = 1, RoleAdmin = 2, GameResultAdmin = 4, Referee = 8, All = 15
+    Admin = 1, RoleAdmin = 2, GameResultAdmin = 4, Referee = 8
 }
 
 export function getRoleName(role: Role): string {

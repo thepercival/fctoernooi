@@ -7,6 +7,8 @@ import { APIRepository } from '../repository';
 import { JsonUser, UserMapper } from '../user/mapper';
 import { User, UserId } from '../user';
 import { Router } from '@angular/router';
+import { Role } from '../role';
+import { Tournament } from '../tournament';
 @Injectable({
   providedIn: 'root'
 })
@@ -114,6 +116,12 @@ export class AuthService extends APIRepository {
 
   logout(): void {
     this.clearAuthItem();
+  }
+
+  loggedInUserHasRole(tournament: Tournament, role: Role): boolean {
+      const loggedInUserId = this.getLoggedInUserId();
+      const tournamentUser = loggedInUserId ? tournament.getUser(loggedInUserId) : undefined;
+      return tournamentUser ? tournamentUser.hasRole(role) : false;
   }
 }
 

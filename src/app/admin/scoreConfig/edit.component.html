@@ -1,6 +1,6 @@
 @if(processing()) {
 <h2 class="text-center">
-  <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
+  <fa-icon [icon]="faSpinner" [animation]="'spin'"></fa-icon>
 </h2>
 }
 @if(alert(); as alert) {
@@ -63,7 +63,7 @@
     <div class="col-7">
       <button type="submit" class="btn btn-primary" [disabled]="typedForm.invalid || saving()">
         @if(saving()) {
-        <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
+        <fa-icon [icon]="faSpinner" [animation]="'spin'"></fa-icon>
         <span class="ms-1">opslaan...</span>
         } @else {
         <span>opslaan</span>

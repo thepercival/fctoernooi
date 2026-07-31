@@ -7,7 +7,7 @@
         </h2>
         @if(processing()) {
         <h2>
-          <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
+          <fa-icon [icon]="faSpinner" [animation]="'spin'"></fa-icon>
         </h2>
         }
       </div>
@@ -88,12 +88,12 @@
 
 <ng-template #contentInfoLocation>
   <div class="text-center">
-    <p class="lead">vul een coordinaat (long/lat) of een adresomschrijving in</p>
+    <p class="lead">vul een coördinaat (long/lat) of een adresomschrijving in</p>
     <hr />
     <div class="container-fluid text-start">
       <div class="row">
         <div class="col-5">
-          coordinaat (lng/lat)
+          coördinaat (lng/lat)
         </div>
         <div class="col-7">
           <input class="form-control" type="text" [disabled]="true" [readonly]="true" value="54.3123,6.3123">

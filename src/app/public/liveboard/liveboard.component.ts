@@ -25,6 +25,8 @@ import { LiveboardPoulesComponent } from './poules.liveboard.component';
 import { RankingEndComponent } from '../../shared/tournament/ranking/end.component';
 import { LiveboardSponsorsComponent } from './sponsors.liveboard.component';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { SCREEN_CONFIGS_MODAL_INPUTS } from '../../shared/modal-input-interfaces/screen-configs-modal-inputs.interface';
+import { createModalInjector } from '../../shared/modal-input-interfaces/create-modal-injector';
 
 @Component({
     selector: 'app-tournament-liveboard',
@@ -191,8 +193,8 @@ export class LiveboardComponent extends TournamentComponent implements OnInit {
         this.activeScreen = undefined;
         this.configModalIsOpen = true;
 
-        const activeModal = this.modalService.open(ScreenConfigsModalComponent, { backdrop: 'static' });
-        activeModal.componentInstance.screenConfigs = screenConfigs;
+        const modalInjector = createModalInjector(this.injector, SCREEN_CONFIGS_MODAL_INPUTS, { screenConfigs });
+        const activeModal = this.modalService.open(ScreenConfigsModalComponent, { backdrop: 'static', injector: modalInjector });
         activeModal.result.then((screenConfigs: ScreenConfig[]) => {
             this.configModalIsOpen = false;
             this.save(screenConfigs);

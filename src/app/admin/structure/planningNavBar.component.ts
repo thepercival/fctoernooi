@@ -84,11 +84,6 @@ export class PlanningNavBarComponent implements OnChanges {
 
   openCategoryModal(category?: Category) {
     // const activeModal = this.modalService.open(NameModalComponent);
-    // activeModal.componentInstance.header = 'categorie';
-    // activeModal.componentInstance.range = { min: 3, max: 15 };
-    // activeModal.componentInstance.placeHolder = 'Jongens 7/8';
-    // activeModal.componentInstance.labelName = 'naam';
-    // activeModal.componentInstance.buttonName = category ? 'wijzigen' : 'toevoegen';
 
     // activeModal.result.then((categoryName: string) => {
     //   this.addCategory(categoryName);

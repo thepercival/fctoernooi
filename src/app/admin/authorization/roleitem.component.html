@@ -8,13 +8,13 @@
     @if(!processing()) {
       <div class="form-check form-switch">
         <input type="checkbox" class="form-check-input" id="role-{{role().role}}"
-          [checked]="role().authorization.hasRoles(role().role)" [disabled]="disabled()"
+          [checked]="role().authorization.hasRole(role().role)" [disabled]="disabled()"
           (change)="toggle()">
         <label class="form-check-label" for="role-{{role().role}}"></label>
       </div>
     }
     @if (processing()) {
-      <fa-icon class="my-2 me-2" [icon]="faSpinner" animations="spin"></fa-icon>
+      <fa-icon class="my-2 me-2" [icon]="faSpinner" [animation]="'spin'"></fa-icon>
     }
   </div>
 </li>

@@ -4,7 +4,7 @@
      
       @if (processing()) {
         <h2 class="text-center">
-          <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
+          <fa-icon [icon]="faSpinner" [animation]="'spin'"></fa-icon>
         </h2>
       }
 
@@ -100,27 +100,27 @@
                 <div>naam</div>
                 <div>& thema</div>
               </div>
+            </div>          
+
+            <!-- start & pauzes -->
+            <div class="card card-sub pointer" [routerLink]="['/admin/startandrecesses', tournament.getId()]">
+              <div class="card-body text-center p-1 pt-2">
+                <h5 class="card-title">
+                  <fa-icon [icon]="faCalendarAlt"></fa-icon>
+                </h5>
+                <div>start &<br />pauzes</div>
+              </div>
+            </div>
+            <!-- ranking (ruleset) -->
+            <div class="card card-sub pointer" [routerLink]="['/admin/ranking', tournament.getId()]">
+              <div class="card-body text-center p-1 pt-2">
+                <h5 class="card-title">
+                  <fa-icon [icon]="faListOl"></fa-icon>
+                </h5>
+                <div>standen</div>
+              </div>
             </div>
           }
-
-          <!-- start & pauzes -->
-          <div class="card card-sub pointer" [routerLink]="['/admin/startandrecesses', tournament.getId()]">
-            <div class="card-body text-center p-1 pt-2">
-              <h5 class="card-title">
-                <fa-icon [icon]="faCalendarAlt"></fa-icon>
-              </h5>
-              <div>start &<br />pauzes</div>
-            </div>
-          </div>
-          <!-- ranking (ruleset) -->
-          <div class="card card-sub pointer" [routerLink]="['/admin/ranking', tournament.getId()]">
-            <div class="card-body text-center p-1 pt-2">
-              <h5 class="card-title">
-                <fa-icon [icon]="faListOl"></fa-icon>
-              </h5>
-              <div>standen</div>
-            </div>
-          </div>
           <!-- live scoreboard -->
           @if (allPoulesHaveGames) {
             <div class="card card-sub {{getLiveBoardBorderClass()}} pointer"
@@ -152,7 +152,7 @@
         <div class="d-flex flex-wrap gap-3 justify-content-center mt-3">
 
           <!-- home pagina -->
-          @if (tournament.getPublic()) {
+          @if (tournament.getPublic() && isAdmin()) {
             <div class="card card-sub pointer" [routerLink]="['/admin/homeedit', tournament.getId()]">
               <div class="card-body text-center p-0 pt-2">
                 <h5 class="card-title">

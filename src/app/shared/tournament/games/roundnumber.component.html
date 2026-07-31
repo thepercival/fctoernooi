@@ -197,7 +197,7 @@
 </tr>
 }
 
-@for(gmData of gameDatas; track gmData) {
+@for(gmData of gameDatas; track gmData.game.getId()) {
   <!-- recess -->
   @if(gmData.recess) {
   <tr class="table-info">

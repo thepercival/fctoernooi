@@ -24,7 +24,7 @@
       }
       @if(processing()) {
         <h2 class="text-center">
-          <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
+          <fa-icon [icon]="faSpinner" [animation]="'spin'"></fa-icon>
         </h2>
       }
 
@@ -41,7 +41,7 @@
             <ng-template ngbNavContent>
               @if(!processing()) {
                 <div class="d-flex flex-wrap gap-1 mt-3">
-                  @for (category of favoriteCategories(); track category) {
+                  @for (category of favoriteCategories(); track category.getNumber()) {
                     <app-tournament-category-competitors-base class="mx-auto"
                       [showHeader]="favoriteCategories().length > 1" [category]="category" [tournament]="tournament" [hasBegun]="hasBegun"
                       [structureNameService]="structureNameService" [lockerRoomValidator]="lockerRoomValidator" [activeTab]="activeTab"
@@ -63,7 +63,7 @@
                 @if(!processing()) {
                   <div class="d-flex flex-wrap gap-1 mt-3">
 
-                    @for (category of favoriteCategories(); track category) {
+                    @for (category of favoriteCategories(); track category.getNumber()) {
                       <app-tournament-category-competitors-order class="mx-auto"
                         [showHeader]="favoriteCategories().length > 1" [category]="category" [tournament]="tournament"
                         [structureNameService]="structureNameService" [activeTab]="activeTab"
@@ -110,7 +110,7 @@
           <ng-template ngbNavContent>
             @if(!processing()) {
               <div class="d-flex flex-wrap gap-1 mt-3">
-                @for (category of favoriteCategories(); track category) {
+                @for (category of favoriteCategories(); track category.getNumber()) {
                   <app-tournament-competitors-present class="mx-auto"
                     [showHeader]="favoriteCategories().length > 1" [category]="category" [tournament]="tournament"
                     [structureNameService]="structureNameService" [activeTab]="activeTab" (onCompetitorsUpdate)="refreshCompetitors()"

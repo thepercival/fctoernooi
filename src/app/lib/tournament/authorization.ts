@@ -1,9 +1,10 @@
 import { Identifiable } from 'ngx-sport';
 import { Tournament } from '../tournament';
+import { Role } from '../role';
 
-export class TournamentAuthorization extends Identifiable {
+export abstract class TournamentAuthorization extends Identifiable {
 
-    constructor(private tournament: Tournament, protected roles: number) {
+    protected constructor(private tournament: Tournament, protected roles: Role[]) {
         super();
     }
 
@@ -11,19 +12,32 @@ export class TournamentAuthorization extends Identifiable {
         return this.tournament;
     }
 
-    getRoles(): number {
+    getRoles(): Role[] {
         return this.roles;
     }
 
-    setRoles(roles: number) {
-        this.roles = roles;
+    addRole(role: Role) {
+        if (!this.roles.includes(role)) {
+            this.roles.push(role);
+            return true;
+        }
+        return false;
     }
 
-    hasRoles(roles: number): boolean {
-        return (this.roles & roles) === roles;
+    removeRole(role: Role): boolean {
+        const index = this.roles.indexOf(role);
+        if (index !== -1) {
+            this.roles.splice(index, 1);
+            return true;
+        }
+        return false;
     }
 
-    hasARole(roles: number): boolean {
-        return (this.roles & roles) > 0;
+    emptyRoles() {
+        this.roles = [];
+    }
+
+    hasRole(role: Role): boolean {
+        return this.roles.includes(role);
     }
 }

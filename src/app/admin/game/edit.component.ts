@@ -121,11 +121,11 @@ export class GameEditComponent extends TournamentComponent {
         if (!tournamentUser || !this.game) {
             return of(false);
         }
-        if (tournamentUser.hasRoles(Role.GameResultAdmin)) {
+        if (tournamentUser.hasRole(Role.GameResultAdmin)) {
             return of(true);
         }
         const referee = this.game.getReferee();
-        if (!tournamentUser.hasRoles(Role.Referee) || !referee) {
+        if (!tournamentUser.hasRole(Role.Referee) || !referee) {
             return of(false);
         }
         return this.tournamentRepository.getUserRefereeId(this.tournament).pipe(

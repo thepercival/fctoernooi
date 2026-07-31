@@ -6,8 +6,10 @@ import { catchError, map } from 'rxjs/operators';
 import { APIRepository } from '../../repository';
 import { Tournament } from '../../tournament';
 import { TournamentInvitation } from '../invitation';
-import { TournamentInvitationMapper, JsonTournamentInvitation } from './mapper';
 import { Router } from '@angular/router';
+import { JsonTournamentInvitation } from '../invitation/json';
+import { Role } from '../../role';
+import { TournamentInvitationMapper } from './mapper';
 
 @Injectable({
     providedIn: 'root'
@@ -46,11 +48,35 @@ export class TournamentInvitationRepository extends APIRepository {
         );
     }
 
-    editObject(invitation: TournamentInvitation): Observable<TournamentInvitation> {
-        const tournament = invitation.getTournament();
-        const url = this.getUrl(tournament) + '/' + invitation.getId();
-        return this.http.put<JsonTournamentInvitation>(url, this.mapper.toJson(invitation), this.getOptions()).pipe(
-            map((res: JsonTournamentInvitation) => this.mapper.toObject(res, tournament)),
+    // editObject(invitation: TournamentInvitation): Observable<TournamentInvitation> {
+    //     const tournament = invitation.getTournament();
+    //     const url = this.getUrl(tournament) + '/' + invitation.getId();
+    //     return this.http.put<JsonTournamentInvitation>(url, this.mapper.toJson(invitation), this.getOptions()).pipe(
+    //         map((res: JsonTournamentInvitation) => this.mapper.toObject(res, tournament)),
+    //         catchError((err: HttpErrorResponse) => this.handleError(err))
+    //     );
+    // }
+
+    addRole(tournamentInvitation: TournamentInvitation, role: Role): Observable<TournamentInvitation> {
+        const tournament = tournamentInvitation.getTournament();
+        const url = this.getUrl(tournament) + '/' + tournamentInvitation.getId() + '/roles/' + role;
+        return this.http.post<JsonTournamentInvitation>(url, undefined, this.getOptions()).pipe(
+            map((res: JsonTournamentInvitation) => {
+                tournamentInvitation.addRole(role);
+                return tournamentInvitation;
+            }),
+            catchError((err: HttpErrorResponse) => this.handleError(err))
+        );
+    }
+
+    removeRole(tournamentInvitation: TournamentInvitation, role: Role): Observable<TournamentInvitation> {
+        const tournament = tournamentInvitation.getTournament();
+        const url = this.getUrl(tournament) + '/' + tournamentInvitation.getId() + '/roles/' + role;
+        return this.http.delete<JsonTournamentInvitation>(url, this.getOptions()).pipe(
+            map((res: JsonTournamentInvitation) => {
+                tournamentInvitation.removeRole(role);
+                return tournamentInvitation;
+            }),
             catchError((err: HttpErrorResponse) => this.handleError(err))
         );
     }

@@ -79,7 +79,7 @@ export class HomeViewComponent extends TournamentComponent implements OnInit {
     get PublicWebsitePart(): WebsitePart { return WebsitePart.Public }
 
     isAdmin(): boolean {
-        return this.hasRole(this.authService, Role.Admin);
+        return this.authService.loggedInUserHasRole(this.tournament, Role.Admin);
     }
 
     public showRegistration(settings: TournamentRegistrationSettings): boolean{

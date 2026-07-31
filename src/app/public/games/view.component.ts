@@ -32,7 +32,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 export class GamesComponent extends TournamentComponent implements OnInit {
     faSpinner = faSpinner;
     userRefereeId: number | string | undefined;
-    roles: number = 0;
+    public hasRefereeRole: boolean = false;
     public structureNameService!: StructureNameService;
     refreshingData = false;
     public favorites!: Favorites;
@@ -60,8 +60,8 @@ export class GamesComponent extends TournamentComponent implements OnInit {
             this.updateFavoriteCategories(this.structure);
             this.favorites = this.favRepository.getObject(this.tournament, this.structure.getCategories());
             this.initGameColumnDefinitions(this.structure);
-            if (tournamentUser && tournamentUser.hasRoles(Role.Referee)) {
-                this.roles = tournamentUser.getRoles();
+            if (tournamentUser && tournamentUser.hasRole(Role.Referee)) {
+                this.hasRefereeRole = true;
                 this.tournamentRepository.getUserRefereeId(this.tournament)
                     .subscribe({
                         next: (userRefereeId: number | string) => {
@@ -93,17 +93,14 @@ export class GamesComponent extends TournamentComponent implements OnInit {
 
     get GamesScreen(): TournamentScreen { return TournamentScreen.Games }
     get PublicWebsitePart(): WebsitePart { return WebsitePart.Public } 
-
-    filterRefereeRole(): number {
-        return this.roles & Role.Referee;
-    }
+    get RefereeRole(): Role { return Role.Referee }
 
     scroll() {
         this.myNavigation.scroll();
     }
 
     isAdmin(): boolean {
-        return this.hasRole(this.authService, Role.Admin);
+        return this.authService.loggedInUserHasRole(this.tournament, Role.Admin);
     }
 
     refreshData() {

@@ -9,6 +9,7 @@ import { TournamentShell } from '../lib/tournament/shell';
 import { GlobalEventsManager } from '../shared/common/eventmanager';
 import { DefaultJsonTheme } from '../lib/tournament/theme';
 import { HomeShellComponent } from './shell.component';
+import { RoleMapper } from '../lib/tournament/authorization/roleMapper';
 
 @Component({
     selector: 'app-home',
@@ -66,7 +67,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    const filter = { roles: Role.All, example: false };
+    const allRoles = (new RoleMapper()).getAllRolesAsNumber();
+    const filter =  { roles: allRoles, example: false };
     this.tournamentShellRepos.getObjects(filter)
       .subscribe({
         next: (myShells) => {

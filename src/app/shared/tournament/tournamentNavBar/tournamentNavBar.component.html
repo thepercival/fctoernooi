@@ -24,22 +24,36 @@
 
       <!-- opzet -->
       <h2 class="mb-0">
-        <a type="button" class="btn {{getBtnClass(StructureScreen)}}" (click)="linkToStructure()">
-          <fa-icon [icon]="facStructure"></fa-icon> <br />opzet
-        </a>
+        @if(!public()) {
+          <a type="button" class="btn {{getBtnClass(StructureScreen)}}" 
+            [class.disabled]="!hasRole(AdminRole)"
+            [routerLink]="(hasRole(AdminRole)) ? ['/admin/structure', tournament().getId()] : null"
+            >
+            <fa-icon [icon]="facStructure"></fa-icon> <br />opzet
+          </a>
+        } 
+        @else {
+          <a type="button" class="btn {{getBtnClass(StructureScreen)}}" 
+            [routerLink]="['/public/structure', tournament().getId()]">
+            <fa-icon [icon]="facStructure"></fa-icon> <br />opzet
+          </a>
+        }
       </h2>
+
       <div class="vr my-1 mx-2"></div>
 
       <!--deelnemers admin -->
       @if(!public()) {
       <h2 class="mb-0">
         <a type="button" class="btn {{getBtnClass(CompetitorsScreen)}}"
-          [routerLink]="['/admin/competitors', tournament().getId(), CompetitorTabBase]">
+          [class.disabled]="!hasRole(AdminRole)"
+          [routerLink]="(hasRole(AdminRole)) ? ['/admin/competitors', tournament().getId(), CompetitorTabBase] : null">
           <fa-icon [icon]="faUsers"></fa-icon> <br />
           <span>deeln</span>
           <span class="d-inline d-sm-none">.</span>
           <span class="d-none d-sm-inline">emers</span>
         </a>
+
       </h2>
       <div class="vr my-1 mx-2"></div>
       }

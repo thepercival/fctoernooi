@@ -51,7 +51,7 @@
 </div>   
 
 <ng-template #editQualifyGroups let-target>
-    @for (qualifyGroup of data.parentRound.getQualifyGroups(target); track qualifyGroup.getId()) {
+    @for (qualifyGroup of data.parentRound.getQualifyGroups(target); track qualifyGroup.getId() + '-' + $index) {
         <li
             class="list-group-item text-center w-100 d-flex flex-column {{getTargetDirectionClass(target)}} py-2 {{cssService.getQualifyGroup(qualifyGroup)}}">
             @if (qualifyGroup.getFirstSingleRule()) {

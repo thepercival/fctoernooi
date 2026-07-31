@@ -11,7 +11,7 @@
     </div>
     @if (processing()) {
       <h2 class="text-center">
-        <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
+        <fa-icon [icon]="faSpinner" [animation]="'spin'"></fa-icon>
       </h2>
     }
     @if (!processing() && competition.getReferees().length === 0) {
@@ -49,7 +49,7 @@
           </tr>
         </thead>
         <tbody>
-          @for (refereeItem of refereeItems(); track refereeItem; let last = $last) {
+          @for (refereeItem of refereeItems(); track refereeItem.referee.getPriority(); let last = $last) {
             <tr>
               <td>
                 <button type="button" class="btn btn-sm btn-primary" [disabled]="processing()"

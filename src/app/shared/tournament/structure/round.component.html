@@ -21,7 +21,7 @@
                 {{structureNameService().getPouleName( poule, tmplRound.isRoot() && tmplRound.getPoules().length <= 2)}} </li>
               @for (place of poule.getPlaces(); track place) {
                 <li class="list-group-item px-2 py-2 place-list-item pointer {{getPlaceAlignClass()}} {{cssService.getQualifyPlace(place)}}"
-                  placement="top" ngbPopover="longName" (click)="setPopoverPlace(place)">
+                  placement="top" [ngbPopover]="longName" [popoverContext]="{ place: place }">
                   <span [class.favitem]="isFavorite(place)"
                     [innerHtml]="structureNameService().getPlaceFromName(place,false) | keepHtml"></span>
                   @if (showCompetitors() && tmplRound.isRoot() && hasLogo(place)) {
@@ -49,7 +49,7 @@
 
 
   <div class="d-flex align-items-stretch text-center gap-1">
-  @for (qualifyGroup of tmplRound.getQualifyGroupsLosersReversed(); track qualifyGroup.getId()) {
+  @for (qualifyGroup of tmplRound.getQualifyGroupsLosersReversed(); track qualifyGroup.getId() + '-' + $index) {
     <app-tournament-structureround
       class="align-self-stretch flex-wrap w-100 mb-2" [round]="qualifyGroup.getChildRound()"
       [editable]="editable()" [favorites]="favorites()" [structureEditor]="structureEditor()"
@@ -76,8 +76,6 @@
   }
 }
 
-<ng-template #longName>
-  @if (popoverPlace) {
-    <span [innerHtml]="structureNameService().getPlaceFromName(popoverPlace,true, true) | keepHtml"></span>
-  }
+<ng-template #longName let-place="place">
+  <span [innerHtml]="structureNameService().getPlaceFromName(place,true, true) | keepHtml"></span>
 </ng-template>

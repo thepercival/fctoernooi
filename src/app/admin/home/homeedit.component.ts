@@ -20,6 +20,8 @@ import { InfoModalComponent } from '../../shared/tournament/infomodal/infomodal.
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TournamentNavBarComponent } from '../../shared/tournament/tournamentNavBar/tournamentNavBar.component';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { INFO_MODAL_INPUTS } from '../../shared/modal-input-interfaces/info-modal-inputs.interface';
+import { createModalInjector } from '../../shared/modal-input-interfaces/create-modal-injector';
 
 @Component({
     selector: 'app-tournament-home-edit',
@@ -149,9 +151,11 @@ export class HomeEditComponent extends TournamentComponent implements OnInit {
   }
 
   openInfoModal(modalContent: TemplateRef<any>) {
-    const activeModal = this.modalService.open(InfoModalComponent, { windowClass: 'info-modal' });
-    activeModal.componentInstance.header = () => 'locatie';
-    activeModal.componentInstance.modalContent = () => modalContent;
+    const modalInjector = createModalInjector(this.injector, INFO_MODAL_INPUTS, {
+      header: 'locatie',
+      modalContent
+    });
+    this.modalService.open(InfoModalComponent, { windowClass: 'info-modal', injector: modalInjector });
   }
 
 }

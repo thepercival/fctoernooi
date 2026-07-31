@@ -7,7 +7,7 @@
 <div class="modal-body">
     <div class="container-fluid">
         <!-- als  -->
-        @if (!creating) {
+        @if (!creating()) {
             <form [formGroup]="typedForm">
                 @for (exportOption of exportOptions; track exportOption.key) {
                     <div class="row mb-3">
@@ -28,36 +28,36 @@
             </form>
         }
 
-        @if (!creating && postCreateAlert) {
-            <ngb-alert class="mt-1" type="danger">{{postCreateAlert.message}}</ngb-alert>
+        @if (!creating() && postCreateAlert()) {
+            <ngb-alert class="mt-1" type="danger">{{postCreateAlert()!.message}}</ngb-alert>
         }
 
-        @if (creating && progressPercentage < 100) {
+        @if (creating() && progressPercentage() < 100) {
             <ngb-alert class=" mt-1" type="info">
-                <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
+                <fa-icon [icon]="faSpinner" [animation]="'spin'"></fa-icon>
                 <span class="ps-2">De pdf is in de maak. Een moment geduld alsjeblieft</span>
             </ngb-alert>
-            @if (progressPercentage > 0) {
+            @if (progressPercentage() > 0) {
                 <ngb-progressbar class="custom-progress mt-4 mx-auto" type="info"
-                    [value]="progressPercentage">
-                    <i>{{progressPercentage}}%</i>
+                    [value]="progressPercentage()">
+                    <i>{{progressPercentage()}}%</i>
                 </ngb-progressbar>
             }
         }
 
-        @if (pdfLink) {
+        @if (pdfLink()) {
             <div class="text-center">
                 <ngb-alert class=" mt-1" type="success">De pdf staat klaar</ngb-alert>
                 <a type="button" class="btn btn-primary" aria-label="pdf openen" target="_blank" rel="noopener"
-                    [href]="pdfLink" (click)="activeModal.dismiss('close')">pdf openen</a>
+                    [href]="pdfLink()" (click)="activeModal.dismiss('close')">pdf openen</a>
             </div>
         }
     </div>
-    @if (alert) {
-        <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
+    @if (alert()) {
+        <ngb-alert [type]="alert()!.type">{{ alert()!.message }}</ngb-alert>
     }
 </div>
-@if (!creating && tournament) {
+@if (!creating() && tournament) {
     <div class="modal-footer d-flex justify-content-between">    
         <button type="button" class="btn btn-primary" data-dismiss="modal"
             (click)="openModalAboutPrintService(tournament)">

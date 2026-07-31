@@ -32,6 +32,8 @@ import { RegistrationsNavComponent } from "./registrations/nav.component";
 import { CompetitorPresentListComponent } from "./present.component";
 import { TournamentNavBarComponent } from "../../shared/tournament/tournamentNavBar/tournamentNavBar.component";
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { CATEGORY_CHOOSE_MODAL_INPUTS } from '../../shared/modal-input-interfaces/category-choose-modal-inputs.interface';
+import { createModalInjector } from '../../shared/modal-input-interfaces/create-modal-injector';
 
 @Component({
     selector: 'app-tournament-competitors',
@@ -63,7 +65,7 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
     private tournamentRegistrationRepository: TournamentRegistrationRepository,
     private planningRepository: PlanningRepository,
     private competitorRepository: CompetitorRepository,
-    private myNavigation: MyNavigation
+    private myNavigation: MyNavigation,
   ) {
     super(route, router, tournamentRepository, sructureRepository, globalEventsManager);
   }
@@ -182,9 +184,11 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
   }
 
   openCategoriesChooseModal(structure: Structure) {
-    const activeModal = this.modalService.open(CategoryChooseModalComponent);
-    activeModal.componentInstance.categories = structure.getCategories();
-    activeModal.componentInstance.tournament = this.tournament;
+    const modalInjector = createModalInjector(this.injector, CATEGORY_CHOOSE_MODAL_INPUTS, {
+      categories: structure.getCategories(),
+      tournament: this.tournament
+    });
+    const activeModal = this.modalService.open(CategoryChooseModalComponent, { injector: modalInjector });
     activeModal.result.then((result) => {
     }, (reason) => {
         this.updateFavoriteCategories(structure);

@@ -133,7 +133,7 @@ export class RegistrationComponent extends TournamentComponent implements OnInit
     get PublicWebsitePart(): WebsitePart { return WebsitePart.Public }
     
     isAdmin(): boolean {
-        return this.hasRole(this.authService, Role.Admin);
+        return this.authService.loggedInUserHasRole(this.tournament, Role.Admin);
     }
 
     getRemarkAsHtml(settings: TournamentRegistrationSettings): string {

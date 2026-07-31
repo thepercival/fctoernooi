@@ -21,6 +21,8 @@ import { RankingRulesComponent } from '../../shared/tournament/rankingrules/rank
 import { TournamentNavBarComponent } from '../../shared/tournament/tournamentNavBar/tournamentNavBar.component';
 import { EscapeHtmlPipe } from '../../shared/common/escapehtmlpipe';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { CATEGORY_CHOOSE_MODAL_INPUTS } from '../../shared/modal-input-interfaces/category-choose-modal-inputs.interface';
+import { createModalInjector } from '../../shared/modal-input-interfaces/create-modal-injector';
 
 @Component({
     selector: 'app-tournament-ranking-edit',
@@ -64,7 +66,7 @@ export class RankingEditComponent extends TournamentComponent implements OnInit 
     get RankingScreen(): TournamentScreen { return TournamentScreen.Ranking }
 
     isAdmin(): boolean {
-        return this.hasRole(this.authService, Role.Admin);
+        return this.authService.loggedInUserHasRole(this.tournament, Role.Admin);
     }
 
     getRankingRuleSetClass(): string {
@@ -98,9 +100,11 @@ export class RankingEditComponent extends TournamentComponent implements OnInit 
     }
 
     openCategoriesChooseModal(structure: Structure) {
-        const activeModal = this.modalService.open(CategoryChooseModalComponent);
-        activeModal.componentInstance.categories = structure.getCategories();
-        activeModal.componentInstance.tournament = this.tournament;
+        const modalInjector = createModalInjector(this.injector, CATEGORY_CHOOSE_MODAL_INPUTS, {
+            categories: structure.getCategories(),
+            tournament: this.tournament
+        });
+        const activeModal = this.modalService.open(CategoryChooseModalComponent, { injector: modalInjector });
         activeModal.result.then((result) => {
         }, (reason) => {
             this.updateFavoriteCategories(structure);

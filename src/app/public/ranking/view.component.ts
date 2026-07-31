@@ -61,6 +61,6 @@ export class RankingViewComponent extends TournamentComponent implements OnInit 
     get PublicWebsitePart(): WebsitePart { return WebsitePart.Public } 
 
     isAdmin(): boolean {
-        return this.hasRole(this.authService, Role.Admin);
+        return this.authService.loggedInUserHasRole(this.tournament, Role.Admin);
     }
 }

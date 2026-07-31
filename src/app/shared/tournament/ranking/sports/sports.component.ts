@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, WritableSignal, inject, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Injector, OnInit, WritableSignal, inject, input, signal } from '@angular/core';
 import { Poule, CompetitionSport, RoundRankingCalculator, RoundRankingItem, Cumulative, StructureNameService } from 'ngx-sport';
 
 import { CSSService } from '../../../common/cssservice';
@@ -9,6 +9,8 @@ import { PouleRankingModalComponent } from '../../poulerankingmodal/rankingmodal
 import { ViewPort, ViewPortManager, ViewPortNrOfColumnsMap } from '../../../common/viewPortManager';
 import { TOURNAMENT_UI_IMPORTS } from '../../tournament.ui-imports';
 import { EscapeHtmlPipe } from '../../../common/escapehtmlpipe';
+import { POULE_RANKING_MODAL_INPUTS } from '../../../modal-input-interfaces/poule-ranking-modal-inputs.interface';
+import { createModalInjector } from '../../../modal-input-interfaces/create-modal-injector';
 
 @Component({
     selector: 'app-tournament-ranking-sports-table',
@@ -35,6 +37,7 @@ export class RankingSportsComponent implements OnInit {
   public readonly processing: WritableSignal<boolean> = signal(true);
   private resolvedCompetitionSports: CompetitionSport[] = [];
   private modalService = inject(NgbModal);
+  private injector = inject(Injector);
 
   constructor(
     public cssService: CSSService,
@@ -79,10 +82,12 @@ export class RankingSportsComponent implements OnInit {
   // }
 
   openModalPouleRank(competitionSport: CompetitionSport) {
-    const modalRef = this.modalService.open(PouleRankingModalComponent, { size: 'xl' });
-    modalRef.componentInstance.poule = this.poule;
-    modalRef.componentInstance.competitionSports = [competitionSport];
-    modalRef.componentInstance.favorites = this.favorites;
+    const modalInjector = createModalInjector(this.injector, POULE_RANKING_MODAL_INPUTS, {
+      poule: this.poule(),
+      competitionSports: [competitionSport],
+      favorites: this.favorites()
+    });
+    this.modalService.open(PouleRankingModalComponent, { size: 'xl', injector: modalInjector });
   }
 }
 

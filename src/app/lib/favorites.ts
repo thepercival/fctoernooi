@@ -49,7 +49,7 @@ export class Favorites {
 
     filterCategories(categories: Category[]): Category[] {
         if (!this.hasCategories()) {
-            return categories;
+            return categories.slice();
         }
         return categories.filter((category: Category) => {
             return this.categories.indexOf(category) >= 0;

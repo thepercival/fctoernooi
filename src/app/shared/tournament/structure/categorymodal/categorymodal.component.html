@@ -7,22 +7,22 @@
     <form name="form" (ngSubmit)="false" [formGroup]="form" novalidate>
       <div class="row mb-3">
         <div class="col-3 col-sm-4 col-md-5">
-          <label for="name" class="col-form-label">naam</label>
+          <label for="category-modal-name-input" class="col-form-label">naam</label>
         </div>
         <div class="col-9 col-sm-8 col-md-7">
           <input class="form-control"
             [class.is-invalid]="form.controls.name.invalid" [class.is-valid]="form.controls.name.valid "
-            type="text" formControlName="name" ngbAutofocus placeholder="{{getPlaceHolder()}}">
+            type="text" id="category-modal-name-input" formControlName="name" ngbAutofocus placeholder="{{getPlaceHolder()}}">
         </div>
       </div>
       <div class="row mb-3">
         <div class="col-3 col-sm-4 col-md-5">
-          <label for="abbreviation" class="col-form-label">afkorting</label>
+          <label for="category-modal-abbreviation-input" class="col-form-label">afkorting</label>
         </div>
         <div class="col-9 col-sm-8 col-md-7">
           <input class="form-control"
             [class.is-invalid]="form.controls.abbreviation.invalid" [class.is-valid]="form.controls.abbreviation.valid " type="text"
-            formControlName="abbreviation" ngbAutofocus placeholder="{{getAbbreviationPlaceHolder()}}">
+            id="category-modal-abbreviation-input" formControlName="abbreviation" ngbAutofocus placeholder="{{getAbbreviationPlaceHolder()}}">
         </div>
       </div>
     </form>

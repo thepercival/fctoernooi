@@ -3,11 +3,12 @@
     <div class="col-sm-10 col-md-6 col-lg-4 g-0">
       @if(processing()) {
       <h2 class="text-center">
-        <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
+        <fa-icon [icon]="faSpinner" [animation]="'spin'"></fa-icon>
       </h2>
       }
-      @if(!processing() && alert()) {
-      <ngb-alert type="alert()?.type">{{ alert()?.message }}</ngb-alert>
+      @let tmplAlert = alert();
+      @if(!processing() && tmplAlert) {
+      <ngb-alert [type]="tmplAlert.type">{{ tmplAlert.message }}</ngb-alert>
       }
       @if(!processing()) {
       <div class="card card-auth my-3">

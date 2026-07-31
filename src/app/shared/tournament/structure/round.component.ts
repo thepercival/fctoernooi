@@ -3,7 +3,7 @@ import { Round, StructureNameService, StructureEditor, QualifyTarget, Competitor
 import { StructureAction, StructureActionName } from '../../../admin/structure/edit.component';
 import { StructureQualifyComponent } from './qualify.component';
 import { StructureRoundArrangeComponent } from './round/arrange.component';
-import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlert, NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 import { IAlert, IAlertType } from '../../common/alert';
 import { TournamentCompetitor } from '../../../lib/competitor';
 import { CSSService } from '../../common/cssservice';
@@ -15,7 +15,7 @@ import { EscapeHtmlPipe } from '../../common/escapehtmlpipe';
     templateUrl: './round.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [EscapeHtmlPipe,NgbAlert,StructureRoundArrangeComponent,StructureQualifyComponent]
+    imports: [EscapeHtmlPipe, NgbAlert, NgbPopover, StructureRoundArrangeComponent, StructureQualifyComponent]
 })
 export class StructureRoundComponent {
 
@@ -29,7 +29,6 @@ export class StructureRoundComponent {
   public lastAction = input<StructureAction>();
   
   alert: IAlert | undefined;
-  popoverPlace: Place | undefined;
   public onActionAdd = output<StructureAction>();
 
   constructor(
@@ -148,9 +147,5 @@ export class StructureRoundComponent {
 
   protected setAlert(type: IAlertType, message: string) {
     this.alert = { type: type, message: message };
-  }
-
-  setPopoverPlace(place: Place) {
-    this.popoverPlace = place;
   }
 }

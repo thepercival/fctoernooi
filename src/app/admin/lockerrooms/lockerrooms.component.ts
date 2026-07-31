@@ -53,8 +53,6 @@ export class LockerRoomsEditComponent extends TournamentComponent implements OnI
     super(route, router, tournamentRepository, sructureRepository, globalEventsManager);
   }
 
-  private injector = inject(Injector);
-
   ngOnInit() {
     super.myNgOnInit(() => this.initLockerRooms());
   }

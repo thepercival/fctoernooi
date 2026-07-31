@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Injector, input, output } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Competitor, StructureEditor, Category, StructureNameService } from 'ngx-sport';
 import { CategoryProperties, StructureAction } from '../../../admin/structure/edit.component';
@@ -7,6 +7,8 @@ import { CategoryModalComponent } from './categorymodal/categorymodal.component'
 import { TOURNAMENT_UI_IMPORTS } from '../tournament.ui-imports';
 import { StructureRoundComponent } from './round.component';
 import { faLevelUpAlt, faPencilAlt, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { CATEGORY_MODAL_INPUTS } from '../../modal-input-interfaces/category-modal-inputs.interface';
+import { createModalInjector } from '../../modal-input-interfaces/create-modal-injector';
 
 @Component({
     selector: 'app-tournament-structurecategory',
@@ -39,6 +41,7 @@ export class StructureCategoryComponent  {
   public canEdit: boolean = false;
 
   private modalService = inject(NgbModal);
+  private injector = inject(Injector);
 
   constructor(public cssService: CSSService) {
 
@@ -46,7 +49,6 @@ export class StructureCategoryComponent  {
 
   updateCategoryAction(category: Category) {
     const modal = this.getCategoryModel(category);
-    modal.componentInstance.initialName = category.getName();
     modal.result.then((categoryProperties: CategoryProperties) => {
       this.onCategoryUpdate.emit(categoryProperties);
     }, (reason) => {
@@ -56,11 +58,12 @@ export class StructureCategoryComponent  {
   get movable(): boolean { return this.editable() && !this.filterActive && this.category().getNumber() > 1 };
 
   getCategoryModel(category: Category): NgbModalRef {
-    const activeModal = this.modalService.open(CategoryModalComponent);
-    
-    activeModal.componentInstance.categories = this.categories;
-    activeModal.componentInstance.category = category;
-    activeModal.componentInstance.buttonLabel = 'wijzigen';    
+    const modalInjector = createModalInjector(this.injector, CATEGORY_MODAL_INPUTS, {
+      categories: this.categories(),
+      category,
+      buttonLabel: 'wijzigen'
+    });
+    const activeModal = this.modalService.open(CategoryModalComponent, { injector: modalInjector });
     return activeModal;
   }
 }

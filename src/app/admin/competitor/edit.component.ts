@@ -29,6 +29,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TournamentNavBarComponent } from "../../shared/tournament/tournamentNavBar/tournamentNavBar.component";
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FocusDirective } from '../../shared/common/focus';
+import { INFO_MODAL_INPUTS } from '../../shared/modal-input-interfaces/info-modal-inputs.interface';
+import { createModalInjector } from '../../shared/modal-input-interfaces/create-modal-injector';
 
 @Component({
     selector: 'app-tournament-competitor-edit',
@@ -281,9 +283,11 @@ export class CompetitorEditComponent extends TournamentComponent implements OnIn
     }
 
     openInfoModal(modalContent: TemplateRef<any>, title: string) {
-        const activeModal = this.modalService.open(InfoModalComponent, { windowClass: 'info-modal' });
-            activeModal.componentInstance.header = () => title;
-            activeModal.componentInstance.modalContent = () => modalContent;
+        const modalInjector = createModalInjector(this.injector, INFO_MODAL_INPUTS, {
+            header: title,
+            modalContent
+        });
+        this.modalService.open(InfoModalComponent, { windowClass: 'info-modal', injector: modalInjector });
     }
 
     onFileChange(event: Event) {

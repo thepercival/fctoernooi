@@ -1,3 +1,4 @@
+import { Injector } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Structure, Competition, Category } from 'ngx-sport';
 
@@ -56,6 +57,8 @@ import {
     faUsers,
 } from '@fortawesome/free-solid-svg-icons';
 import { inject, signal, WritableSignal } from '@angular/core';
+import { CATEGORY_CHOOSE_MODAL_INPUTS } from '../modal-input-interfaces/category-choose-modal-inputs.interface';
+import { createModalInjector } from '../modal-input-interfaces/create-modal-injector';
 
 export class TournamentComponent {
 
@@ -111,6 +114,8 @@ export class TournamentComponent {
 
     protected modalService: NgbModal = inject(NgbModal);
     protected favRepository: FavoritesRepository = inject(FavoritesRepository);
+
+    protected injector: Injector = inject(Injector);
 
     constructor(
         protected route: ActivatedRoute,
@@ -175,19 +180,16 @@ export class TournamentComponent {
         return tournament.getTheme() ?? DefaultJsonTheme;
     }
 
-    hasRole(authService: AuthService, roles: number): boolean {
-        const loggedInUserId = authService.getLoggedInUserId();
-        const tournamentUser = loggedInUserId ? this.tournament.getUser(loggedInUserId) : undefined;
-        return tournamentUser ? tournamentUser.hasARole(roles) : false;
-    }
-
     getCategoryFavoritesActiveClass(structure: Structure): string {
-        return structure.getCategories().length !== this.favoriteCategories.length ? 'primary' : 'secondary';
+        return structure.getCategories().length !== this.favoriteCategories().length ? 'primary' : 'secondary';
     }
 
     isCategoryFilterActive(structure: Structure): boolean {
-        return structure.getCategories().length !== this.favoriteCategories.length;
-        // return this.favorites.hasCategories() && this.favoriteCategories.length > 0
+        console.log(structure.getCategories(), this.favoriteCategories());
+        return this.favoriteCategories().length > 0 &&
+            structure.getCategories().length !== this.favoriteCategories().length;
+        // favorites!: Favorites
+        // return this.favoriteCategories().hasCategories() && this.favoriteCategories().length > 0
     }
 
     updateFavoriteCategories(structure: Structure) {
@@ -196,9 +198,11 @@ export class TournamentComponent {
     }
 
     openCategoriesChooseModal(structure: Structure) {
-        const activeModal = this.modalService.open(CategoryChooseModalComponent);
-        activeModal.componentInstance.categories = structure.getCategories();
-        activeModal.componentInstance.tournament = this.tournament;
+        const modalInjector = createModalInjector(this.injector, CATEGORY_CHOOSE_MODAL_INPUTS, {
+            categories: structure.getCategories(),
+            tournament: this.tournament
+        });
+        const activeModal = this.modalService.open(CategoryChooseModalComponent, { injector: modalInjector });
         activeModal.result.then(() => {
         }, () => {
             this.updateFavoriteCategories(structure);

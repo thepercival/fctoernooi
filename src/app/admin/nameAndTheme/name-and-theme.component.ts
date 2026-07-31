@@ -17,6 +17,8 @@ import { Tournament } from '../../lib/tournament';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TournamentNavBarComponent } from '../../shared/tournament/tournamentNavBar/tournamentNavBar.component';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { INFO_MODAL_INPUTS, InfoModalInputs } from '../../shared/modal-input-interfaces/info-modal-inputs.interface';
+import { createModalInjector } from '../../shared/modal-input-interfaces/create-modal-injector';
 
 @Component({
     selector: 'app-tournament-name-and-theme',
@@ -62,9 +64,6 @@ export class TournamentNameAndThemeComponent extends TournamentComponent impleme
         this.logoInputType = LogoInput.ByUpload;
         this.newLogoUploaded = false;
         
-        // activeModal.componentInstance.initialName = this.competition.getLeague().getName();
-
-
         this.typedForm = new FormGroup({
             name: new FormControl('', { 
                 nonNullable: true, 
@@ -231,9 +230,12 @@ export class TournamentNameAndThemeComponent extends TournamentComponent impleme
     }
 
     openInfoModal(modalContent: TemplateRef<any>) {
-        const activeModal = this.modalService.open(InfoModalComponent, { windowClass: 'info-modal' });
-        activeModal.componentInstance.header = () => 'uitleg upload logo';
-        activeModal.componentInstance.modalContent = () => modalContent;
+        const modalInputs = {
+            header: 'uitleg upload logo',
+            modalContent
+        } satisfies InfoModalInputs;
+        const modalInjector = createModalInjector(this.injector, INFO_MODAL_INPUTS, modalInputs);
+        this.modalService.open(InfoModalComponent, { windowClass: 'info-modal', injector: modalInjector });
     }
 
     getLogoUrl(tournament: Tournament): string {

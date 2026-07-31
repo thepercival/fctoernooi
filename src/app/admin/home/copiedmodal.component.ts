@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, Inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, inject } from '@angular/core';
 import { NgbActiveModal, NgbAlert } from '@ng-bootstrap/ng-bootstrap';
+import { COPIED_MODAL_INPUTS } from '../../shared/modal-input-interfaces/copied-modal-inputs.interface';
 
 @Component({
     selector: 'app-ngbd-modal-copied',
@@ -10,9 +11,14 @@ import { NgbActiveModal, NgbAlert } from '@ng-bootstrap/ng-bootstrap';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CopiedModalComponent {
-    previousId = input<string>('');
-    title = input<string>('');
+    private readonly modalInputs = inject(COPIED_MODAL_INPUTS, { optional: true });
+    previousId = '';
+    title = '';
 
     constructor(@Inject(NgbActiveModal) public modal: NgbActiveModal) {
+        if (this.modalInputs) {
+            this.previousId = this.modalInputs.previousId;
+            this.title = this.modalInputs.title;
+        }
     }
 }

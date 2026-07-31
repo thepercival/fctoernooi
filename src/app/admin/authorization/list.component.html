@@ -16,7 +16,7 @@
         </div>
         @if (processing()) {
             <h2 class="text-center">
-                <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
+                <fa-icon [icon]="faSpinner" [animation]="'spin'"></fa-icon>
             </h2>
         }
         @if (alert()) {
@@ -25,34 +25,37 @@
         @if (!processing()) {
             <ul class="list-unstyled">
                 <li>
-                    @for (userItem of validUserItems; track userItem) {
+                    @for (userItem of validUserItems(); track userItem.tournamentUser.getUserId().getId()) {
                         <div class="card border-secondary mt-3 mx-2">
                             <div class="card-header">
                                 <div class="d-flex justify-content-between">
                                     <h5 class="mb-0 mt-2">
-                                        @if (userItem.emailaddress) {
+                                        @if (userItem.loadingEmail) {
+                                            <fa-icon [icon]="faSpinner" [animation]="'spin'"></fa-icon>
+                                        } @else if (userItem.emailaddress) {
                                             <span>{{userItem.emailaddress}}</span>
+                                        } @else {
+                                            <span class="text-muted">email onbekend</span>
                                         }
-                                        <span></span>
-                                        @if (!userItem.emailaddress) {
-                                            <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
+                                        @if (isAuthorizationProcessing(userItem.tournamentUser)) {
+                                            <fa-icon class="ms-2" [icon]="faSpinner" [animation]="'spin'"></fa-icon>
                                         }
                                     </h5>
                                     @if (canBeRemoved(userItem.tournamentUser)) {
-                                        <button [disabled]="roleToProcess"
+                                        <button [disabled]="isAuthorizationProcessing(userItem.tournamentUser) || isAuthorizationProcessing(userItem.tournamentUser)"
                                             class="btn btn-sm btn-outline-danger ms-1"
-                                            (click)="openModalRemove(contentremove, userItem.tournamentUser, userItem.tournamentUser.hasARole(RoleReferee))">
+                                            (click)="openModalRemove(contentremove, userItem.tournamentUser, userItem.tournamentUser.hasRole(RoleReferee))">
                                             <fa-icon [icon]="faTrashAlt"></fa-icon>
                                         </button>
                                     }
                                 </div>
                             </div>
                             <ul class="list-group list-group-flush w-100">
-                                @for (role of getAssignableRoles(userItem.tournamentUser); track role) {
+                                @for (role of getAssignableRoles(userItem.tournamentUser); track role.role) {
                                     <app-tournament-authorization-role
                                         [role]="role"
                                         [disabled]="!canToggleRole(userItem.tournamentUser, role.role)"
-                                        [processing]="rolesAreEqual(role,roleToProcess)"
+                                        [processing]="isAuthorizationProcessing(userItem.tournamentUser)"
                                         (onRoleChange)="toggleRole($event,contentremove)">
                                     </app-tournament-authorization-role>
                                 }
@@ -60,24 +63,24 @@
                         </div>
                     }
 
-                    @for (invitation of invitations; track invitation) {
+                    @for (invitation of invitations(); track invitation) {
                         <div class="card border-secondary mt-3 mx-2">
                             <div class="card-header">
                                 <div class="d-flex justify-content-between">
                                     <h5 class="mb-0 mt-2">{{invitation.getEmailaddress()}} <span class="badge bg-info">gebruiker
                                             nog onbekend</span></h5>
-                                    <button class="btn btn-sm btn-outline-danger ms-1" [disabled]="roleToProcess"
+                                    <button class="btn btn-sm btn-outline-danger ms-1" [disabled]="isAuthorizationProcessing(invitation)"
                                         (click)="openModalRemove(contentremove, invitation)">
                                         <fa-icon [icon]="faTrashAlt"></fa-icon>
                                     </button>
                                 </div>
                             </div>
                             <ul class="list-group list-group-flush w-100">
-                                @for (role of getAssignableRoles(invitation); track role) {
+                                @for (assignableRole of getAssignableRoles(invitation); track assignableRole.role) {
                                     <app-tournament-authorization-role
-                                        [role]="role"
-                                        [processing]="rolesAreEqual(role,roleToProcess)"
-                                        [disabled]="false"
+                                        [role]="assignableRole"
+                                        [processing]="isAuthorizationProcessing(invitation)"
+                                        [disabled]="invitation.getRoles().length <= 1 && assignableRole.authorization.hasRole(assignableRole.role)"
                                         (onRoleChange)="toggleRole($event,contentremove)">
                                     </app-tournament-authorization-role>
                                 }

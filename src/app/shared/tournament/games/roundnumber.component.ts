@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, OnDestroy, OnChanges, SimpleChanges, TemplateRef, input, output, inject } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, OnDestroy, OnChanges, SimpleChanges, TemplateRef, Injector, input, output, inject } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { Router } from '@angular/router';
 import { NgbPopover, NgbModal, NgbAlert, NgbProgressbar } from '@ng-bootstrap/ng-bootstrap';
@@ -55,6 +55,9 @@ import { TOURNAMENT_UI_IMPORTS } from '../tournament.ui-imports';
 import { EscapeHtmlPipe } from '../../common/escapehtmlpipe';
 import { faCogs, faListUl, faPencilAlt, faPlus, faSpinner, faStar, faSync } from '@fortawesome/free-solid-svg-icons';
 import { facReferee, facScoreboard, facSoccerField } from '../../customicons';
+import { POULE_RANKING_MODAL_INPUTS } from '../../modal-input-interfaces/poule-ranking-modal-inputs.interface';
+import { INFO_MODAL_INPUTS } from '../../modal-input-interfaces/info-modal-inputs.interface';
+import { createModalInjector } from '../../modal-input-interfaces/create-modal-injector';
 
 @Component({
     selector: 'tbody[app-tournament-roundnumber-planning]',
@@ -82,7 +85,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
   readonly _structureNameService = input.required<StructureNameService>({ alias: 'structureNameService' });
   readonly _showLinksToAdmin = input(false, { alias: 'showLinksToAdmin' });
   readonly _userRefereeId = input<number | string | undefined>(undefined, { alias: 'userRefereeId' });
-  readonly _roles = input(0, { alias: 'roles' });
+  readonly _roles = input.required<Role[]>({ alias: 'roles' });
   readonly _favorites = input<Favorites | undefined>(undefined, { alias: 'favorites' });
   readonly _refreshingData = input<boolean | undefined>(undefined, { alias: 'refreshingData' });
   
@@ -113,8 +116,9 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
   private refreshProgressTimer: Subscription | undefined;
   private refreshGetPlanningTimer: Subscription | undefined;
   private appErrorHandler: AppErrorHandler;
+  private injector = inject(Injector);
   public progressPerc = 0;
-  private rolesValue = 0;
+  private rolesValue: Role[] = [];
 
   private modalService: NgbModal = inject(NgbModal);
 
@@ -138,7 +142,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
     this.planningConfig = this.roundNumber.getValidPlanningConfig();
     const loggedInUserId = this.authService.getLoggedInUserId();
     const currentUser = loggedInUserId ? this.tournament.getUser(loggedInUserId) : undefined;
-    this.rolesValue = currentUser?.getRoles() ?? this.roles;
+    this.rolesValue = currentUser?.getRoles() ?? this._roles();
     this.needsRanking = this.roundNumber.getStructureCells().some(structureCell => structureCell.needsRanking());
     const rounds = this.roundNumber.getRounds(undefined);
     this.hasMultiplePoules = rounds.length > 1 || rounds.every(round => round.getPoules().length > 1);
@@ -388,8 +392,8 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
     return this.hasRole(Role.Referee) && this.userRefereeId === referee.getId();
   }
 
-  protected hasRole(role: number): boolean {
-    return (this.rolesValue & role) === role;
+  protected hasRole(role: Role): boolean {
+    return this.rolesValue.includes(role);
   }
 
   getCompetitor(place: Place): TournamentCompetitor | undefined {
@@ -498,18 +502,22 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
   }
 
   openModalPouleRank(poule: Poule) {
-    const modalRef = this.modalService.open(PouleRankingModalComponent, { size: 'xl' });
-    modalRef.componentInstance.poule = poule;
-    modalRef.componentInstance.competitionSports = this.roundNumber.getCompetitionSports();
-    modalRef.componentInstance.favorites = this.favorites;
-    modalRef.componentInstance.structureNameService = this.structureNameService;
+    const modalInjector = createModalInjector(this.injector, POULE_RANKING_MODAL_INPUTS, {
+      poule,
+      competitionSports: this.roundNumber.getCompetitionSports(),
+      favorites: this.favorites,
+      structureNameService: this.structureNameService
+    });
+    this.modalService.open(PouleRankingModalComponent, { size: 'xl', injector: modalInjector });
   }
 
   openInfoModal(header: string, modalContent: TemplateRef<any>) {
-    const activeModal = this.modalService.open(InfoModalComponent, { windowClass: 'info-modal' });
-    activeModal.componentInstance.header = () => header;
-    activeModal.componentInstance.noHeaderBorder = () => true;
-    activeModal.componentInstance.modalContent = () => modalContent;
+    const modalInjector = createModalInjector(this.injector, INFO_MODAL_INPUTS, {
+      header,
+      noHeaderBorder: true,
+      modalContent
+    });
+    this.modalService.open(InfoModalComponent, { windowClass: 'info-modal', injector: modalInjector });
   }
 
   getUniqueScoreConfigs(): ScoreConfig[] {
@@ -664,7 +672,7 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
     return this._userRefereeId();
   }
 
-  get roles(): number {
+  get roles(): Role[] {
     return this._roles();
   }
 

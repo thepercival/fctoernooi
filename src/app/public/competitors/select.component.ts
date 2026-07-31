@@ -23,6 +23,8 @@ import { NgbAlert, NgbNav, NgbNavContent, NgbNavItem, NgbNavLink, NgbNavOutlet }
 import { TournamentNavBarComponent } from '../../shared/tournament/tournamentNavBar/tournamentNavBar.component';
 import { CompetitorsCategoryComponent } from './category.component';
 import { CommonModule } from '@angular/common';
+import { INFO_MODAL_INPUTS } from '../../shared/modal-input-interfaces/info-modal-inputs.interface';
+import { createModalInjector } from '../../shared/modal-input-interfaces/create-modal-injector';
 import { facReferee } from '../../shared/customicons';
 
 @Component({
@@ -98,10 +100,11 @@ export class SelectFavoritesComponent extends TournamentComponent implements OnI
     }
 
     openHelpModal(modalContent: TemplateRef<any>) {
-        const activeModal = this.modalService.open(InfoModalComponent, { windowClass: 'info-modal' });
-            activeModal.componentInstance.header = () => 'uitleg';
-            activeModal.componentInstance.modalContent = () => modalContent;
-        // activeModal.componentInstance.noHeaderBorder = true;
+        const modalInjector = createModalInjector(this.injector, INFO_MODAL_INPUTS, {
+            header: 'uitleg',
+            modalContent
+        });
+        const activeModal = this.modalService.open(InfoModalComponent, { windowClass: 'info-modal', injector: modalInjector });
         activeModal.result.then(() => {
             //  this.linkToPlanningConfig();
         }, () => { });
@@ -119,7 +122,7 @@ export class SelectFavoritesComponent extends TournamentComponent implements OnI
     }
 
     isAdmin(): boolean {
-        return this.hasRole(this.authService, Role.Admin);
+        return this.authService.loggedInUserHasRole(this.tournament, Role.Admin);
     }
 
     navigateBack() {

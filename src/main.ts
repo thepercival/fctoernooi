@@ -7,11 +7,13 @@ import { provideZonelessChangeDetection } from '@angular/core';
 
 import { AppComponent } from './app/app.component';
 import { routes } from './app/app.routes';
+import { provideModalA11yInitializer } from './app/shared/common/modal-a11y-initializer';
 
 bootstrapApplication(AppComponent, {
   providers: [
     provideRouter(routes),
     provideZonelessChangeDetection(),
+    provideModalA11yInitializer(),
     // provideHttpClient(withInterceptorsFromDi())
   ]
 }).catch((e: Error) => console.error(e));

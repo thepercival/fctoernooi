@@ -10,13 +10,15 @@ import { User } from '../../lib/user';
 import { TournamentInvitationRepository } from '../../lib/tournament/invitation/repository';
 import { Validators, FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MyNavigation } from '../../shared/common/navigation';
-import { JsonTournamentInvitation } from '../../lib/tournament/invitation/mapper';
 import { AuthorizationExplanationModalComponent } from './infomodal.component';
 import { IAlertType } from '../../shared/common/alert';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faInfoCircle, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { TournamentNavBarComponent } from '../../shared/tournament/tournamentNavBar/tournamentNavBar.component';
+import { AUTHORIZATION_EXPLANATION_MODAL_INPUTS } from '../../shared/modal-input-interfaces/authorization-explanation-modal-inputs.interface';
+import { createModalInjector } from '../../shared/modal-input-interfaces/create-modal-injector';
+import { JsonTournamentInvitation } from '../../lib/tournament/invitation/json';
 
 @Component({
     selector: 'app-tournament-authorization-add',
@@ -108,9 +110,11 @@ export class AuthorizationAddComponent extends TournamentComponent implements On
     }
 
     openHelpModal() {
-        const activeModal = this.modalService.open(AuthorizationExplanationModalComponent, { windowClass: 'info-modal' });
-        activeModal.componentInstance.header = 'uitleg rol toevoegen';
-        activeModal.componentInstance.showAdd = true;
+        const modalInjector = createModalInjector(this.injector, AUTHORIZATION_EXPLANATION_MODAL_INPUTS, {
+            header: 'uitleg rol toevoegen',
+            showAdd: true
+        });
+        const activeModal = this.modalService.open(AuthorizationExplanationModalComponent, { windowClass: 'info-modal', injector: modalInjector });
         activeModal.result.then((result) => {
             if (result === 'linkToReferees') {
                 this.router.navigate(['/admin/referees', this.tournament.getId()]);

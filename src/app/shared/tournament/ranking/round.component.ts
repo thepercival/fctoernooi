@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, TemplateRef, forwardRef, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Injector, OnInit, TemplateRef, forwardRef, inject, input } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 
 import { Poule, Round, GameState, CompetitionSport, StructureNameService, StartLocation, Competitor, Place, AgainstSide, AgainstGamePlace, AgainstGame, ScoreConfigService, HorizontalMultipleQualifyRule, HorizontalSingleQualifyRule, VerticalMultipleQualifyRule, VerticalSingleQualifyRule } from 'ngx-sport';
@@ -13,6 +13,8 @@ import { RankingPouleComponent } from './poule.component';
 import { AgainstQualifyInfoComponent } from '../againstQualifyConfig/info.component';
 import { EscapeHtmlPipe } from '../../common/escapehtmlpipe';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { INFO_MODAL_INPUTS } from '../../modal-input-interfaces/info-modal-inputs.interface';
+import { createModalInjector } from '../../modal-input-interfaces/create-modal-injector';
 
 @Component({
     selector: 'app-tournament-ranking-round',
@@ -42,6 +44,7 @@ export class RankingRoundComponent implements OnInit {
     public popoverPlace: Place | undefined;
 
     private modalService = inject(NgbModal);
+    private injector = inject(Injector);
 
     constructor(
         public cssService: CSSService,
@@ -174,10 +177,12 @@ export class RankingRoundComponent implements OnInit {
     }
 
     openInfoModal(modalContent: TemplateRef<any>) {
-        const activeModal = this.modalService.open(InfoModalComponent, { windowClass: 'info-modal' });
-        activeModal.componentInstance.header = () => 'puntentelling';
-        activeModal.componentInstance.noHeaderBorder = () => true;
-        activeModal.componentInstance.modalContent = () => modalContent;
+        const modalInjector = createModalInjector(this.injector, INFO_MODAL_INPUTS, {
+            header: 'puntentelling',
+            noHeaderBorder: true,
+            modalContent
+        });
+        this.modalService.open(InfoModalComponent, { windowClass: 'info-modal', injector: modalInjector });
     }
 
     getAgainstSides(): AgainstSide[] {

@@ -7,6 +7,7 @@ import { GlobalEventsManager } from '../../../shared/common/eventmanager';
 import { LiveboardLink } from '../../../lib/liveboard/link';
 import { DefaultJsonTheme, JsonTheme } from '../../../lib/tournament/theme';
 import { SvgIconComponent } from '../svgicon.component';
+import { environment } from '../../../../environments/environment';
 
 @Component({
     selector: 'app-nav',
@@ -27,6 +28,7 @@ export class NavComponent implements OnInit, AfterContentInit {
   });  
   tournamentLiveboardLink: LiveboardLink = {};
   navbarCollapsed = true;
+  private readonly isAccEnvironment = environment.apiurl.includes('acc-api.fctoernooi.nl');
 
   constructor(
     private elRef: ElementRef,
@@ -72,8 +74,10 @@ export class NavComponent implements OnInit, AfterContentInit {
     if (theme !== undefined) {
       // console.log('--nav-bg', theme.bgColor);
       // console.log('--nav-color', theme.textColor)
-      this.elRef.nativeElement.style.setProperty('--nav-bg', theme.bgColor);
-      this.elRef.nativeElement.style.setProperty('--nav-color', theme.textColor);
+      const navBg = this.isAccEnvironment ? '#ff69b4' : theme.bgColor;
+      const navColor = this.isAccEnvironment ? '#111111' : theme.textColor;
+      this.elRef.nativeElement.style.setProperty('--nav-bg', navBg);
+      this.elRef.nativeElement.style.setProperty('--nav-color', navColor);
     }
   }
 

@@ -29,7 +29,7 @@
 
       @if (processing()) {
         <h2 class="text-center">
-          <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
+          <fa-icon [icon]="faSpinner" [animation]="'spin'"></fa-icon>
         </h2>
       }
       @if (alert()) {
@@ -41,7 +41,7 @@
             <tbody app-tournament-roundnumber-planning
               [favoriteCategories]="favoriteCategories()" [structureNameService]="structureNameService"
               [optionalGameColumns]="optionalGameColumns"
-              [tournament]="tournament" [roundNumber]="roundNumber" [favorites]="favorites" [roles]="filterRefereeRole()"
+              [tournament]="tournament" [roundNumber]="roundNumber" [favorites]="favorites" [roles]="hasRefereeRole ? [RefereeRole] : []"
               [userRefereeId]="userRefereeId" (scrolling)="scroll()" (refreshData)="refreshData()"
               [refreshingData]="refreshingData">
             </tbody>

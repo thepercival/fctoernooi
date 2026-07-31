@@ -80,6 +80,6 @@ export class StructureViewComponent extends TournamentComponent implements OnIni
   }
 
   isAdmin(): boolean {
-    return this.hasRole(this.authService, Role.Admin);
+    return this.authService.loggedInUserHasRole(this.tournament, Role.Admin);
   }
 }

@@ -15,7 +15,7 @@
           <span> {{showStart()}}</span>
         }
         @if (processing()) {
-          <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
+          <fa-icon [icon]="faSpinner" [animation]="'spin'"></fa-icon>
         }
         <span class="d-none d-sm-inline"> uur</span>
       </div>
@@ -25,7 +25,7 @@
           <span> {{showEnd()}}</span>
         }
         @if (processing()) {
-          <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
+          <fa-icon [icon]="faSpinner" [animation]="'spin'"></fa-icon>
         }
         <span class="d-none d-sm-inline"> uur</span>
       </div>
@@ -48,7 +48,7 @@
           <span> {{showNrOfGames()}}</span>
         }
         @if (processing()) {
-          <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
+          <fa-icon [icon]="faSpinner" [animation]="'spin'"></fa-icon>
         }
         wed<span class="d-xs-inline d-sm-none">.</span><span class="d-none d-sm-inline">strijden</span> per
         deeln<span class="d-xs-inline d-sm-none">.</span><span class="d-none d-sm-inline">emer</span>
@@ -58,7 +58,7 @@
           <span> {{showNrOfMinutes()}}</span>
         }
         @if (processing()) {
-          <fa-icon [icon]="faSpinner" animations="spin"></fa-icon>
+          <fa-icon [icon]="faSpinner" [animation]="'spin'"></fa-icon>
         }
         min<span class="d-xs-inline d-sm-none">.</span><span class="d-none d-sm-inline">uten</span>
         per deeln<span class="d-xs-inline d-sm-none">.</span><span class="d-none d-sm-inline">emer</span>
