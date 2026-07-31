@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, output, signal, WritableSignal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, OnInit, output, signal, WritableSignal, ChangeDetectionStrategy, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AgainstGpp, AgainstH2h, AllInOneGame, GameMode, NameService, Single, Sport, VoetbalRange } from 'ngx-sport';
 
@@ -18,10 +18,16 @@ import { SportToAddComponent } from './toAdd.component';
     templateUrl: './createSportWithFields.component.html',
     styleUrls: ['./createSportWithFields.component.scss'],
     standalone: true,
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [FontAwesomeModule,ReactiveFormsModule, NgbAlert,SportToAddComponent]
 })
 export class CreateSportWithFieldsComponent implements OnInit {
+    cssService = inject(CSSService);
+    private translateSport = inject(TranslateSportService);
+    private translateField = inject(TranslateFieldService);
+    private defaultService = inject(DefaultService);
+    private modalService = inject(NgbModal);
+
     faLevelUpAlt = faLevelUpAlt;
     faPencilAlt = faPencilAlt;
     faInfoCircle = faInfoCircle;
@@ -58,14 +64,7 @@ export class CreateSportWithFieldsComponent implements OnInit {
     get maxNrOfFields(): number { return 64; }
     get minNrOfGamePlaces(): number { return 1; }
     get maxNrOfGamePlaces(): number { return 4; }
-
-    constructor(
-        public cssService: CSSService,
-        private translateSport: TranslateSportService,
-        private translateField: TranslateFieldService,
-        private defaultService: DefaultService,
-        private modalService: NgbModal
-    ) {
+    constructor() {
         
     }
 

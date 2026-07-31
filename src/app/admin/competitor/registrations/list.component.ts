@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, output, signal, SimpleChanges, WritableSignal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Injector, Input, OnChanges, inject, output, signal, SimpleChanges, WritableSignal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { NgbAlert, NgbDropdown, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Category, StartLocationMap, StructureNameService } from 'ngx-sport';
@@ -13,16 +13,23 @@ import { TournamentRegistrationTextSubject } from '../../../lib/tournament/regis
 import { TextEditorModalComponent } from '../../textEditor/texteditormodal.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCheckCircle, faFileLines, faPencilAlt, faRegistered, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
+import { TOURNAMENT_REGISTRATION_PROCESS_MODAL_INPUTS } from '../../../shared/modal-input-interfaces/tournament-registration-process-modal-inputs.interface';
+import { TEXT_EDITOR_MODAL_INPUTS } from '../../../shared/modal-input-interfaces/text-editor-modal-inputs.interface';
+import { createModalInjector } from '../../../shared/modal-input-interfaces/create-modal-injector';
 
 @Component({
     selector: 'app-tournament-registrations-list',
     templateUrl: './list.component.html',
     styleUrls: ['./list.component.scss'],
     standalone: true,
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FontAwesomeModule, NgbAlert, NgbDropdown, RouterLink]
 })
 export class RegistrationListComponent implements OnChanges  {
+  private router = inject(Router);
+  private tournamentRegistrationRepository = inject(TournamentRegistrationRepository);
+  private modalService = inject(NgbModal);
+  private competitorMapper = inject(TournamentCompetitorMapper);
+
   @Input() tournament!: Tournament;
   @Input() category!: Category;
   @Input() showHeader!: boolean;
@@ -43,12 +50,8 @@ export class RegistrationListComponent implements OnChanges  {
   faFileLines = faFileLines;
   faPencilAlt = faPencilAlt;
   faCheckCircle = faCheckCircle;
-
-  constructor(
-    private router: Router,
-    private tournamentRegistrationRepository: TournamentRegistrationRepository,
-    private modalService: NgbModal,
-    private competitorMapper: TournamentCompetitorMapper) {
+  private injector = inject(Injector);
+  constructor() {
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -86,9 +89,11 @@ export class RegistrationListComponent implements OnChanges  {
   
   processRegistration(registration: TournamentRegistration): void {
 
-    const activeModal = this.modalService.open(TournamentRegistrationProcessModalComponent, { size: 'sm'});
-    activeModal.componentInstance.registration = registration;
-    activeModal.componentInstance.tournament = this.tournament;
+    const modalInjector = createModalInjector(this.injector, TOURNAMENT_REGISTRATION_PROCESS_MODAL_INPUTS, {
+      registration,
+      tournament: this.tournament
+    });
+    const activeModal = this.modalService.open(TournamentRegistrationProcessModalComponent, { size: 'sm', injector: modalInjector });
 
     activeModal.result.then((newState: RegistrationState) => {
       this.updateRegistrations();      
@@ -138,11 +143,13 @@ export class RegistrationListComponent implements OnChanges  {
     this.tournamentRegistrationRepository.getText(this.tournament, subject)
       .subscribe({
         next: (text: string) => {
-          const activeModal = this.modalService.open(TextEditorModalComponent, { size: 'xl' });
-          activeModal.componentInstance.header = this.getTextSubjectDescription(subject);
-          activeModal.componentInstance.tournament = this.tournament;
-          activeModal.componentInstance.subject = subject;
-          activeModal.componentInstance.initialText = text;
+          const modalInjector = createModalInjector(this.injector, TEXT_EDITOR_MODAL_INPUTS, {
+            header: this.getTextSubjectDescription(subject),
+            tournament: this.tournament,
+            subject,
+            initialText: text
+          });
+          const activeModal = this.modalService.open(TextEditorModalComponent, { size: 'xl', injector: modalInjector });
 
           activeModal.result.then((newText: string) => {
           }, (reason) => {

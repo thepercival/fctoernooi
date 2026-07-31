@@ -23,10 +23,13 @@ import { createModalInjector } from '../../shared/modal-input-interfaces/create-
     templateUrl: './list.component.html',
     styleUrls: ['./list.component.scss'],
     standalone: true,
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [NgbAlert,FontAwesomeModule,TournamentNavBarComponent]
 })
 export class RefereeListComponent extends TournamentComponent implements OnInit {
+  private refereeRepository = inject(RefereeRepository);
+  private planningRepository = inject(PlanningRepository);
+
   faSpinner = faSpinner;
   faEnvelope = faEnvelope;
   faInfoCircle = faInfoCircle;
@@ -41,16 +44,13 @@ export class RefereeListComponent extends TournamentComponent implements OnInit 
     'maxlengthname': Referee.MAX_LENGTH_NAME
   };
   faPlus = faPlus;
+  constructor() {
+    const route = inject(ActivatedRoute);
+    const router = inject(Router);
+    const tournamentRepository = inject(TournamentRepository);
+    const sructureRepository = inject(StructureRepository);
+    const globalEventsManager = inject(GlobalEventsManager);
 
-  constructor(
-    route: ActivatedRoute,
-    router: Router,
-    tournamentRepository: TournamentRepository,
-    sructureRepository: StructureRepository,
-    globalEventsManager: GlobalEventsManager,    
-    private refereeRepository: RefereeRepository,
-    private planningRepository: PlanningRepository,
-  ) {
     super(route, router, tournamentRepository, sructureRepository, globalEventsManager);
   }
 

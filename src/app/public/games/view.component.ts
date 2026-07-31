@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthService } from '../../lib/auth/auth.service';
@@ -25,11 +25,14 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
     selector: 'app-tournament-games-view',
     templateUrl: './view.component.html',
     styleUrls: ['./view.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [AdminPublicSwitcherComponent, FontAwesomeModule, NgbAlert, RoundNumberPlanningComponent, TournamentNavBarComponent]
     
 })
 export class GamesComponent extends TournamentComponent implements OnInit {
+    private myNavigation = inject(MyNavigation);
+    private authService = inject(AuthService);
+
     faSpinner = faSpinner;
     userRefereeId: number | string | undefined;
     public hasRefereeRole: boolean = false;
@@ -37,17 +40,13 @@ export class GamesComponent extends TournamentComponent implements OnInit {
     refreshingData = false;
     public favorites!: Favorites;
     public categoryMap: Map<number, Category> = new Map();
-    public optionalGameColumns: Map<OptionalGameColumn, boolean> = new Map(); 
+    public optionalGameColumns: Map<OptionalGameColumn, boolean> = new Map();    constructor() {
+        const route = inject(ActivatedRoute);
+        const router = inject(Router);
+        const tournamentRepository = inject(TournamentRepository);
+        const structureRepository = inject(StructureRepository);
+        const globalEventsManager = inject(GlobalEventsManager);
 
-    constructor(
-        route: ActivatedRoute,
-        router: Router,
-        tournamentRepository: TournamentRepository,
-        structureRepository: StructureRepository,
-        globalEventsManager: GlobalEventsManager,
-        private myNavigation: MyNavigation,
-        private authService: AuthService,
-    ) {
         super(route, router, tournamentRepository, structureRepository, globalEventsManager);
     }
 

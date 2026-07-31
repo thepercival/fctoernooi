@@ -9,7 +9,7 @@
           <h2>
             <fa-icon [icon]="faUsers"></fa-icon> deelnemers
           </h2>
-          @if(tournament.getLogoExtension() != undefined) {
+          @if(tournament.getLogoExtension() !== undefined) {
             <img height="30" width="30" src="{{getLogoUrl(tournament, 200)}}"
               class="align-self-center" alt="logo">
           }
@@ -113,8 +113,8 @@
                 @for (category of favoriteCategories(); track category.getNumber()) {
                   <app-tournament-competitors-present class="mx-auto"
                     [showHeader]="favoriteCategories().length > 1" [category]="category" [tournament]="tournament"
-                    [structureNameService]="structureNameService" [activeTab]="activeTab" (onCompetitorsUpdate)="refreshCompetitors()"
-                    (onAlertChange)="alert.set({ type: $event.type, message: $event.message })">
+                    [structureNameService]="structureNameService" [activeTab]="activeTab" (competitorsUpdate)="refreshCompetitors()"
+                    (alertChange)="alert.set({ type: $event.type, message: $event.message })">
                   </app-tournament-competitors-present>
                 }
               </div>

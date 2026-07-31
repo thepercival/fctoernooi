@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, OnInit, TemplateRef, ChangeDetectionStrategy, inject } from '@angular/core';
 
 import { Category, Competitor, Place, StartLocationMap, StructureNameService } from 'ngx-sport';
 import { AuthService } from '../../lib/auth/auth.service';
@@ -19,11 +19,17 @@ import { EscapeHtmlPipe } from '../../shared/common/escapehtmlpipe';
     templateUrl: './category.component.html',
     styleUrls: ['./category.component.scss'],
     standalone: true,
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [FontAwesomeModule,EscapeHtmlPipe]
     
 })
 export class CompetitorsCategoryComponent implements OnInit {
+    protected tournamentMapper = inject(TournamentMapper);
+    protected favRepository = inject(FavoritesRepository);
+    competitorRepository = inject(CompetitorRepository);
+    protected authService = inject(AuthService);
+    private modalService = inject(NgbModal);
+
     @Input() category!: Category;
     @Input() favorites!: Favorites;
     @Input() showHeader!: boolean;
@@ -38,14 +44,7 @@ export class CompetitorsCategoryComponent implements OnInit {
     faInfoCircle = faInfoCircle;
     faDoorClosed = faDoorClosed;
     faStar = faStar;
-
-    constructor(
-        protected tournamentMapper: TournamentMapper,
-        protected favRepository: FavoritesRepository,
-        public competitorRepository: CompetitorRepository,
-        protected authService: AuthService,
-        private modalService: NgbModal,
-    ) {
+    constructor() {
 
     }
 

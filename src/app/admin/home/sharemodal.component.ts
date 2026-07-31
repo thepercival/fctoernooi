@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, OnInit, TemplateRef, ChangeDetectionStrategy, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgbActiveModal, NgbAlert, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Tournament } from '../../lib/tournament';
@@ -11,10 +11,13 @@ import { faCopy, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
     templateUrl: './sharemodal.component.html',
     styleUrls: ['./sharemodal.component.scss'],
     standalone: true,
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [NgbAlert, FontAwesomeModule, ReactiveFormsModule]
 })
 export class ShareModalComponent implements OnInit {
+    modal = inject(NgbActiveModal);
+    private modalService = inject(NgbModal);
+
     @Input() tournament!: Tournament;
     @Input() publicInitial!: boolean;
     public typedForm: FormGroup<{
@@ -23,11 +26,8 @@ export class ShareModalComponent implements OnInit {
       }>;
     copied: boolean = false;
     faCopy = faCopy;
-    faInfoCircle = faInfoCircle;
-    
-    constructor(
-        public modal: NgbActiveModal,
-        private modalService: NgbModal) {
+    faInfoCircle = faInfoCircle;    
+    constructor() {
         this.typedForm = new FormGroup({
             public: new FormControl(false, { nonNullable: true }),
             url: new FormControl('', { nonNullable: true })            

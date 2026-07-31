@@ -27,27 +27,26 @@ import { createModalInjector } from '../../shared/modal-input-interfaces/create-
     templateUrl: './list.component.html',
     styleUrls: ['./list.component.scss'],
     standalone: true,
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [TournamentNavBarComponent, FontAwesomeModule, NgbAlert, RouterLink]
 })
 export class SponsorListComponent extends TournamentComponent implements OnInit {
+  sponsorRepository = inject(SponsorRepository);
+  private sponsorMapper = inject(SponsorMapper);
+
   faSpinner = faSpinner;
   faMoneyBillAlt = faMoneyBillAlt;
   faInfoCircle = faInfoCircle;
   sponsors: Sponsor[] = [];
   sponsorScreensCreator!: SponsorScreensCreator;
   public screenConfig: ScreenConfig;
-  public hasSomeSponsorAnImage: boolean = false;  
+  public hasSomeSponsorAnImage: boolean = false;  constructor() {
+    const route = inject(ActivatedRoute);
+    const router = inject(Router);
+    const tournamentRepository = inject(TournamentRepository);
+    const sructureRepository = inject(StructureRepository);
+    const globalEventsManager = inject(GlobalEventsManager);
 
-  constructor(
-    route: ActivatedRoute,
-    router: Router,
-    tournamentRepository: TournamentRepository,
-    sructureRepository: StructureRepository,
-    globalEventsManager: GlobalEventsManager,    
-    public sponsorRepository: SponsorRepository,
-    private sponsorMapper: SponsorMapper
-  ) {
     super(route, router, tournamentRepository, sructureRepository, globalEventsManager);
     this.screenConfig = this.sponsorMapper.getDefaultScreenConfig();
   }

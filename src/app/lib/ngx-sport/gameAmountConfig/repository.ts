@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
@@ -12,13 +12,14 @@ import { Router } from '@angular/router';
     providedIn: 'root'
 })
 export class GameAmountConfigRepository extends APIRepository {
+    private service = inject(GameAmountConfigService);
+    private mapper = inject(GameAmountConfigMapper);
+    private competitionSportMapper = inject(CompetitionSportMapper);
+    private http = inject(HttpClient);
 
-    constructor(
-        private service: GameAmountConfigService,
-        private mapper: GameAmountConfigMapper,
-        private competitionSportMapper: CompetitionSportMapper,
-        private http: HttpClient,
-        router: Router) {
+    constructor() {
+        const router = inject(Router);
+
         super(router);
     }
 

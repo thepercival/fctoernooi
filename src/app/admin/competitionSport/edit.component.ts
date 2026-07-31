@@ -28,25 +28,25 @@ import { CustomSportId } from '../../lib/ngx-sport/sport/custom';
     selector: 'app-tournament-sportconfig-edit',
     templateUrl: './edit.component.html',
     styleUrls: ['./edit.component.css'],
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [FaIconComponent, NgbAlert, NgbNav, NgbNavItem, NgbNavLink, NgbNavContent, NgbNavOutlet, FieldListComponent, ScoreConfigEditComponent, TournamentNavBarComponent, AgainstQualifyConfigEditComponent],
 })
 export class CompetitionSportEditComponent extends TournamentComponent implements OnInit {
+    cssService = inject(CSSService);
+    private translate = inject(TranslateFieldService);
+    private myNavigation = inject(MyNavigation);
+
     faSpinner = faSpinner;
     competitionSport: CompetitionSport | undefined;
     activeTab!: number;
     hasBegun!: boolean;
+    constructor() {
+        const route = inject(ActivatedRoute);
+        const router = inject(Router);
+        const tournamentRepository = inject(TournamentRepository);
+        const structureRepository = inject(StructureRepository);
+        const globalEventsManager = inject(GlobalEventsManager);
 
-    constructor(
-        route: ActivatedRoute,
-        router: Router,
-        tournamentRepository: TournamentRepository,
-        structureRepository: StructureRepository,
-        globalEventsManager: GlobalEventsManager,        
-        public cssService: CSSService,
-        private translate: TranslateFieldService,
-        private myNavigation: MyNavigation
-    ) {
         super(route, router, tournamentRepository, structureRepository, globalEventsManager);
     }
 

@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
@@ -12,14 +12,15 @@ import { JsonTournamentRule } from './json';
     providedIn: 'root'
 })
 export class TournamentRuleRepository extends APIRepository {
+    private http = inject(HttpClient);
+
 
     static readonly MIN_LENGTH_DESCRIPTION = 5;
     static readonly MAX_LENGTH_DESCRIPTION = 80;
     static readonly MAX_PER_TOURNAMENT = 25;
+    constructor() {
+        const router = inject(Router);
 
-    constructor(
-        private http: HttpClient,
-        router: Router) {
         super(router);
     }
 

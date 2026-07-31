@@ -19,6 +19,8 @@ import { createModalInjector } from '../../modal-input-interfaces/create-modal-i
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StructureCategoryComponent  {
+  cssService = inject(CSSService);
+
   public structureEditor = input.required<StructureEditor>();
   public categories = input.required<Category[]>();
   public category = input.required<Category>();
@@ -42,8 +44,7 @@ export class StructureCategoryComponent  {
 
   private modalService = inject(NgbModal);
   private injector = inject(Injector);
-
-  constructor(public cssService: CSSService) {
+  constructor() {
 
   }
 

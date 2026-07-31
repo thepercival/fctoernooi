@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, TemplateRef, ChangeDetectionStrategy, inject } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Params, Router, RouterLink } from '@angular/router';
 import { NgbAlert, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CompetitionSport, PlanningEditMode, RoundNumber } from 'ngx-sport';
@@ -46,10 +46,19 @@ import { createModalInjector } from '../../shared/modal-input-interfaces/create-
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.css'],
     standalone: true,
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [TournamentNavBarComponent, NgbAlert, FontAwesomeModule, AdminPublicSwitcherComponent, RouterLink]
 })
 export class HomeAdminComponent extends TournamentComponent implements OnInit {
+    private tournamentRegistrationRepository = inject(TournamentRegistrationRepository);
+    private competitionSportRouter = inject(CompetitionSportRouter);
+    cssService = inject(CSSService);
+    private userRepository = inject(UserRepository);
+    private tournamentMapper = inject(TournamentMapper);
+    private authService = inject(AuthService);
+    dateFormatter = inject(DateFormatter);
+    private translate = inject(TranslateFieldService);
+
 
     faSpinner = faSpinner;
     faTv = faTv;
@@ -61,22 +70,13 @@ export class HomeAdminComponent extends TournamentComponent implements OnInit {
     hasPlanningEditManualMode: boolean = false;
     allPoulesHaveGames: boolean = false;
     openModalCopiedCheck: boolean = false;
+    constructor() {
+        const route = inject(ActivatedRoute);
+        const router = inject(Router);
+        const tournamentRepository = inject(TournamentRepository);
+        const structureRepository = inject(StructureRepository);
+        const globalEventsManager = inject(GlobalEventsManager);
 
-    constructor(
-        route: ActivatedRoute,
-        router: Router,
-        tournamentRepository: TournamentRepository,        
-        structureRepository: StructureRepository,
-        globalEventsManager: GlobalEventsManager,        
-        private tournamentRegistrationRepository: TournamentRegistrationRepository,
-        private competitionSportRouter: CompetitionSportRouter,
-        public cssService: CSSService,
-        private userRepository: UserRepository,
-        private tournamentMapper: TournamentMapper,
-        private authService: AuthService,
-        public dateFormatter: DateFormatter,
-        private translate: TranslateFieldService
-    ) {
         super(route, router, tournamentRepository, structureRepository, globalEventsManager);
 
 

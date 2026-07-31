@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectionStrategy, inject } from '@angular/core';
 import { AgainstGame, AgainstGamePlace, AgainstSide, NameService, Round, ScoreConfigService, GameState, TogetherGame, TogetherGamePlace, AgainstVariant, StructureNameService } from 'ngx-sport';
 import { DateFormatter } from '../../lib/dateFormatter';
 import { ResultsScreen, ScheduleScreen } from '../../lib/liveboard/screens';
@@ -13,11 +13,14 @@ import { NgTemplateOutlet } from '@angular/common';
     templateUrl: './games.liveboard.component.html',
     styleUrls: ['./games.liveboard.component.scss'],
     standalone: true,
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [FontAwesomeModule, EscapeHtmlPipe, NgTemplateOutlet]
     
 })
 export class LiveboardGamesComponent implements OnInit {
+    private scoreConfigService = inject(ScoreConfigService);
+    dateFormatter = inject(DateFormatter);
+
     @Input() screen!: ScheduleScreen | ResultsScreen;
     @Input() structureNameService!: StructureNameService;
     public hasOnlyGameModeAgainst: boolean = true;
@@ -25,11 +28,7 @@ export class LiveboardGamesComponent implements OnInit {
     public facScoreboard = facScoreboard;
     public facReferee = facReferee;
     public faListUl = faListUl;
-
-    constructor(
-        private scoreConfigService: ScoreConfigService,
-        public dateFormatter: DateFormatter
-    ) {
+    constructor() {
     }
 
     ngOnInit() {

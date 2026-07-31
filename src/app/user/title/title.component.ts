@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, inject } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { IconDefinition, IconName } from '@fortawesome/fontawesome-svg-core';
 import { MyNavigation } from '../../shared/common/navigation';
@@ -11,10 +11,11 @@ import { MyNavigation } from '../../shared/common/navigation';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserTitleComponent {
+  private myNavigation = inject(MyNavigation);
+
   readonly title = input('');
   readonly icon = input.required<IconDefinition>();
-
-  constructor(private myNavigation: MyNavigation) {
+  constructor() {
   }
 
   navigateBack() {

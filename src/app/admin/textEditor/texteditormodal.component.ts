@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, inject } from '@angular/core';
 import { NgbActiveModal, NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 import { TournamentCompetitor } from '../../lib/competitor';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators, FormGroupDirective, FormControlName } from '@angular/forms';
@@ -12,10 +12,13 @@ import { IAlert, IAlertType } from '../../shared/common/alert';
     templateUrl: './texteditormodal.component.html',
     styleUrls: ['./texteditormodal.component.scss'],
     standalone: true,
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [NgbAlert, ReactiveFormsModule]
 })
 export class TextEditorModalComponent implements OnInit {
+    private registrationRepository = inject(TournamentRegistrationRepository);
+    activeModal = inject(NgbActiveModal);
+
     public initialText!: string;
     public header!: string;
     public tournament!: Tournament;
@@ -24,12 +27,9 @@ export class TextEditorModalComponent implements OnInit {
 
     public form: FormGroup<{
         text: FormControl<string>,
-    }>|undefined;
+    }>|undefined;    
     
-    
-    constructor(
-        private registrationRepository: TournamentRegistrationRepository,
-        public activeModal: NgbActiveModal) { }
+    constructor() { }
 
     ngOnInit(): void {
         this.form = new FormGroup({            

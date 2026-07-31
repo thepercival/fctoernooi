@@ -1,4 +1,4 @@
-import { AfterViewChecked, Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { AfterViewChecked, Component, OnInit, ChangeDetectionStrategy, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   Place,
@@ -40,10 +40,15 @@ import { createModalInjector } from '../../shared/modal-input-interfaces/create-
     templateUrl: './list.component.html',
     styleUrls: ['./list.component.scss'],
     standalone: true,
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [NgbAlert, FontAwesomeModule, CategoryBaseCompetitorListComponent, ReactiveFormsModule, NgbNav, NgbNavItem, NgbNavLink, NgbNavContent, NgbNavOutlet, CategoryOrderCompetitorListComponent, RegistrationsNavComponent, CompetitorPresentListComponent, TournamentNavBarComponent]
 })
 export class CompetitorListComponent extends TournamentComponent implements OnInit, AfterViewChecked {
+  private tournamentRegistrationRepository = inject(TournamentRegistrationRepository);
+  private planningRepository = inject(PlanningRepository);
+  private competitorRepository = inject(CompetitorRepository);
+  private myNavigation = inject(MyNavigation);
+
 
   focusId!: number | string;
   // hasBegun!: boolean;
@@ -54,19 +59,14 @@ export class CompetitorListComponent extends TournamentComponent implements OnIn
   public hasBegun!: boolean;
   public registrationSettings: TournamentRegistrationSettings|undefined;
 
-  faSpinner = faSpinner;
-  
-  constructor(
-    route: ActivatedRoute,
-    router: Router,
-    tournamentRepository: TournamentRepository,
-    sructureRepository: StructureRepository,
-    globalEventsManager: GlobalEventsManager,
-    private tournamentRegistrationRepository: TournamentRegistrationRepository,
-    private planningRepository: PlanningRepository,
-    private competitorRepository: CompetitorRepository,
-    private myNavigation: MyNavigation,
-  ) {
+  faSpinner = faSpinner;  
+  constructor() {
+    const route = inject(ActivatedRoute);
+    const router = inject(Router);
+    const tournamentRepository = inject(TournamentRepository);
+    const sructureRepository = inject(StructureRepository);
+    const globalEventsManager = inject(GlobalEventsManager);
+
     super(route, router, tournamentRepository, sructureRepository, globalEventsManager);
   }
 

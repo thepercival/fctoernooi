@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { TournamentRepository } from '../../lib/tournament/repository';
@@ -25,10 +25,13 @@ import { JsonTournamentInvitation } from '../../lib/tournament/invitation/json';
     templateUrl: './add.component.html',
     styleUrls: ['./add.component.scss'],
     standalone: true,
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [FontAwesomeModule,NgbAlert, ReactiveFormsModule, TournamentNavBarComponent]
 })
 export class AuthorizationAddComponent extends TournamentComponent implements OnInit {
+    private invitationRepository = inject(TournamentInvitationRepository);
+    private myNavigation = inject(MyNavigation);
+
     public typedForm: FormGroup;/*<{
         emailaddress: FormControl<string>,
         sendinvitation: FormControl<boolean>
@@ -42,17 +45,13 @@ export class AuthorizationAddComponent extends TournamentComponent implements On
 
     faSpinner = faSpinner;
     faInfoCircle = faInfoCircle;
+    constructor() {
+        const route = inject(ActivatedRoute);
+        const router = inject(Router);
+        const tournamentRepository = inject(TournamentRepository);
+        const structureRepository = inject(StructureRepository);
+        const globalEventsManager = inject(GlobalEventsManager);
 
-    constructor(
-        route: ActivatedRoute,
-        router: Router,
-        tournamentRepository: TournamentRepository,
-        structureRepository: StructureRepository,
-        globalEventsManager: GlobalEventsManager,
-        private invitationRepository: TournamentInvitationRepository,
-        private myNavigation: MyNavigation
-
-    ) {
         super(route, router, tournamentRepository, structureRepository, globalEventsManager);
         this.typedForm = new FormGroup({
             emailaddress: new FormControl('', { nonNullable: true, validators: 

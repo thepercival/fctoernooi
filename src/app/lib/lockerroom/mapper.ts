@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 
 import { Tournament } from '../tournament';
 import { LockerRoom } from '../lockerroom';
@@ -10,7 +10,8 @@ import { TournamentCompetitorMapper } from '../competitor/mapper';
     providedIn: 'root'
 })
 export class LockerRoomMapper {
-    constructor(private competitorMapper: TournamentCompetitorMapper) { }
+    private competitorMapper = inject(TournamentCompetitorMapper);
+    constructor() { }
 
     toObject(json: JsonLockerRoom, tournament: Tournament, lockerRoom?: LockerRoom): LockerRoom {
         if (lockerRoom === undefined) {

@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, signal, SimpleChanges, WritableSignal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, OnChanges, signal, SimpleChanges, WritableSignal, ChangeDetectionStrategy, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import {
   Category, JsonStructure, VoetbalRange,
@@ -17,10 +17,13 @@ import { faCalendarAlt, faSpinner } from '@fortawesome/free-solid-svg-icons';
     templateUrl: './planningNavBar.component.html',
     styleUrls: ['./planningNavBar.component.scss'],
     standalone: true,
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [FontAwesomeModule,NgbAlert,RouterLink]
 })
 export class PlanningNavBarComponent implements OnChanges {
+  private structureRepository = inject(StructureRepository);
+  private dateFormatter = inject(DateFormatter);
+
 
   faSpinner = faSpinner;
   faCalendarAlt = faCalendarAlt;
@@ -33,11 +36,7 @@ export class PlanningNavBarComponent implements OnChanges {
   public readonly processing: WritableSignal<boolean> = signal(true);
   public unknownPlanning = false;
   private refreshSubscription!: Subscription;
-
-  constructor(
-    private structureRepository: StructureRepository,
-    private dateFormatter: DateFormatter
-  ) {
+  constructor() {
 
   }
 

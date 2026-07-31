@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { TournamentRepository } from '../../lib/tournament/repository';
@@ -32,28 +32,28 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
     selector: 'app-tournament-home-view',
     templateUrl: './homeview.component.html',
     styleUrls: ['./homeview.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [FontAwesomeModule, NgbAlert, AdminPublicSwitcherComponent, TournamentNavBarComponent, RouterModule]
     
 })
 export class HomeViewComponent extends TournamentComponent implements OnInit {
+    private sponsorRepository = inject(SponsorRepository);
+    private rulesRepository = inject(TournamentRuleRepository);
+    private tournamentRegistrationRepository = inject(TournamentRegistrationRepository);
+    protected tournamentMapper = inject(TournamentMapper);
+    protected authService = inject(AuthService);
+    dateFormatter = inject(DateFormatter);
+
     faSpinner = faSpinner;
     public rules: JsonTournamentRule[] = [];
     public settings: TournamentRegistrationSettings|undefined;
+    constructor() {
+        const route = inject(ActivatedRoute);
+        const router = inject(Router);
+        const tournamentRepository = inject(TournamentRepository);
+        const structureRepository = inject(StructureRepository);
+        const globalEventsManager = inject(GlobalEventsManager);
 
-    constructor(
-        route: ActivatedRoute,
-        router: Router,
-        tournamentRepository: TournamentRepository,
-        structureRepository: StructureRepository,
-        globalEventsManager: GlobalEventsManager,
-        private sponsorRepository: SponsorRepository,
-        private rulesRepository: TournamentRuleRepository,
-        private tournamentRegistrationRepository: TournamentRegistrationRepository,
-        protected tournamentMapper: TournamentMapper,
-        protected authService: AuthService,
-        public dateFormatter: DateFormatter,
-    ) {
         super(route, router, tournamentRepository, structureRepository, globalEventsManager);
     }
 

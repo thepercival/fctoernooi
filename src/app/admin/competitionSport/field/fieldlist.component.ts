@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, signal, WritableSignal, Injector, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, Input, signal, WritableSignal, Injector, ChangeDetectionStrategy, inject } from '@angular/core';
 import { Field, CompetitionSport, JsonField, Structure } from 'ngx-sport';
 
 import { FieldRepository } from '../../../lib/ngx-sport/field/repository';
@@ -15,10 +15,16 @@ import { faArrowUp, faPencil, faPlus, faSort, faSpinner, faTrashCan } from '@for
     selector: 'app-tournament-fields',
     templateUrl: './fieldlist.component.html',
     styleUrls: ['./fieldlist.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [NgbAlert, FaIconComponent],
 })
 export class FieldListComponent implements OnInit {
+    private fieldRepository = inject(FieldRepository);
+    private planningRepository = inject(PlanningRepository);
+    private translate = inject(TranslateFieldService);
+    private modalService = inject(NgbModal);
+    private injector = inject(Injector);
+
 
     public readonly alert: WritableSignal<IAlert | undefined> = signal(undefined);
     public readonly processing: WritableSignal<boolean> = signal(true);
@@ -34,14 +40,7 @@ export class FieldListComponent implements OnInit {
     faPencilAlt = faPencil;
     faLevelUpAlt = faArrowUp;
     faTrashAlt = faTrashCan;
-
-    constructor(
-        private fieldRepository: FieldRepository,
-        private planningRepository: PlanningRepository,
-        private translate: TranslateFieldService,
-        private modalService: NgbModal,
-        private injector: Injector,
-    ) {
+    constructor() {
         this.processing.set(true);
 
     }

@@ -68,6 +68,15 @@ import { createModalInjector } from '../../modal-input-interfaces/create-modal-i
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges {
+  private router = inject(Router);
+  competitionSportRouter = inject(CompetitionSportRouter);
+  private authService = inject(AuthService);
+  cssService = inject(CSSService);
+  dateFormatter = inject(DateFormatter);
+  translate = inject(TranslateScoreService);
+  protected planningRepository = inject(PlanningRepository);
+  competitorRepository = inject(CompetitorRepository);
+
   public faSpinner = faSpinner;
   public faSync = faSync;
   public faStar = faStar;
@@ -121,16 +130,9 @@ export class RoundNumberPlanningComponent implements OnInit, AfterViewInit, OnDe
   private rolesValue: Role[] = [];
 
   private modalService: NgbModal = inject(NgbModal);
+  constructor() {
+    const router = this.router;
 
-  constructor(
-    private router: Router,
-    public competitionSportRouter: CompetitionSportRouter,
-    private authService: AuthService,
-    public cssService: CSSService,
-    public dateFormatter: DateFormatter,
-    public translate: TranslateScoreService,    
-    protected planningRepository: PlanningRepository,
-    public competitorRepository: CompetitorRepository) {
     // this.winnersAndLosers = [Round.WINNERS, Round.LOSERS];
     this.resetAlert();
     this.scoreConfigService = new ScoreConfigService();

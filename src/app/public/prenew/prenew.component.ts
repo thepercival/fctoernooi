@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { GlobalEventsManager } from '../../shared/common/eventmanager';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
@@ -9,17 +9,16 @@ import { faLevelUpAlt, faSignInAlt, faUserCircle } from '@fortawesome/free-solid
     selector: 'app-tournament-prenew',
     templateUrl: './prenew.component.html',
     styleUrls: ['./prenew.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FontAwesomeModule, NgbAlert, RouterModule],
 })
 export class PreNewComponent {
   faLevelUpAlt = faLevelUpAlt;
   faUserCircle = faUserCircle;
   faSignInAlt = faSignInAlt;
+  constructor() {
+    const globalEventsManager = inject(GlobalEventsManager);
 
-  constructor(
-    globalEventsManager: GlobalEventsManager
-  ) {
     globalEventsManager.showFooter.emit(true);
   }
 }

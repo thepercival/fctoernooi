@@ -52,10 +52,20 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
     templateUrl: './edit.component.html',
     styleUrls: ['./edit.component.css'],
     standalone: true,
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [NgbAlert,GameAmountConfigEditComponent,FontAwesomeModule,EscapeHtmlPipe,TournamentNavBarComponent,ReactiveFormsModule]
 })
 export class PlanningConfigComponent extends TournamentComponent implements OnInit {
+    private planningConfigRepository = inject(PlanningConfigRepository);
+    private gameAmountConfigRepository = inject(GameAmountConfigRepository);
+    private myNavigation = inject(MyNavigation);
+    private defaultService = inject(DefaultService);
+    private planningRepository = inject(PlanningRepository);
+    private mapper = inject(PlanningConfigMapper);
+    private competitionSportMapper = inject(CompetitionSportMapper);
+    private sportMapper = inject(SportMapper);
+    private gameAmountConfigMapper = inject(GameAmountConfigMapper);
+
     faSpinner = faSpinner;
     public typedForm: FormGroup;/*<{
         gameAmountConfigs: FormArray<FormControl>,
@@ -90,23 +100,13 @@ export class PlanningConfigComponent extends TournamentComponent implements OnIn
     @ViewChild('updateDataAlert', { static: false }) updateDataAlert!: NgbAlert;
     updateDataMsg: string | undefined = '';
     private _changingStartRoundNumber = new Subject<RoundNumber>();
+    constructor() {
+        const route = inject(ActivatedRoute);
+        const router = inject(Router);
+        const tournamentRepository = inject(TournamentRepository);
+        const sructureRepository = inject(StructureRepository);
+        const globalEventsManager = inject(GlobalEventsManager);
 
-    constructor(
-        route: ActivatedRoute,
-        router: Router,
-        tournamentRepository: TournamentRepository,
-        sructureRepository: StructureRepository,
-        globalEventsManager: GlobalEventsManager,
-        private planningConfigRepository: PlanningConfigRepository,
-        private gameAmountConfigRepository: GameAmountConfigRepository,
-        private myNavigation: MyNavigation,
-        private defaultService: DefaultService,
-        private planningRepository: PlanningRepository,
-        private mapper: PlanningConfigMapper,
-        private competitionSportMapper: CompetitionSportMapper, 
-        private sportMapper: SportMapper,
-        private gameAmountConfigMapper: GameAmountConfigMapper
-    ) {
         super(route, router, tournamentRepository, sructureRepository, globalEventsManager);
         this.typedForm = new FormGroup({
             /*gameAmountConfigs: new FormArray([

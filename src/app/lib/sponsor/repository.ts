@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
@@ -14,11 +14,12 @@ import { Router } from '@angular/router';
     providedIn: 'root'
 })
 export class SponsorRepository extends APIRepository {
+    private http = inject(HttpClient);
+    private mapper = inject(SponsorMapper);
 
-    constructor(
-        private http: HttpClient,
-        private mapper: SponsorMapper,
-        router: Router) {
+    constructor() {
+        const router = inject(Router);
+
         super(router);
     }
 

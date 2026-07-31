@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, signal, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, signal, input, inject } from '@angular/core';
 import { GlobalEventsManager } from '../../common/eventmanager';
 
 @Component({
@@ -10,10 +10,11 @@ import { GlobalEventsManager } from '../../common/eventmanager';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FooterComponent implements OnInit {
+  private globalEventsManager = inject(GlobalEventsManager);
+
 
   public showFooter = signal(false);
-
-  constructor(private globalEventsManager: GlobalEventsManager) {
+  constructor() {
   }
 
   ngOnInit() {

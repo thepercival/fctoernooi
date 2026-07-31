@@ -1,4 +1,4 @@
-import { Component, OnInit, output, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, output, TemplateRef, ChangeDetectionStrategy, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FormGroup, FormControl, Validators, AbstractControl, ReactiveFormsModule } from '@angular/forms';
 import { NgbDateStruct, NgbInputDatepicker, NgbModal, NgbTimepicker, NgbTimeStruct } from '@ng-bootstrap/ng-bootstrap';
@@ -16,10 +16,12 @@ import { faCalendarAlt, faInfoCircle, faLevelUpAlt } from '@fortawesome/free-sol
     templateUrl: './properties.component.html',
     styleUrls: ['./properties.component.scss'],
     standalone: true,
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [FontAwesomeModule,NgbInputDatepicker,NgbTimepicker,ReactiveFormsModule,RouterLink]
 })
 export class TournamentPropertiesComponent implements OnInit {
+  private modalService = inject(NgbModal);
+
   
   toNextStep = output<JsonTournament>();
   
@@ -38,10 +40,7 @@ export class TournamentPropertiesComponent implements OnInit {
   faInfoCircle = faInfoCircle;
   faCalendarAlt = faCalendarAlt;
   faLevelUpAlt = faLevelUpAlt;
-
-  constructor(
-    private modalService: NgbModal
-  ) {
+  constructor() {
     const date = new Date();
     this.minDateStruct = { year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() };
 

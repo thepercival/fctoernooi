@@ -1,4 +1,4 @@
-import { Component, input, model, OnInit, signal, WritableSignal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, input, model, OnInit, signal, WritableSignal, ChangeDetectionStrategy, inject } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 
 import { IAlert, IAlertType } from '../../shared/common/alert';
@@ -26,27 +26,26 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
     templateUrl: './new.component.html',
     styleUrls: ['./new.component.scss'],
     standalone: true,
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [TournamentPropertiesComponent, NgbAlert, CreateSportWithFieldsComponent, FaIconComponent,ReactiveFormsModule]
 })
 export class NewComponent implements OnInit {
+  private router = inject(Router);
+  private userRepository = inject(UserRepository);
+  private tournamentRepository = inject(TournamentRepository);
+  private structureRepository = inject(StructureRepository);
+  private planningRepository = inject(PlanningRepository);
+  private structureEditor = inject(StructureEditor);
+  private defaultService = inject(DefaultService);
+  private competitionSportRepository = inject(CompetitionSportRepository);
+
   faSpinner = faSpinner;
   public readonly processing: WritableSignal<boolean> = signal(true);
   public alert: IAlert | undefined;
   protected jsonTournament!: JsonTournament;
   public nrOfCredits: number | undefined;
   public currentStep = NewTournamentStep.editProperties;
-
-  constructor(
-    private router: Router,
-    private userRepository: UserRepository,
-    private tournamentRepository: TournamentRepository,
-    private structureRepository: StructureRepository,
-    private planningRepository: PlanningRepository,
-    private structureEditor: StructureEditor,
-    private defaultService: DefaultService,
-    private competitionSportRepository: CompetitionSportRepository,
-  ) {
+  constructor() {
   }
 
   ngOnInit() {

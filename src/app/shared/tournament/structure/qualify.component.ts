@@ -20,6 +20,8 @@ import { faCogs, faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StructureQualifyComponent {
+    cssService = inject(CSSService);
+
     public structureEditor = input.required<StructureEditor>();
     public parentRound = input.required<Round>();
     public structureNameService = input.required<StructureNameService>();
@@ -34,9 +36,7 @@ export class StructureQualifyComponent {
 
     private modalService = inject(NgbModal);
     private injector = inject(Injector);
-
-    constructor(
-        public cssService: CSSService) {
+    constructor() {
         this.resetAlert();
     }
 

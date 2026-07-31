@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, input, inject } from '@angular/core';
 import { NgbNav, NgbNavContent, NgbNavItem, NgbNavLink, NgbNavOutlet } from '@ng-bootstrap/ng-bootstrap';
 
 import { Category, CompetitionSport, GameState, StructureNameService } from 'ngx-sport';
@@ -18,6 +18,9 @@ import { RankingEndComponent } from './end.component';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RankingCategoryComponent implements OnInit {
+    protected tournamentMapper = inject(TournamentMapper);
+    protected authService = inject(AuthService);
+
     public category = input.required<Category>();
     public favorites = input<Favorites | undefined>(undefined);
     public competitionSports = input.required<CompetitionSport[]>();
@@ -25,14 +28,10 @@ export class RankingCategoryComponent implements OnInit {
     public structureNameService = input.required<StructureNameService>();
 
     public activeTabName!: string;
-    public multipleRounds: boolean = false;
-    
+    public multipleRounds: boolean = false;    
     
 
-    constructor(
-        protected tournamentMapper: TournamentMapper,
-        protected authService: AuthService
-    ) {
+    constructor() {
 
     }
 

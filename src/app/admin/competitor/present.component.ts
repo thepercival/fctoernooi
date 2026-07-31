@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, output, signal, SimpleChanges, WritableSignal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, OnChanges, output, signal, SimpleChanges, WritableSignal, ChangeDetectionStrategy, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 import { Category, Place, StartLocationMap, StructureNameService } from 'ngx-sport';
@@ -17,10 +17,14 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
     templateUrl: './present.component.html',
     styleUrls: ['./present.component.scss'],
     standalone: true,
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [NgbAlert,FontAwesomeModule,EscapeHtmlPipe]
 })
 export class CompetitorPresentListComponent implements OnChanges {
+  private router = inject(Router);
+  private competitorRepository = inject(CompetitorRepository);
+  private competitorMapper = inject(TournamentCompetitorMapper);
+
   faSpinner = faSpinner;
   @Input() tournament!: Tournament;
   @Input() category!: Category;
@@ -28,8 +32,8 @@ export class CompetitorPresentListComponent implements OnChanges {
   @Input() structureNameService!: StructureNameService;
   @Input() activeTab!: number;
 
-  onAlertChange = output<IAlert>();
-  onCompetitorsUpdate = output();
+  alertChange = output<IAlert>();
+  competitorsUpdate = output();
 
   public placeCompetitorItems: PlaceCompetitorItem[] = [];
   public poulePlaceCompetitorItems: { pouleNr: number, items: PlaceCompetitorItem[] }[] = [];
@@ -37,12 +41,8 @@ export class CompetitorPresentListComponent implements OnChanges {
   public swapItem: PlaceCompetitorItem | undefined;
   private startLocationMap!: StartLocationMap;
   // public alert: IAlert | undefined;
-  public readonly processingCompetitorIds: WritableSignal<(string | number)[]> = signal([]);
-  
-  constructor(
-    private router: Router,
-    private competitorRepository: CompetitorRepository,
-    private competitorMapper: TournamentCompetitorMapper) {
+  public readonly processingCompetitorIds: WritableSignal<(string | number)[]> = signal([]);  
+  constructor() {
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -110,7 +110,7 @@ export class CompetitorPresentListComponent implements OnChanges {
 
     this.competitorRepository.editObject(jsonCompetitor, competitor, this.tournament.getId())
       .subscribe({
-        next: () => this.onCompetitorsUpdate.emit(),
+        next: () => this.competitorsUpdate.emit(),
         error: () => {
           competitor.setPresent(previousPresent);
           this.processingCompetitorIds.update((ids: (string | number)[]) => ids.filter((id) => id !== competitorId));

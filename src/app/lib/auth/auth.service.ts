@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { computed, Injectable, signal } from '@angular/core';
+import { computed, Injectable, signal, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
@@ -13,12 +13,16 @@ import { Tournament } from '../tournament';
   providedIn: 'root'
 })
 export class AuthService extends APIRepository {
+  private userMapper = inject(UserMapper);
+  private http = inject(HttpClient);
+
   // private userId: UserId | undefined;
   private authItem: JsonAuthItem | undefined;
   private readonly authItemSignal = signal<JsonAuthItem | undefined>(undefined);
   public readonly loggedIn = computed((): boolean => this.authItemSignal() !== undefined);
+  constructor() {
+    const router = inject(Router);
 
-  constructor(private userMapper: UserMapper, private http: HttpClient, router: Router) {
     super(router);
     const authStorageItem = localStorage.getItem('auth');
     const authItem = authStorageItem ? JSON.parse(authStorageItem) : undefined;

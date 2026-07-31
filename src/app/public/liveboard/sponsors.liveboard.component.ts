@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges, ChangeDetectionStrategy, inject } from '@angular/core';
 
 import { Sponsor } from '../../lib/sponsor';
 import { SponsorRepository } from '../../lib/sponsor/repository';
@@ -6,16 +6,17 @@ import { SponsorRepository } from '../../lib/sponsor/repository';
 @Component({
     selector: 'app-tournament-liveboard-sponsors',
     templateUrl: './sponsors.liveboard.component.html',
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     styleUrls: ['./sponsors.liveboard.component.scss'],
     
 })
 export class LiveboardSponsorsComponent implements OnChanges {
+    private sponsorRepository = inject(SponsorRepository);
+
     @Input() sponsors: Sponsor[] = [];
     nrOfColumns: number = 0;
-    sponsorRows: Sponsor[][] = [];
-    
-    constructor(private sponsorRepository: SponsorRepository) {
+    sponsorRows: Sponsor[][] = [];    
+    constructor() {
         
     }
 

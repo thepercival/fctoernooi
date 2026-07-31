@@ -9,7 +9,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
     templateUrl: './roleitem.component.html',
     styleUrls: ['./roleitem.component.scss'],
     standalone: true,
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [FaIconComponent],
 })
 export class RoleItemComponent implements OnInit {

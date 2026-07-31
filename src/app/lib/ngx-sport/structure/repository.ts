@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable, of, delay } from 'rxjs';
 import { catchError, concatMap, map } from 'rxjs/operators';
 
@@ -15,12 +15,13 @@ import { Router } from '@angular/router';
     providedIn: 'root'
 })
 export class StructureRepository extends APIRepository {
+    private competitorRepository = inject(CompetitorRepository);
+    private mapper = inject(StructureMapper);
+    private http = inject(HttpClient);
 
-    constructor(
-        private competitorRepository: CompetitorRepository,
-        private mapper: StructureMapper,
-        private http: HttpClient,
-        router: Router) {
+    constructor() {
+        const router = inject(Router);
+
         super(router);
     }
 

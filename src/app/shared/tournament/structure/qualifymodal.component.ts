@@ -23,6 +23,8 @@ export const QUALIFY_MODAL_DATA = new InjectionToken<QualifyModalData>('QUALIFY_
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class QualifyModalComponent {
+    cssService = inject(CSSService);
+
 
     readonly data = inject(QUALIFY_MODAL_DATA);
     public faCheckCircle = faCheckCircle;
@@ -33,9 +35,8 @@ export class QualifyModalComponent {
     readonly onQualifyGroupFromSplit = output<HorizontalSingleQualifyRule|VerticalSingleQualifyRule>(); 
     readonly onQualifyGroupWithNextMerge = output<QualifyGroup>(); 
     
-    public modal: NgbActiveModal = inject(NgbActiveModal);
-    
-    constructor(public cssService: CSSService) {
+    public modal: NgbActiveModal = inject(NgbActiveModal);    
+    constructor() {
         
     }
 

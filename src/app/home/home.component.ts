@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, signal, WritableSignal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, AfterViewInit, signal, WritableSignal, ChangeDetectionStrategy, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthService } from '../lib/auth/auth.service';
@@ -16,11 +16,17 @@ import { RoleMapper } from '../lib/tournament/authorization/roleMapper';
     standalone: true,
     imports: [HomeShellComponent],
     templateUrl: './home.component.html',
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     styleUrls: ['./home.component.scss'],
     
 })
 export class HomeComponent implements OnInit, AfterViewInit {
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  authService = inject(AuthService);
+  private tournamentShellRepos = inject(TournamentShellRepository);
+  private globalEventsManager = inject(GlobalEventsManager);
+
   static readonly START_HOUR_IN_PAST = 4;
 
   shellsTillX: TournamentShell[] = [];
@@ -31,14 +37,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   alert: IAlert | undefined;
   public readonly processing: WritableSignal<boolean> = signal(true);
+  constructor() {
+    const globalEventsManager = this.globalEventsManager;
 
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    public authService: AuthService,
-    private tournamentShellRepos: TournamentShellRepository,
-    private globalEventsManager: GlobalEventsManager
-  ) {
     this.linethroughDate = new Date();
     this.linethroughDate.setHours(this.linethroughDate.getHours() - HomeComponent.START_HOUR_IN_PAST);
     globalEventsManager.showFooter.emit(true);

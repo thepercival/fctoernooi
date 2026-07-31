@@ -1,4 +1,4 @@
-import { OnInit, ElementRef, Input, Directive } from '@angular/core';
+import { OnInit, ElementRef, Input, Directive, inject } from '@angular/core';
 
 @Directive({
     selector: '[focusMe]',
@@ -6,10 +6,11 @@ import { OnInit, ElementRef, Input, Directive } from '@angular/core';
     
 })
 export class FocusDirective implements OnInit {
+    private hostElement = inject(ElementRef);
+
 
     @Input('focusMe') isFocused: boolean = false;;
-
-    constructor(private hostElement: ElementRef) { }
+    constructor() { }
 
     ngOnInit() {
         if (this.isFocused && !this.isTouchDevice()) {

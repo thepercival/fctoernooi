@@ -12,9 +12,9 @@ import { catchError, map } from 'rxjs/operators';
 export class TournamentShellRepository extends APIRepository {
     
     private http: HttpClient = inject(HttpClient);
+    constructor() {
+        const router = inject(Router);
 
-    constructor(        
-        router: Router) {
         super(router);
     }
 

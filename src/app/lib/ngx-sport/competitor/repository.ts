@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
@@ -16,11 +16,14 @@ import { TournamentRegistration } from '../../tournament/registration';
     providedIn: 'root'
 })
 export class CompetitorRepository extends APIRepository {
+    private mapper = inject(TournamentCompetitorMapper);
+    private http = inject(HttpClient);
+
 
     private unusedCompetitors: UnusedCompetitors[] = [];
+    constructor() {
+        const router = inject(Router);
 
-    constructor(
-        private mapper: TournamentCompetitorMapper, private http: HttpClient, router: Router) {
         super(router);
     }
 

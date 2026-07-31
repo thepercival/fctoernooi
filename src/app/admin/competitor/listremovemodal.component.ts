@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { NgbActiveModal, NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 import { PlaceCompetitorItem } from '../../lib/ngx-sport/placeCompetitorItem';
 import { FaIconComponent } from "@fortawesome/angular-fontawesome";
@@ -9,17 +9,18 @@ import { facStructure } from '../../shared/customicons';
     selector: 'app-ngbd-modal-listremove',
     templateUrl: './listremovemodal.component.html',
     styleUrls: ['./listremovemodal.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [FaIconComponent, NgbAlert],
     
 })
 export class CompetitorListRemoveModalComponent {
+    activeModal = inject(NgbActiveModal);
+
     facStructure = facStructure;
     faTrashAlt = faTrashAlt;
     item!: PlaceCompetitorItem;
     allPlacesAssigned!: boolean;
-
-    constructor(public activeModal: NgbActiveModal) { }
+    constructor() { }
 
     hasMinimumNrOfPlacesPerPoule() {
         const rootRound = this.item.place.getPoule().getRound();

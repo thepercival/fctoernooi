@@ -1,4 +1,4 @@
-import { Component, Input, output, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, output, OnInit, ChangeDetectionStrategy, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { StructureEditor, StructureNameService } from 'ngx-sport';
 import { DefaultService } from '../../lib/ngx-sport/defaultService';
@@ -13,10 +13,14 @@ import { faCogs } from '@fortawesome/free-solid-svg-icons';
     templateUrl: './rounds.component.html',
     styleUrls: ['./rounds.component.css'],
     standalone: true,
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [FontAwesomeModule, EscapeHtmlPipe, ReactiveFormsModule]
 })
 export class StructureSelectRoundComponent implements OnInit {
+  cssService = inject(CSSService);
+  private structureEditor = inject(StructureEditor);
+  private defaultService = inject(DefaultService);
+
   @Input() selectableRoundNode!: SelectableRoundNode;
   @Input() first!: boolean;
   @Input() hasOwnConfig!: Function;
@@ -29,12 +33,7 @@ export class StructureSelectRoundComponent implements OnInit {
   }>;
 
   faCogs = faCogs;
-
-  constructor(
-    public cssService: CSSService,
-    private structureEditor: StructureEditor,
-    private defaultService: DefaultService
-  ) {
+  constructor() {
     this.typedForm = new FormGroup({
       selected: new FormControl(false, { nonNullable: true })
     });

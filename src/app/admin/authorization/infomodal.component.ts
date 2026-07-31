@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectionStrategy, inject } from '@angular/core';
 import { NgbActiveModal, NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 import { getRoleName, Role } from '../../lib/role';
 import { facReferee } from '../../shared/customicons';
@@ -9,18 +9,19 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     templateUrl: './infomodal.component.html',
     styleUrls: ['./infomodal.component.scss'],
     standalone: true,
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [NgbAlert, FontAwesomeModule],
 })
 export class AuthorizationExplanationModalComponent implements OnInit {
+    activeModal = inject(NgbActiveModal);
+
     @Input() header!: string;
     @Input() showAdd: boolean = false;
 
     roleDefinitions: RoleDefinition[] = [];
 
     facReferee = facReferee;
-
-    constructor(public activeModal: NgbActiveModal) {
+    constructor() {
     }
 
     ngOnInit() {

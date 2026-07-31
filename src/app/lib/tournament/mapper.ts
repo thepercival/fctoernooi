@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { CompetitionMapper, JsonPeriod, Period } from 'ngx-sport';
 
 import { TournamentUserMapper } from './user/mapper';
@@ -14,13 +14,13 @@ import { TournamentCompetitorMapper } from '../competitor/mapper';
     providedIn: 'root'
 })
 export class TournamentMapper {
-    constructor(
-        private competitionMapper: CompetitionMapper,
-        private tournamentUserMapper: TournamentUserMapper,
-        private sponsorMapper: SponsorMapper,
-        private competitorMapper: TournamentCompetitorMapper,
-        private lockerRoomMapper: LockerRoomMapper,
-        private recessMapper: RecessMapper) { }
+    private competitionMapper = inject(CompetitionMapper);
+    private tournamentUserMapper = inject(TournamentUserMapper);
+    private sponsorMapper = inject(SponsorMapper);
+    private competitorMapper = inject(TournamentCompetitorMapper);
+    private lockerRoomMapper = inject(LockerRoomMapper);
+    private recessMapper = inject(RecessMapper);
+    constructor() { }
 
     toObject(json: JsonTournament): Tournament {
         const competition = this.competitionMapper.toObject(json.competition);

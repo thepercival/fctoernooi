@@ -21,6 +21,9 @@ import { createModalInjector } from '../../../modal-input-interfaces/create-moda
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RankingSportsComponent implements OnInit {
+  cssService = inject(CSSService);
+  favRepos = inject(FavoritesRepository);
+
   public poule = input.required<Poule>();
   public competitionSports = input<CompetitionSport[]>([]);
   public favorites = input<Favorites | undefined>(undefined);
@@ -38,10 +41,7 @@ export class RankingSportsComponent implements OnInit {
   private resolvedCompetitionSports: CompetitionSport[] = [];
   private modalService = inject(NgbModal);
   private injector = inject(Injector);
-
-  constructor(
-    public cssService: CSSService,
-    public favRepos: FavoritesRepository) {
+  constructor() {
     this.roundRankingCalculator = new RoundRankingCalculator(undefined, Cumulative.byPerformance);
   }
 

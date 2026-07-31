@@ -1,4 +1,4 @@
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy, inject } from '@angular/core';
 import { AgainstRuleSet, AgainstSportRoundRankingCalculator, AgainstVariant, Poule, SportRoundRankingItem, StructureNameService, TogetherSportRoundRankingCalculator } from 'ngx-sport';
 
 import { CSSService } from '../../shared/common/cssservice';
@@ -10,18 +10,17 @@ import { NgTemplateOutlet } from '@angular/common';
     selector: 'app-tournament-liveboard-poules',
     templateUrl: './poules.liveboard.component.html',
     styleUrls: ['./poules.liveboard.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [EscapeHtmlPipe, NgTemplateOutlet]
     
 })
 export class LiveboardPoulesComponent {
+    cssService = inject(CSSService);
+
     @Input() screen!: PoulesRankingScreen;
     @Input() ruleSet!: AgainstRuleSet;
     @Input() structureNameService!: StructureNameService;
-
-    constructor(
-        public cssService: CSSService
-    ) {
+    constructor() {
     }
 
     getRankingItems(poule: Poule): SportRoundRankingItem[] {

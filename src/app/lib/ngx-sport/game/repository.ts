@@ -1,5 +1,5 @@
 import { HttpClient, HttpParams, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
@@ -12,9 +12,12 @@ import { Router } from '@angular/router';
     providedIn: 'root'
 })
 export class GameRepository extends APIRepository {
+    private mapper = inject(GameMapper);
+    private http = inject(HttpClient);
 
-    constructor(
-        private mapper: GameMapper, private http: HttpClient, router: Router) {
+    constructor() {
+        const router = inject(Router);
+
         super(router);
     }
 

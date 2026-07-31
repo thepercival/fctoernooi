@@ -1,25 +1,19 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  effect,
-  ElementRef,
-  input,
-  NgZone,
-  OnDestroy,
-  output,
-  ChangeDetectionStrategy
-} from '@angular/core';
+import { ChangeDetectorRef, Component, effect, ElementRef, input, NgZone, OnDestroy, output, ChangeDetectionStrategy, inject } from '@angular/core';
 import { Subscription, timer } from 'rxjs';
 import { DefaultJsonTheme, JsonTheme } from '../../lib/tournament/theme';
 
 @Component({
     selector: 'app-progress',
     templateUrl: './progress.component.html',
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     styleUrls: ['./progress.component.scss'],
     
 })
 export class ProgressComponent implements OnDestroy {
+    private elRef = inject(ElementRef);
+    private _ngZone = inject(NgZone);
+    private changeRef = inject(ChangeDetectorRef);
+
     startNrOfSecondsFromZero = input.required<number>();
     theme = input<JsonTheme>();        
     newNrOfSecondsFromZero = output<number>();
@@ -32,8 +26,7 @@ export class ProgressComponent implements OnDestroy {
     length = (this.radius + this.strokeWidth) * 2;
     private timer!: Subscription;
     public dashoffset!: number;
-
-    constructor(private elRef: ElementRef, private _ngZone: NgZone, private changeRef: ChangeDetectorRef) {        
+    constructor() {        
         effect(() => {
             this.resetProgress(this.startNrOfSecondsFromZero());
             this.updateCustomProperty(); 

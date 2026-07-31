@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, WritableSignal, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, WritableSignal, input, signal, inject } from '@angular/core';
 import { Poule, ScoreConfig, AgainstSportRoundRankingCalculator, CompetitionSport, SportRoundRankingItem, StructureNameService, Competitor, StartLocation, Place } from 'ngx-sport';
 import { Favorites } from '../../../../lib/favorites';
 import { FavoritesRepository } from '../../../../lib/favorites/repository';
@@ -18,6 +18,10 @@ import { EscapeHtmlPipe } from '../../../common/escapehtmlpipe';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RankingAgainstComponent implements OnInit {
+  cssService = inject(CSSService);
+  favRepos = inject(FavoritesRepository);
+  private competitorRepository = inject(CompetitorRepository);
+
   public poule = input.required<Poule>();
   public competitionSport = input.required<CompetitionSport>();
   public favorites = input<Favorites | undefined>(undefined);
@@ -27,11 +31,7 @@ export class RankingAgainstComponent implements OnInit {
   public sportRankingItems!: SportRoundRankingItem[];
   public showDifferenceDetail = false;
   public readonly processing: WritableSignal<boolean> = signal(true);
-
-  constructor(
-    public cssService: CSSService,
-    public favRepos: FavoritesRepository,
-    private competitorRepository: CompetitorRepository) {
+  constructor() {
   }
 
   ngOnInit() {

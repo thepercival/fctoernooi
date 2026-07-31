@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectionStrategy, inject } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AgainstGame, Field, Place, PlanningConfig, PlanningEditMode, Structure, StructureNameService, TogetherGame } from 'ngx-sport';
 import { DateFormatter } from '../../lib/dateFormatter';
@@ -14,23 +14,23 @@ import { faCalendarDays } from '@fortawesome/free-solid-svg-icons';
     templateUrl: './editbase.component.html',
     styleUrls: ['./editbase.component.scss'],
     standalone: true,
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [EscapeHtmlPipe, NgbTimepicker, NgbInputDatepicker, FontAwesomeModule, ReactiveFormsModule]
 })
 export class GameBaseEditComponent implements OnInit {
+  private translate = inject(TranslateFieldService);
+  dateFormatter = inject(DateFormatter);
+  private dateConverter = inject(DateConverter);
+
   @Input() form!: FormGroup;
   @Input() game!: AgainstGame | TogetherGame;
   @Input() structureNameService!: StructureNameService;
   @Input() structure!: Structure;
-  faCalendarAlt = faCalendarDays;
-  
+  faCalendarAlt = faCalendarDays;  
   // onEditAfter = output<void>();
   // public firstScoreConfig!: ScoreConfig;
 
-  constructor(
-    private translate: TranslateFieldService,
-    public dateFormatter: DateFormatter,
-    private dateConverter: DateConverter) {
+  constructor() {
   }
 
   ngOnInit() {

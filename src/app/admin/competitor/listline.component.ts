@@ -1,4 +1,4 @@
-import { AfterViewChecked, Component, ElementRef, Input, output, signal, TemplateRef, ViewChild, WritableSignal, ChangeDetectionStrategy } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, Input, output, signal, TemplateRef, ViewChild, WritableSignal, ChangeDetectionStrategy, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Place, StructureNameService } from 'ngx-sport';
@@ -16,10 +16,15 @@ import { faCircleCheck, faDoorClosed, faPencil, faTrashCan } from '@fortawesome/
     templateUrl: './listline.component.html',
     styleUrls: ['./listline.component.css'],
     standalone: true,
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [FontAwesomeModule, EscapeHtmlPipe]
 })
 export class CompetitorListLineComponent implements AfterViewChecked {
+  private modalService = inject(NgbModal);
+  private router = inject(Router);
+  competitorRepository = inject(CompetitorRepository);
+  private competitorMapper = inject(TournamentCompetitorMapper);
+
   @Input() placeCompetitor!: PlaceCompetitorItem;
   @Input() focus!: boolean;
   @Input() hasBegun!: boolean;
@@ -38,12 +43,7 @@ export class CompetitorListLineComponent implements AfterViewChecked {
   faTrashAlt = faTrashCan;
 
   @ViewChild('btnEdit', { static: true }) private btnEditRef: ElementRef | undefined;
-
-  constructor(
-    private modalService: NgbModal,
-    private router: Router,
-    public competitorRepository: CompetitorRepository,
-    private competitorMapper: TournamentCompetitorMapper) {
+  constructor() {
   }
 
   edit() {

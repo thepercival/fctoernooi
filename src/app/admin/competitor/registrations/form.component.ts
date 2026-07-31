@@ -1,4 +1,4 @@
-import { Component, OnInit, WritableSignal, input, model, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, WritableSignal, input, model, signal, ChangeDetectionStrategy, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { TournamentCompetitor } from '../../../lib/competitor';
 import { IAlert } from '../../../shared/common/alert';
@@ -19,10 +19,15 @@ import { RouterLink } from '@angular/router';
     templateUrl: './form.component.html',
     styleUrls: ['./form.component.scss'],
     standalone: true,
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [NgbAlert, FontAwesomeModule, RouterLink, ReactiveFormsModule]
 })
 export class RegistrationFormComponent implements OnInit{
+  private router = inject(Router);
+  private registrationRepository = inject(TournamentRegistrationRepository);
+  private settingsMapper = inject(TournamentRegistrationSettingsMapper);
+  private dateConverter = inject(DateConverter);
+
   faSpinner = faSpinner;
   faEye = faEye;
   faPrint = faPrint;
@@ -39,12 +44,7 @@ export class RegistrationFormComponent implements OnInit{
   public validations: RegisterSettingsValidations = {
     maxlengthremark: TournamentCompetitor.MAX_LENGTH_INFO
   };
-
-  constructor(
-    private router: Router,
-    private registrationRepository: TournamentRegistrationRepository,
-    private settingsMapper: TournamentRegistrationSettingsMapper,
-    private dateConverter: DateConverter) {
+  constructor() {
   }
 
   ngOnInit(): void {

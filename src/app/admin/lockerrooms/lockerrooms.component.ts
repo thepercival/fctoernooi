@@ -26,11 +26,14 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
     selector: 'app-tournament-lockerrooms-edit',
     templateUrl: './lockerrooms.component.html',
     styleUrls: ['./lockerrooms.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [TournamentNavBarComponent, LockerRoomComponent, NgbAlert, FaIconComponent, RouterLink],
     
 })
 export class LockerRoomsEditComponent extends TournamentComponent implements OnInit {
+  private lockerRoomRepository = inject(LockerRoomRepository);
+  private authService = inject(AuthService);
+
   faSpinner = faSpinner;
   hasCompetitors = false;
   validator!: LockerRoomValidator;
@@ -40,16 +43,13 @@ export class LockerRoomsEditComponent extends TournamentComponent implements OnI
     'maxlengthname': LockerRoom.MAX_LENGTH_NAME
   };
   modalService: NgbModal = inject(NgbModal);
+  constructor() {
+    const route = inject(ActivatedRoute);
+    const router = inject(Router);
+    const tournamentRepository = inject(TournamentRepository);
+    const sructureRepository = inject(StructureRepository);
+    const globalEventsManager = inject(GlobalEventsManager);
 
-  constructor(
-    route: ActivatedRoute,
-    router: Router,
-    tournamentRepository: TournamentRepository,
-    sructureRepository: StructureRepository,
-    globalEventsManager: GlobalEventsManager,
-    private lockerRoomRepository: LockerRoomRepository,
-    private authService: AuthService
-  ) {
     super(route, router, tournamentRepository, sructureRepository, globalEventsManager);
   }
 

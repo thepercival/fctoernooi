@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { TournamentRepository } from '../../lib/tournament/repository';
@@ -25,24 +25,24 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
     selector: 'app-tournament-ranking-view',
     templateUrl: './view.component.html',
     styleUrls: ['./view.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [AdminPublicSwitcherComponent, FontAwesomeModule, NgbAlert, RankingCategoryComponent, TournamentNavBarComponent]
     
 })
 export class RankingViewComponent extends TournamentComponent implements OnInit {
+    protected tournamentMapper = inject(TournamentMapper);
+    protected authService = inject(AuthService);
+
     faSpinner = faSpinner;
     public favorites!: Favorites;
     public structureNameService!: StructureNameService;
+    constructor() {
+        const route = inject(ActivatedRoute);
+        const router = inject(Router);
+        const tournamentRepository = inject(TournamentRepository);
+        const structureRepository = inject(StructureRepository);
+        const globalEventsManager = inject(GlobalEventsManager);
 
-    constructor(
-        route: ActivatedRoute,
-        router: Router,
-        tournamentRepository: TournamentRepository,
-        structureRepository: StructureRepository,
-        globalEventsManager: GlobalEventsManager,
-        protected tournamentMapper: TournamentMapper,
-        protected authService: AuthService
-    ) {
         super(route, router, tournamentRepository, structureRepository, globalEventsManager);
     }
 

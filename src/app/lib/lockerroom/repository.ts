@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
@@ -16,12 +16,13 @@ import { TournamentCompetitorMapper } from '../competitor/mapper';
     providedIn: 'root'
 })
 export class LockerRoomRepository extends APIRepository {
+    private http = inject(HttpClient);
+    private mapper = inject(LockerRoomMapper);
+    private competitorMapper = inject(TournamentCompetitorMapper);
 
-    constructor(
-        private http: HttpClient,
-        private mapper: LockerRoomMapper,
-        private competitorMapper: TournamentCompetitorMapper,
-        router: Router) {
+    constructor() {
+        const router = inject(Router);
+
         super(router);
     }
 

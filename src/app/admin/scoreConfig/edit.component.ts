@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild, WritableSignal, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, WritableSignal, signal, ChangeDetectionStrategy, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Validators, FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 import {
@@ -28,10 +28,17 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
     templateUrl: './edit.component.html',
     styleUrls: ['./edit.component.scss'],
     standalone: true,
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [FontAwesomeModule, NgbAlert, ReactiveFormsModule]
 })
 export class ScoreConfigEditComponent implements OnInit {
+    private scoreConfigRepository = inject(ScoreConfigRepository);
+    cssService = inject(CSSService);
+    competitionSportMapper = inject(CompetitionSportMapper);
+    private mapper = inject(ScoreConfigMapper);
+    private translate = inject(TranslateScoreService);
+    private modalService = inject(NgbModal);
+
     faSpinner = faSpinner;
     @Input() tournament!: Tournament;
     @Input() structure!: Structure;
@@ -56,15 +63,7 @@ export class ScoreConfigEditComponent implements OnInit {
         minScore: 0,
         maxScore: 9999
     };
-
-    constructor(
-        private scoreConfigRepository: ScoreConfigRepository,
-        public cssService: CSSService,
-        public competitionSportMapper: CompetitionSportMapper,
-        private mapper: ScoreConfigMapper,
-        private translate: TranslateScoreService,
-        private modalService: NgbModal
-    ) {
+    constructor() {
         this.successMessage$
             .pipe(
                 takeUntilDestroyed(),

@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
@@ -13,9 +13,12 @@ import { Router } from '@angular/router';
     providedIn: 'root'
 })
 export class FieldRepository extends APIRepository {
+    private mapper = inject(FieldMapper);
+    private http = inject(HttpClient);
 
-    constructor(
-        private mapper: FieldMapper, private http: HttpClient, router: Router) {
+    constructor() {
+        const router = inject(Router);
+
         super(router);
     }
 

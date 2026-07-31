@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
@@ -14,14 +14,15 @@ import { Router } from '@angular/router';
     providedIn: 'root'
 })
 export class CompetitionSportRepository extends APIRepository {
+    private editor = inject(CompetitionSportEditor);
+    private mapper = inject(CompetitionSportMapper);
+    private sportMapper = inject(SportMapper);
+    private defaultService = inject(DefaultService);
+    private http = inject(HttpClient);
 
-    constructor(
-        private editor: CompetitionSportEditor,
-        private mapper: CompetitionSportMapper,
-        private sportMapper: SportMapper,
-        private defaultService: DefaultService,
-        private http: HttpClient,
-        router: Router) {
+    constructor() {
+        const router = inject(Router);
+
         super(router);
     }
 

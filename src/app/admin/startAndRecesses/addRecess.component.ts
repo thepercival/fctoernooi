@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, inject } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Period } from 'ngx-sport';
@@ -26,10 +26,15 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
     templateUrl: './addRecess.component.html',
     styleUrls: ['./addRecess.component.css'],
     standalone: true,
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [TournamentNavBarComponent,NgbAlert,NgbTimepicker,NgbInputDatepicker,FontAwesomeModule,ReactiveFormsModule]
 })
 export class RecessAddComponent extends TournamentComponent implements OnInit {
+    private recessRepository = inject(RecessRepository);
+    private planningRepository = inject(PlanningRepository);
+    private myNavigation = inject(MyNavigation);
+    private dateConverter = inject(DateConverter);
+
     
     public typedForm: FormGroup<{
         name: FormControl<string>,
@@ -42,18 +47,13 @@ export class RecessAddComponent extends TournamentComponent implements OnInit {
     minDateStruct!: NgbDateStruct;
 
     faSpinner = faSpinner;
+    constructor() {
+        const route = inject(ActivatedRoute);
+        const router = inject(Router);
+        const tournamentRepository = inject(TournamentRepository);
+        const structureRepository = inject(StructureRepository);
+        const globalEventsManager = inject(GlobalEventsManager);
 
-    constructor(
-        route: ActivatedRoute,
-        router: Router,
-        tournamentRepository: TournamentRepository,
-        structureRepository: StructureRepository,
-        globalEventsManager: GlobalEventsManager,
-        private recessRepository: RecessRepository,
-        private planningRepository: PlanningRepository,
-        private myNavigation: MyNavigation,
-        private dateConverter: DateConverter,
-    ) {
         super(route, router, tournamentRepository, structureRepository, globalEventsManager);
         this.typedForm = new FormGroup({
             name: new FormControl('pauze', { nonNullable: true, validators: 

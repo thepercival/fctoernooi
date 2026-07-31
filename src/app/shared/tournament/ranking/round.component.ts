@@ -32,6 +32,10 @@ import { createModalInjector } from '../../modal-input-interfaces/create-modal-i
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RankingRoundComponent implements OnInit {
+    cssService = inject(CSSService);
+    private competitorRepository = inject(CompetitorRepository);
+    private scoreConfigService = inject(ScoreConfigService);
+
     public round = input.required<Round>();
     public structureNameService = input.required<StructureNameService>();
     public competitionSports = input.required<CompetitionSport[]>();
@@ -45,12 +49,7 @@ export class RankingRoundComponent implements OnInit {
 
     private modalService = inject(NgbModal);
     private injector = inject(Injector);
-
-    constructor(
-        public cssService: CSSService,
-        private competitorRepository: CompetitorRepository,
-        private scoreConfigService: ScoreConfigService
-    ) {
+    constructor() {
     }
 
     ngOnInit() {

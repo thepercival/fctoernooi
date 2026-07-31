@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
@@ -14,13 +14,14 @@ import { CopyConfig } from '../../public/tournament/copymodal.component';
     providedIn: 'root'
 })
 export class TournamentRepository extends APIRepository {
+    private http = inject(HttpClient);
+    private mapper = inject(TournamentMapper);
+
 
     private url: string;
+    constructor() {
+        const router = inject(Router);
 
-    constructor(
-        private http: HttpClient,
-        private mapper: TournamentMapper,
-        router: Router) {
         super(router);
         this.url = super.getApiUrl() + this.getUrlpostfix();
     }

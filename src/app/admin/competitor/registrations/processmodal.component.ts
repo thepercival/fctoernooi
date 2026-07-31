@@ -1,4 +1,4 @@
-import { Component, signal, WritableSignal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, signal, WritableSignal, ChangeDetectionStrategy, inject } from '@angular/core';
 import { NgbActiveModal, NgbModal, NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 import { PlaceCompetitorItem } from '../../../lib/ngx-sport/placeCompetitorItem';
 import { TournamentRegistration } from '../../../lib/tournament/registration';
@@ -17,24 +17,24 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
     selector: 'app-ngbd-modal-process-tournamentregistration',
     templateUrl: './processmodal.component.html',
     styleUrls: ['./processmodal.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [FaIconComponent, NgbAlert],
     
 })
 export class TournamentRegistrationProcessModalComponent {
+    private competitorRepository = inject(CompetitorRepository);
+    private registrationRepository = inject(TournamentRegistrationRepository);
+    private registrationMapper = inject(TournamentRegistrationMapper);
+    private modalService = inject(NgbModal);
+    activeModal = inject(NgbActiveModal);
+
     faSpinner = faSpinner;
     tournament!: Tournament;    
     registration!: TournamentRegistration;    
     public competitor: TournamentCompetitor|undefined;
     public readonly processing: WritableSignal<boolean> = signal(true);
-    public errorAlert: IAlert|undefined;
-    
-    constructor(
-        private competitorRepository: CompetitorRepository,
-        private registrationRepository: TournamentRegistrationRepository,
-        private registrationMapper: TournamentRegistrationMapper,
-        private modalService: NgbModal,
-        public activeModal: NgbActiveModal) { }
+    public errorAlert: IAlert|undefined;    
+    constructor() { }
 
     get Accepted(): RegistrationState { return RegistrationState.Accepted; } 
     get Declined(): RegistrationState { return RegistrationState.Declined; }

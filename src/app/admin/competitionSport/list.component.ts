@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, TemplateRef, ChangeDetectionStrategy, inject } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { NgbAlert, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
@@ -36,10 +36,13 @@ import { facSoccerField } from '../../shared/customicons';
     templateUrl: './list.component.html',
     styleUrls: ['./list.component.scss'],
     standalone: true,
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [TournamentNavBarComponent,FontAwesomeModule,NgbAlert,CreateSportWithFieldsComponent,RouterLink]
 })
 export class CompetitionSportListComponent extends TournamentComponent implements OnInit {
+  private competitionSportRepository = inject(CompetitionSportRepository);
+  private planningRepository = inject(PlanningRepository);
+
   public smallestNrOfPoulePlaces!: number;
   public competitionSports: CompetitionSport[] = [];
   public showCreateSportWithFields = false;
@@ -53,16 +56,13 @@ export class CompetitionSportListComponent extends TournamentComponent implement
   };
   faSpinner = faSpinner;
   facSoccerField = facSoccerField;
+  constructor() {
+    const route = inject(ActivatedRoute);
+    const router = inject(Router);
+    const tournamentRepository = inject(TournamentRepository);
+    const sructureRepository = inject(StructureRepository);
+    const globalEventsManager = inject(GlobalEventsManager);
 
-  constructor(
-    route: ActivatedRoute,
-    router: Router,
-    tournamentRepository: TournamentRepository,
-    sructureRepository: StructureRepository,
-    globalEventsManager: GlobalEventsManager,
-    private competitionSportRepository: CompetitionSportRepository,
-    private planningRepository: PlanningRepository
-  ) {
     super(route, router, tournamentRepository, sructureRepository, globalEventsManager);
   }
 

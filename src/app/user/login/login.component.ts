@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -37,14 +37,13 @@ export class LoginComponent extends UserComponent implements OnInit {
     minlengthpassword: User.MIN_LENGTH_PASSWORD,
     maxlengthpassword: User.MAX_LENGTH_PASSWORD
   };
+  constructor() {
+    const route = inject(ActivatedRoute);
+    const router = inject(Router);
+    const userRepository = inject(UserRepository);
+    const authService = inject(AuthService);
+    const globalEventsManager = inject(GlobalEventsManager);
 
-  constructor(
-    route: ActivatedRoute,
-    router: Router,
-    userRepository: UserRepository,
-    authService: AuthService,
-    globalEventsManager: GlobalEventsManager
-  ) {
     super(route, router, userRepository, authService, globalEventsManager);
     this.typedForm = new FormGroup({
       emailaddress: new FormControl('', { nonNullable: true, validators: 

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, output, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, OnInit, output, TemplateRef, ChangeDetectionStrategy, inject } from '@angular/core';
 import { AbstractControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CompetitionSport, JsonCompetitionSport, JsonGameAmountConfig, JsonSport, NameService, Sport, VoetbalRange } from 'ngx-sport';
@@ -8,10 +8,12 @@ import { CompetitionSport, JsonCompetitionSport, JsonGameAmountConfig, JsonSport
     templateUrl: './edit.component.html',
     styleUrls: ['./edit.component.css'],
   standalone: true,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ReactiveFormsModule],
 })
 export class GameAmountConfigEditComponent implements OnInit {
+  private modalService = inject(NgbModal);
+
   @Input() gameAmountControls!: GameAmountConfigControl[];
   @Input() label!: string;
   @Input() typedForm!: FormGroup;
@@ -19,10 +21,7 @@ export class GameAmountConfigEditComponent implements OnInit {
 
   range: number[] = [];
   public nameService = new NameService();
-
-  constructor(
-    private modalService: NgbModal
-  ) {
+  constructor() {
   }
 
   ngOnInit() {

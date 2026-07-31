@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router, Params } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -34,14 +34,13 @@ export class ValidateComponent extends UserComponent implements OnInit {
   };
   faSpinner = faSpinner;
   faUserCircle = faUserCircle;
+  constructor() {
+    const route = inject(ActivatedRoute);
+    const router = inject(Router);
+    const userRepository = inject(UserRepository);
+    const authService = inject(AuthService);
+    const globalEventsManager = inject(GlobalEventsManager);
 
-  constructor(
-    route: ActivatedRoute,
-    router: Router,
-    userRepository: UserRepository,
-    authService: AuthService,
-    globalEventsManager: GlobalEventsManager
-  ) {
     super(route, router, userRepository, authService, globalEventsManager);
     this.typedForm = new FormGroup(
       {

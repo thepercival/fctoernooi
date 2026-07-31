@@ -17,10 +17,16 @@ import { CustomSportId } from '../../lib/ngx-sport/sport/custom';
     templateUrl: './toAdd.component.html',
     styleUrls: ['./toAdd.component.scss'],
     standalone: true,
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [NgbAlert, FaIconComponent]
 })
 export class SportToAddComponent implements OnInit {
+    cssService = inject(CSSService);
+    private sportRepository = inject(SportRepository);
+    translate = inject(TranslateSportService);
+    private defaultService = inject(DefaultService);
+    private modalService = inject(NgbModal);
+
     sportToAdd = output<Sport>();
     goToPrevious = output<void>();
     
@@ -28,14 +34,7 @@ export class SportToAddComponent implements OnInit {
     sports!: Sport[];
     alert: IAlert | undefined;
     private injector = inject(Injector);
-
-    constructor(
-        public cssService: CSSService,
-        private sportRepository: SportRepository,
-        public translate: TranslateSportService,
-        private defaultService: DefaultService,
-        private modalService: NgbModal,
-    ) {
+    constructor() {
 
     }
 

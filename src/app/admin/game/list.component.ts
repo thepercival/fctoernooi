@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Injector, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { AuthService } from '../../lib/auth/auth.service';
@@ -19,32 +19,32 @@ import { CategoryChooseModalComponent } from '../../shared/tournament/category/c
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TournamentNavBarComponent } from '../../shared/tournament/tournamentNavBar/tournamentNavBar.component';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { CATEGORY_CHOOSE_MODAL_INPUTS } from '../../shared/modal-input-interfaces/category-choose-modal-inputs.interface';
+import { createModalInjector } from '../../shared/modal-input-interfaces/create-modal-injector';
 
 @Component({
     selector: 'app-tournament-games-edit',
     templateUrl: './list.component.html',
     styleUrls: ['./list.component.css'],
     standalone: true,
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgbAlert,FontAwesomeModule,RoundNumberPlanningComponent,TournamentNavBarComponent,RouterLink]
 })
 export class GameListComponent extends TournamentComponent implements OnInit {
+  private authService = inject(AuthService);
+  private myNavigation = inject(MyNavigation);
+
   faSpinner = faSpinner;
   userRefereeId: number | string | undefined;
-  roles: number = 0;
+  roles: Role[] = [];
   public structureNameService!: StructureNameService;
   public categoryMap: Map<number, Category> = new Map();
-  public optionalGameColumns: Map<OptionalGameColumn, boolean> = new Map(); 
+  public optionalGameColumns: Map<OptionalGameColumn, boolean> = new Map();  constructor() {
+    const route = inject(ActivatedRoute);
+    const router = inject(Router);
+    const tournamentRepository = inject(TournamentRepository);
+    const structureRepository = inject(StructureRepository);
+    const globalEventsManager = inject(GlobalEventsManager);
 
-  constructor(
-    route: ActivatedRoute,
-    router: Router,
-    tournamentRepository: TournamentRepository,
-    structureRepository: StructureRepository,
-    globalEventsManager: GlobalEventsManager,    
-    private authService: AuthService,
-    private myNavigation: MyNavigation,
-  ) {
     super(route, router, tournamentRepository, structureRepository, globalEventsManager);
   }
 
@@ -60,7 +60,7 @@ export class GameListComponent extends TournamentComponent implements OnInit {
       this.initGameColumnDefinitions(this.structure);
       const startLocationMap = new StartLocationMap(this.tournament.getCompetitors());
       this.structureNameService = new StructureNameService(startLocationMap);
-      this.roles = tournamentUser ? tournamentUser.getRoles() : 0;
+      this.roles = tournamentUser ? tournamentUser.getRoles() : [];
       this.getUserRefereeId(tournamentUser)
         .subscribe({
           next: (userRefereeId: string | number | undefined) => {
@@ -90,11 +90,11 @@ export class GameListComponent extends TournamentComponent implements OnInit {
   get GamesScreen(): TournamentScreen { return TournamentScreen.Games }
 
   hasAdminRole(): boolean {
-    return (this.roles & Role.Admin) === Role.Admin;
+    return this.roles.includes(Role.Admin);
   }
 
   getUserRefereeId(tournamentUser: TournamentUser): Observable<string | number | undefined> {
-    if (!tournamentUser.hasRoles(Role.Referee)) {
+    if (!tournamentUser.hasRole(Role.Referee)) {
       return of(0);
     }
     return this.tournamentRepository.getUserRefereeId(this.tournament);
@@ -105,9 +105,11 @@ export class GameListComponent extends TournamentComponent implements OnInit {
   }
 
   openCategoriesChooseModal(structure: Structure) {
-    const activeModal = this.modalService.open(CategoryChooseModalComponent);
-    activeModal.componentInstance.categories = structure.getCategories();
-    activeModal.componentInstance.tournament = this.tournament;
+    const modalInjector = createModalInjector(this.injector, CATEGORY_CHOOSE_MODAL_INPUTS, {
+      categories: structure.getCategories(),
+      tournament: this.tournament
+    });
+    const activeModal = this.modalService.open(CategoryChooseModalComponent, { injector: modalInjector });
     activeModal.result.then((result) => {
     }, (reason) => {
         this.updateFavoriteCategories(structure);

@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { CSSService } from '../../shared/common/cssservice';
@@ -32,11 +32,15 @@ import { createModalInjector } from '../../shared/modal-input-interfaces/create-
     selector: 'app-tournament-liveboard',
     templateUrl: './liveboard.component.html',
     styleUrls: ['./liveboard.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [NgbAlert, FontAwesomeModule, LiveboardNavComponent, LiveboardGamesComponent, LiveboardPoulesComponent, RankingEndComponent, LiveboardSponsorsComponent]
     
 })
 export class LiveboardComponent extends TournamentComponent implements OnInit {
+    private screenConfigRepository = inject(ScreenConfigRepository);
+    cssService = inject(CSSService);
+    private myNavigation = inject(MyNavigation);
+
     faSpinner = faSpinner;
     public activeScreen: SponsorScreen | ResultsScreen | ScheduleScreen | EndRankingScreen | PoulesRankingScreen | undefined;
     private screens: (SponsorScreen | ResultsScreen | ScheduleScreen | EndRankingScreen | PoulesRankingScreen)[] = [];
@@ -45,17 +49,13 @@ export class LiveboardComponent extends TournamentComponent implements OnInit {
     public structureNameService!: StructureNameService;
     public startLocationMap!: StartLocationMap;
     public previewScreenConfig: undefined | ScreenConfig;
+    constructor() {
+        const route = inject(ActivatedRoute);
+        const router = inject(Router);
+        const tournamentRepository = inject(TournamentRepository);
+        const structureRepository = inject(StructureRepository);
+        const globalEventsManager = inject(GlobalEventsManager);
 
-    constructor(
-        route: ActivatedRoute,
-        router: Router,
-        tournamentRepository: TournamentRepository,
-        structureRepository: StructureRepository,
-        globalEventsManager: GlobalEventsManager,
-        private screenConfigRepository: ScreenConfigRepository,
-        public cssService: CSSService,
-        private myNavigation: MyNavigation
-    ) {
         super(route, router, tournamentRepository, structureRepository, globalEventsManager);
     }
 

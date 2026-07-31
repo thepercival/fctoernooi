@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, TemplateRef, ChangeDetectionStrategy, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { JsonReferee, Referee } from 'ngx-sport';
@@ -27,10 +27,14 @@ import { FocusDirective } from '../../shared/common/focus';
     templateUrl: './edit.component.html',
     styleUrls: ['./edit.component.css'],
     standalone: true,
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [NgbAlert, FontAwesomeModule, TournamentNavBarComponent, ReactiveFormsModule, FocusDirective]
 })
 export class RefereeEditComponent extends TournamentComponent implements OnInit {
+    private refereeRepository = inject(RefereeRepository);
+    private planningRepository = inject(PlanningRepository);
+    private myNavigation = inject(MyNavigation);
+
     faSpinner = faSpinner;
     facReferee = facReferee;
     public typedForm: FormGroup<{
@@ -50,17 +54,13 @@ export class RefereeEditComponent extends TournamentComponent implements OnInit 
         minlengthemailaddress: User.MIN_LENGTH_EMAIL,
         maxlengthemailaddress: User.MAX_LENGTH_EMAIL,
     };
+    constructor() {
+        const route = inject(ActivatedRoute);
+        const router = inject(Router);
+        const tournamentRepository = inject(TournamentRepository);
+        const structureRepository = inject(StructureRepository);
+        const globalEventsManager = inject(GlobalEventsManager);
 
-    constructor(
-        route: ActivatedRoute,
-        router: Router,
-        tournamentRepository: TournamentRepository,
-        structureRepository: StructureRepository,
-        globalEventsManager: GlobalEventsManager,
-        private refereeRepository: RefereeRepository,
-        private planningRepository: PlanningRepository,
-        private myNavigation: MyNavigation
-    ) {
         super(route, router, tournamentRepository, structureRepository, globalEventsManager);
         this.typedForm = new FormGroup({
             initials: new FormControl('', {

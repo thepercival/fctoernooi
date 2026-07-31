@@ -1,4 +1,4 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import { Pipe, PipeTransform, inject } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 
 @Pipe({
@@ -6,7 +6,8 @@ import { DomSanitizer } from '@angular/platform-browser';
     
 })
 export class EscapeHtmlPipe implements PipeTransform {
-    constructor(private sanitizer: DomSanitizer) {
+    private sanitizer = inject(DomSanitizer);
+    constructor() {
     }
 
     transform(content: string) {

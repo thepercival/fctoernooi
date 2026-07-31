@@ -1,4 +1,4 @@
-import { AfterContentInit, ChangeDetectionStrategy, Component, ElementRef, OnInit, effect, input, signal } from '@angular/core';
+import { AfterContentInit, ChangeDetectionStrategy, Component, ElementRef, OnInit, effect, input, signal, inject } from '@angular/core';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { filter } from 'rxjs/operators';
 
@@ -18,6 +18,11 @@ import { environment } from '../../../../environments/environment';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NavComponent implements OnInit, AfterContentInit {
+  private elRef = inject(ElementRef);
+  private router = inject(Router);
+  authService = inject(AuthService);
+  private globalEventsManager = inject(GlobalEventsManager);
+
 
   public defaultTitle: string = 'FCToernooi';
   private colorMode: ColorMode;
@@ -29,13 +34,7 @@ export class NavComponent implements OnInit, AfterContentInit {
   tournamentLiveboardLink: LiveboardLink = {};
   navbarCollapsed = true;
   private readonly isAccEnvironment = environment.apiurl.includes('acc-api.fctoernooi.nl');
-
-  constructor(
-    private elRef: ElementRef,
-    private router: Router,
-    public authService: AuthService,
-    private globalEventsManager: GlobalEventsManager
-  ) {
+  constructor() {
     let colorMode = <ColorMode>localStorage.getItem('colorMode');
     if (colorMode === null) {
       colorMode = ColorMode.Inherit;

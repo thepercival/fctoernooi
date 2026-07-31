@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, model, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, model, OnInit, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -31,6 +31,9 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BuyCreditsComponent extends UserComponent implements OnInit {
+  private paymentRepository = inject(PaymentRepository);
+  myNavigation = inject(MyNavigation);
+
   purpose: Purpose | undefined;
   faSpinner = faSpinner;
   public typedForm: FormGroup<{
@@ -50,16 +53,13 @@ export class BuyCreditsComponent extends UserComponent implements OnInit {
   public paymentMethods = model.required<string[]>();
   public idealIssuers = model.required<IDealIssuer[]>();
   public nrOfCreditsOptions = model.required<number[]>();
+  constructor() {
+    const route = inject(ActivatedRoute);
+    const router = inject(Router);
+    const userRepository = inject(UserRepository);
+    const authService = inject(AuthService);
+    const globalEventsManager = inject(GlobalEventsManager);
 
-  constructor(
-    route: ActivatedRoute,
-    router: Router,
-    userRepository: UserRepository,
-    authService: AuthService,
-    globalEventsManager: GlobalEventsManager,
-    private paymentRepository: PaymentRepository,
-    public myNavigation: MyNavigation,
-  ) {
     super(route, router, userRepository, authService, globalEventsManager);
     this.typedForm = new FormGroup(
       {

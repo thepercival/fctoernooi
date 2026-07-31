@@ -1,4 +1,4 @@
-import { Component, Input, ModelSignal, OnDestroy, OnInit, TemplateRef, WritableSignal, input, model, output, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, ModelSignal, OnDestroy, OnInit, TemplateRef, WritableSignal, input, model, output, signal, ChangeDetectionStrategy, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { IAlert, IAlertType } from '../../../shared/common/alert';
 import { JsonRegistrationSettings } from '../../../lib/tournament/registration/settings/json';
@@ -18,10 +18,16 @@ import { faCalendarDays, faCircleInfo, faSpinner } from '@fortawesome/free-solid
     templateUrl: './settings.component.html',
     styleUrls: ['./settings.component.scss'],
     standalone: true,
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [ReactiveFormsModule, NgbAlert, FontAwesomeModule, NgbTimepicker, NgbInputDatepicker]
 })
 export class RegistrationSettingsComponent implements OnInit, OnDestroy {
+  private router = inject(Router);
+  private modalService = inject(NgbModal);
+  private registrationRepository = inject(TournamentRegistrationRepository);
+  dateFormatter = inject(DateFormatter);
+  private dateConverter = inject(DateConverter);
+
   faSpinner = faSpinner;
   faInfoCircle = faCircleInfo;
   faCalendarAlt = faCalendarDays;
@@ -41,13 +47,7 @@ export class RegistrationSettingsComponent implements OnInit, OnDestroy {
   public readonly saving: WritableSignal<boolean> = signal(false);
   public saveAlert: IAlert | undefined;
   private saveAlertTimeoutId: ReturnType<typeof setTimeout> | undefined;
-
-  constructor(
-    private router: Router,
-    private modalService: NgbModal,
-    private registrationRepository: TournamentRegistrationRepository,
-    public dateFormatter: DateFormatter,
-    private dateConverter: DateConverter) {
+  constructor() {
   }
 
   ngOnInit(): void {

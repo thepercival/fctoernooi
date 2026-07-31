@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, WritableSignal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, signal, WritableSignal, ChangeDetectionStrategy, inject } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import { TournamentShell } from '../../lib/tournament/shell';
 import { TournamentShellRepository } from '../../lib/tournament/shell/repository';
@@ -16,26 +16,26 @@ import { faCopy, faSpinner } from '@fortawesome/free-solid-svg-icons';
     selector: 'app-tournament-examples',
     templateUrl: './examples.component.html',
     styleUrls: ['./examples.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FontAwesomeModule]
     
 })
 export class ExamplesComponent implements OnInit{
+  private router = inject(Router);
+  private modalService = inject(NgbModal);
+  private tournamentShellRepos = inject(TournamentShellRepository);
+  private tournamentRepository = inject(TournamentRepository);
+  private userRepository = inject(UserRepository);
+
   faSpinner = faSpinner;
   faCopy = faCopy;
 
   public readonly processing: WritableSignal<boolean> = signal(true);
   public readonly alert: WritableSignal<IAlert | undefined> = signal(undefined);
   public tournamentShells!: TournamentShell[];
+  constructor() {
+    const globalEventsManager = inject(GlobalEventsManager);
 
-  constructor(
-    private router: Router,
-    private modalService: NgbModal,
-    private tournamentShellRepos: TournamentShellRepository,
-    private tournamentRepository: TournamentRepository,
-    private userRepository: UserRepository,
-    globalEventsManager: GlobalEventsManager
-  ) {
     globalEventsManager.showFooter.emit(true);
   }  
 

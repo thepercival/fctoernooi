@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, TemplateRef, ChangeDetectionStrategy, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Referee, StructureNameService, StartLocationMap } from 'ngx-sport';
 
@@ -31,26 +31,26 @@ import { facReferee } from '../../shared/customicons';
     selector: 'app-tournament-select-favorites',
     templateUrl: './select.component.html',
     styleUrls: ['./select.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [AdminPublicSwitcherComponent, FontAwesomeModule, NgbAlert, NgbNav, NgbNavItem, NgbNavLink, NgbNavContent, NgbNavOutlet, TournamentNavBarComponent, CompetitorsCategoryComponent, CommonModule]
     
 })
 export class SelectFavoritesComponent extends TournamentComponent implements OnInit {
+    private myNavigation = inject(MyNavigation);
+    private authService = inject(AuthService);
+
     facReferee = facReferee;
     public favorites!: Favorites;
     public structureNameService!: StructureNameService;
     public showLockerRoom = false;
     public lockerRoomMap: Map<string, string> = new Map();
+    constructor() {
+        const route = inject(ActivatedRoute);
+        const router = inject(Router);
+        const tournamentRepository = inject(TournamentRepository);
+        const sructureRepository = inject(StructureRepository);
+        const globalEventsManager = inject(GlobalEventsManager);
 
-    constructor(
-        route: ActivatedRoute,
-        router: Router,
-        tournamentRepository: TournamentRepository,
-        sructureRepository: StructureRepository,
-        globalEventsManager: GlobalEventsManager,
-        private myNavigation: MyNavigation,
-        private authService: AuthService,
-    ) {
         super(route, router, tournamentRepository, sructureRepository, globalEventsManager);
         this.alert.set(undefined);
     }

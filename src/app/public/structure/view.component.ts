@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { MyNavigation } from '../../shared/common/navigation';
@@ -25,28 +25,28 @@ import { facStructure } from '../../shared/customicons';
     selector: 'app-tournament-structure-view',
     templateUrl: './view.component.html',
     styleUrls: ['./view.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [AdminPublicSwitcherComponent, FontAwesomeModule, StructureRoundComponent, StructureCategoryComponent, TournamentNavBarComponent]
     
 })
 export class StructureViewComponent extends TournamentComponent implements OnInit {
+  private myNavigation = inject(MyNavigation);
+  structureEditor = inject(StructureEditor);
+  private authService = inject(AuthService);
+
   faSpinner = faSpinner;
   facStructure = facStructure;
   competitors: Competitor[] = [];
   private favorites!: Favorites;
   public structureNameService!: StructureNameService;
   public showCompetitors = true;
+  constructor() {
+    const route = inject(ActivatedRoute);
+    const router = inject(Router);
+    const tournamentRepository = inject(TournamentRepository);
+    const structureRepository = inject(StructureRepository);
+    const globalEventsManager = inject(GlobalEventsManager);
 
-  constructor(
-    route: ActivatedRoute,
-    router: Router,
-    tournamentRepository: TournamentRepository,
-    structureRepository: StructureRepository,
-    globalEventsManager: GlobalEventsManager,
-    private myNavigation: MyNavigation,
-    public structureEditor: StructureEditor,
-    private authService: AuthService
-  ) {
     super(route, router, tournamentRepository, structureRepository, globalEventsManager);
   }
 

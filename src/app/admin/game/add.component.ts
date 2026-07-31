@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -47,10 +47,17 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
     templateUrl: './add.component.html',
     styleUrls: ['./add.component.scss'],
     standalone: true,
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [NgbAlert,FontAwesomeModule,TournamentNavBarComponent,ReactiveFormsModule]
 })
 export class GameAddComponent extends TournamentComponent implements OnInit {
+    private gameRepository = inject(GameRepository);
+    private competitionSportMapper = inject(CompetitionSportMapper);
+    private fieldMapper = inject(FieldMapper);
+    private refereeMapper = inject(RefereeMapper);
+    private placeMapper = inject(PlaceMapper);
+    dateFormatter = inject(DateFormatter);
+
     faSpinner = faSpinner;
     private roundNumber!: RoundNumber;
     public categories: Category[] = [];
@@ -61,20 +68,13 @@ export class GameAddComponent extends TournamentComponent implements OnInit {
     public allInOneGameSportVariant: AllInOneGame | undefined;
     public form!: FormGroup;
     public structureNameService!: StructureNameService;
+    constructor() {
+        const route = inject(ActivatedRoute);
+        const router = inject(Router);
+        const tournamentRepository = inject(TournamentRepository);
+        const structureRepository = inject(StructureRepository);
+        const globalEventsManager = inject(GlobalEventsManager);
 
-    constructor(
-        route: ActivatedRoute,
-        router: Router,
-        tournamentRepository: TournamentRepository,
-        structureRepository: StructureRepository,
-        globalEventsManager: GlobalEventsManager,
-        private gameRepository: GameRepository,
-        private competitionSportMapper: CompetitionSportMapper,
-        private fieldMapper: FieldMapper,
-        private refereeMapper: RefereeMapper,
-        private placeMapper: PlaceMapper,
-        public dateFormatter: DateFormatter
-    ) {
         super(route, router, tournamentRepository, structureRepository, globalEventsManager);
     }
 

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -33,14 +33,13 @@ export class PasswordresetComponent extends UserComponent implements OnInit {
     minlengthemailaddress: User.MIN_LENGTH_EMAIL,
     maxlengthemailaddress: User.MAX_LENGTH_EMAIL
   };
+  constructor() {
+    const route = inject(ActivatedRoute);
+    const router = inject(Router);
+    const userRepository = inject(UserRepository);
+    const authService = inject(AuthService);
+    const globalEventsManager = inject(GlobalEventsManager);
 
-  constructor(
-    route: ActivatedRoute,
-    router: Router,
-    userRepository: UserRepository,
-    authService: AuthService,
-    globalEventsManager: GlobalEventsManager
-  ) {
     super(route, router, userRepository, authService, globalEventsManager);
     this.typedForm = new FormGroup(
       {

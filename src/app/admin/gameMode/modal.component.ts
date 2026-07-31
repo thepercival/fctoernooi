@@ -1,20 +1,21 @@
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy, inject } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { GameMode, NameService } from 'ngx-sport';
 
 @Component({
     selector: 'app-modal-gamemode',
     templateUrl: './modal.component.html',
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     styleUrls: ['./modal.component.scss'],
     
 })
 export class GameModeModalComponent {
+    activeModal = inject(NgbActiveModal);
+
     @Input() defaultGameMode: GameMode | undefined;
     public gameModeDefinitions: GameModeOption[];
     private nameService: NameService;
-
-    constructor(public activeModal: NgbActiveModal) {
+    constructor() {
         this.nameService = new NameService();
         this.gameModeDefinitions = [
             {

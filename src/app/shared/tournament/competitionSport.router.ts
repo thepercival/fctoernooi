@@ -2,17 +2,16 @@ import { CompetitionSportTab } from './competitionSportTab';
 import { CompetitionSport, RoundNumber } from 'ngx-sport';
 import { Tournament } from '../../lib/tournament';
 import { Router } from '@angular/router';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 
 @Injectable({
     providedIn: 'root'
 })
 export class CompetitionSportRouter {
-    private adminUrl = '/admin';
+    private router = inject(Router);
 
-    constructor(
-        private router: Router
-    ) {
+    private adminUrl = '/admin';
+    constructor() {
     }
 
     navigate(tournament: Tournament, tabOrder?: CompetitionSportTab) {

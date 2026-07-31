@@ -1,4 +1,4 @@
-import { AfterViewChecked, ChangeDetectionStrategy, Component, ElementRef, TemplateRef, ViewChild, input } from '@angular/core';
+import { AfterViewChecked, ChangeDetectionStrategy, Component, ElementRef, TemplateRef, ViewChild, input, inject } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { Router } from '@angular/router';
 
@@ -21,6 +21,9 @@ import { faCalendarAlt, faCogs, faHome, faListOl, faUsers } from '@fortawesome/f
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TournamentNavBarComponent implements AfterViewChecked {
+  authService = inject(AuthService);
+  private router = inject(Router);
+
   public facStructure = facStructure;
   public faHome = faHome;
   public faUsers = faUsers;
@@ -36,11 +39,7 @@ export class TournamentNavBarComponent implements AfterViewChecked {
   public theme = input.required<JsonTheme>();
 
   @ViewChild("navbar") private navbarRef: ElementRef<HTMLElement> | undefined;
-
-  constructor(
-    public authService: AuthService,
-    private router: Router
-  ) {
+  constructor() {
   }
 
   ngAfterViewChecked() {

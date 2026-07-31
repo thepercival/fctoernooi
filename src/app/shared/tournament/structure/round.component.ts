@@ -1,4 +1,4 @@
-import { Component, input, output, ChangeDetectionStrategy } from '@angular/core';
+import { Component, input, output, ChangeDetectionStrategy, inject } from '@angular/core';
 import { Round, StructureNameService, StructureEditor, QualifyTarget, Competitor, Place, PlaceRanges, StartLocation } from 'ngx-sport';
 import { StructureAction, StructureActionName } from '../../../admin/structure/edit.component';
 import { StructureQualifyComponent } from './qualify.component';
@@ -18,6 +18,9 @@ import { EscapeHtmlPipe } from '../../common/escapehtmlpipe';
     imports: [EscapeHtmlPipe, NgbAlert, NgbPopover, StructureRoundArrangeComponent, StructureQualifyComponent]
 })
 export class StructureRoundComponent {
+  cssService = inject(CSSService);
+  private competitorRepository = inject(CompetitorRepository);
+
 
   public showCompetitors = input.required<boolean>();
   public favorites = input<Competitor[]>([]);
@@ -30,10 +33,7 @@ export class StructureRoundComponent {
   
   alert: IAlert | undefined;
   public onActionAdd = output<StructureAction>();
-
-  constructor(
-    public cssService: CSSService, 
-    private competitorRepository: CompetitorRepository) {
+  constructor() {
     this.resetAlert();
   }
 

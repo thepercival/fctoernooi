@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, TemplateRef, ChangeDetectionStrategy, inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -33,10 +33,15 @@ import { FocusDirective } from '../../shared/common/focus';
     templateUrl: './registration-edit.component.html',
     styleUrls: ['./registration-edit.component.scss'],
     standalone: true,
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [NgbAlert, TournamentNavBarComponent,FontAwesomeModule, FormsModule, ReactiveFormsModule, FocusDirective]
 })
 export class TournamentRegistrationEditComponent extends TournamentComponent implements OnInit {
+  private tournamentRegistrationRepository = inject(TournamentRegistrationRepository);
+  private nameValidator = inject(NameValidator);
+  private myNavigation = inject(MyNavigation);
+  private authService = inject(AuthService);
+
   faSpinner = faSpinner;
   public settings!: TournamentRegistrationSettings;
   public registration: TournamentRegistration | undefined;
@@ -56,20 +61,15 @@ export class TournamentRegistrationEditComponent extends TournamentComponent imp
     minlengthtelephone: TournamentCompetitor.MIN_LENGTH_TELEPHONE,
     maxlengthtelephone: TournamentCompetitor.MAX_LENGTH_TELEPHONE,
     maxlengthinfo: TournamentCompetitor.MAX_LENGTH_INFO,
-  };
-  // 17056
+  };  // 17056
 
-  constructor(
-    route: ActivatedRoute,
-    router: Router,
-    tournamentRepository: TournamentRepository,
-    sructureRepository: StructureRepository,
-    globalEventsManager: GlobalEventsManager,
-    private tournamentRegistrationRepository: TournamentRegistrationRepository,
-    private nameValidator: NameValidator,
-    private myNavigation: MyNavigation,
-    private authService: AuthService,
-  ) {
+  constructor() {
+    const route = inject(ActivatedRoute);
+    const router = inject(Router);
+    const tournamentRepository = inject(TournamentRepository);
+    const sructureRepository = inject(StructureRepository);
+    const globalEventsManager = inject(GlobalEventsManager);
+
     super(route, router, tournamentRepository, sructureRepository, globalEventsManager);
     this.alert.set(undefined);
   }

@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, inject } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Category } from 'ngx-sport';
 
@@ -32,10 +32,15 @@ import { FocusDirective } from '../../shared/common/focus';
     templateUrl: './registration-form.component.html',
     styleUrls: ['./registration-form.component.scss'],
     standalone: true,
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [FontAwesomeModule, AdminPublicSwitcherComponent, NgbAlert, FormsModule, ReactiveFormsModule, RouterLink, FocusDirective]
 })
 export class RegistrationComponent extends TournamentComponent implements OnInit {
+    private tournamentRegistrationRepository = inject(TournamentRegistrationRepository);
+    private nameValidator = inject(NameValidator);
+    private myNavigation = inject(MyNavigation);
+    private authService = inject(AuthService);
+
     public settings: TournamentRegistrationSettings|undefined;
     public isOpen: boolean = false;
     public registration: TournamentRegistration|undefined;
@@ -57,18 +62,13 @@ export class RegistrationComponent extends TournamentComponent implements OnInit
     };
     // 17056
     faSpinner = faSpinner;
+    constructor() {
+        const route = inject(ActivatedRoute);
+        const router = inject(Router);
+        const tournamentRepository = inject(TournamentRepository);
+        const sructureRepository = inject(StructureRepository);
+        const globalEventsManager = inject(GlobalEventsManager);
 
-    constructor(
-        route: ActivatedRoute,
-        router: Router,
-        tournamentRepository: TournamentRepository,
-        sructureRepository: StructureRepository,
-        globalEventsManager: GlobalEventsManager,
-        private tournamentRegistrationRepository: TournamentRegistrationRepository,
-        private nameValidator: NameValidator,
-        private myNavigation: MyNavigation,
-        private authService: AuthService,
-    ) {
         super(route, router, tournamentRepository, sructureRepository, globalEventsManager);
         this.alert.set(undefined);
     }

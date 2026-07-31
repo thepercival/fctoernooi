@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 
 import { Tournament } from '../../tournament';
 import { JsonIdentifiable } from 'ngx-sport';
@@ -10,7 +10,8 @@ import { JsonTournamentInvitation } from './json';
     providedIn: 'root'
 })
 export class TournamentInvitationMapper {
-    constructor(private roleMapper: RoleMapper) { }
+    private roleMapper = inject(RoleMapper);
+    constructor() { }
 
     toObject(json: JsonTournamentInvitation, tournament: Tournament): TournamentInvitation {
         const invitation = new TournamentInvitation(tournament, json.emailaddress, this.roleMapper.mapNumberToRoles(json.roles));

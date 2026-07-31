@@ -1,4 +1,4 @@
-import { Component, input, model, OnInit, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component, input, model, OnInit, TemplateRef, ChangeDetectionStrategy, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { MyNavigation } from '../../shared/common/navigation';
@@ -28,10 +28,14 @@ import { createModalInjector } from '../../shared/modal-input-interfaces/create-
     templateUrl: './homeedit.component.html',
     styleUrls: ['./homeedit.component.scss'],
     standalone: true,
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [FontAwesomeModule, TournamentNavBarComponent, NgbAlert, ReactiveFormsModule]
 })
 export class HomeEditComponent extends TournamentComponent implements OnInit {
+  private tournamentMapper = inject(TournamentMapper);
+  private myNavigation = inject(MyNavigation);
+  private ruleRepository = inject(TournamentRuleRepository);
+
 
   faSpinner = faSpinner;
 
@@ -47,17 +51,13 @@ export class HomeEditComponent extends TournamentComponent implements OnInit {
     minlengthlocation: 5,
     maxlengthlocation: 80,
   };
+  constructor() {
+    const route = inject(ActivatedRoute);
+    const router = inject(Router);
+    const tournamentRepository = inject(TournamentRepository);
+    const structureRepository = inject(StructureRepository);
+    const globalEventsManager = inject(GlobalEventsManager);
 
-  constructor(
-    route: ActivatedRoute,
-    router: Router,
-    tournamentRepository: TournamentRepository,
-    structureRepository: StructureRepository,    
-    globalEventsManager: GlobalEventsManager,    
-    private tournamentMapper: TournamentMapper,
-    private myNavigation: MyNavigation,
-    private ruleRepository: TournamentRuleRepository,
-  ) {
     super(route, router, tournamentRepository, structureRepository, globalEventsManager);
 
     this.form = new FormGroup({

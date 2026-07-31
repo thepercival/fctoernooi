@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, TemplateRef, ChangeDetectionStrategy, inject } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -28,10 +28,14 @@ import { createModalInjector } from '../../shared/modal-input-interfaces/create-
     templateUrl: './edit.component.html',
     styleUrls: ['./edit.component.css'],
     standalone: true,
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [NgbAlert, FontAwesomeModule, TournamentNavBarComponent, FormsModule, ReactiveFormsModule]
 })
 export class SponsorEditComponent extends TournamentComponent implements OnInit {
+    private sponsorRepository = inject(SponsorRepository);
+    private sponsorMapper = inject(SponsorMapper);
+    private myNavigation = inject(MyNavigation);
+
     faSpinner = faSpinner;
     public typedForm: FormGroup<{
         name: FormControl<string>,
@@ -61,17 +65,13 @@ export class SponsorEditComponent extends TournamentComponent implements OnInit 
         maxlengthurl: Sponsor.MAX_LENGTH_URL,
         maxlengthextension: 10,
     };
+    constructor() {
+        const route = inject(ActivatedRoute);
+        const router = inject(Router);
+        const tournamentRepository = inject(TournamentRepository);
+        const structureRepository = inject(StructureRepository);
+        const globalEventsManager = inject(GlobalEventsManager);
 
-    constructor(
-        route: ActivatedRoute,
-        router: Router,
-        tournamentRepository: TournamentRepository,
-        structureRepository: StructureRepository,
-        globalEventsManager: GlobalEventsManager,        
-        private sponsorRepository: SponsorRepository,
-        private sponsorMapper: SponsorMapper,
-        private myNavigation: MyNavigation
-    ) {
         super(route, router, tournamentRepository, structureRepository, globalEventsManager);
         this.logoInputType = LogoInput.ByUpload;
         this.newLogoUploaded = false;

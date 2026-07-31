@@ -1,4 +1,4 @@
-import { Component, OnInit, WritableSignal, input, output, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, WritableSignal, input, output, signal, ChangeDetectionStrategy, inject } from '@angular/core';
 
 import { TournamentRegistrationSettings } from '../../../lib/tournament/registration/settings';
 import { TournamentRegistrationRepository } from '../../../lib/tournament/registration/repository';
@@ -15,11 +15,13 @@ import { NgbNav, NgbNavContent, NgbNavItem, NgbNavLink, NgbNavOutlet } from '@ng
     selector: 'app-tournament-registrations-nav',
     templateUrl: './nav.component.html',
     styleUrls: ['./nav.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [RegistrationListComponent, RegistrationFormComponent, RegistrationSettingsComponent, NgbNav, NgbNavItem, NgbNavLink, NgbNavContent, NgbNavOutlet],
     
 })
 export class RegistrationsNavComponent implements OnInit {
+  private tournamentRegistrationRepository = inject(TournamentRegistrationRepository);
+
 
   tournament = input.required<Tournament>();
   structureNameService = input.required<StructureNameService>();
@@ -33,10 +35,7 @@ export class RegistrationsNavComponent implements OnInit {
   public hasBegun!: boolean;
   public readonly processing: WritableSignal<boolean> = signal(true);
   public settings: TournamentRegistrationSettings|undefined;
-
-  constructor(
-    private tournamentRegistrationRepository: TournamentRegistrationRepository,
-  ) {
+  constructor() {
    
   }
 

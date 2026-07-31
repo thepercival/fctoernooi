@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
@@ -13,12 +13,13 @@ import { Router } from '@angular/router';
   providedIn: 'root'
 })
 export class UserRepository extends APIRepository {
+  private authService = inject(AuthService);
+  private http = inject(HttpClient);
+  private mapper = inject(UserMapper);
 
-  constructor(
-    private authService: AuthService,
-    private http: HttpClient,
-    private mapper: UserMapper,
-    router: Router) {
+  constructor() {
+    const router = inject(Router);
+
     super(router);
   }
 

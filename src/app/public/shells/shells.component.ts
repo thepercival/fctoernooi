@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, WritableSignal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, signal, WritableSignal, ChangeDetectionStrategy, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { DateFormatter } from '../../lib/dateFormatter';
 import { FavoritesRepository } from '../../lib/favorites/repository';
@@ -21,10 +21,16 @@ import { CustomSportId } from '../../lib/ngx-sport/sport/custom';
     templateUrl: './shells.component.html',
     styleUrls: ['./shells.component.scss'],
     standalone: true,
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [FontAwesomeModule, NgbInputDatepicker, ReactiveFormsModule]
 })
 export class PublicShellsComponent implements OnInit{
+  private router = inject(Router);
+  private tournamentShellRepos = inject(TournamentShellRepository);
+  private favoritesRepos = inject(FavoritesRepository);
+  dateFormatter = inject(DateFormatter);
+  private dateConverter = inject(DateConverter);
+
   faSpinner = faSpinner;
   faCalendarAlt = faCalendarAlt;
 
@@ -40,15 +46,9 @@ export class PublicShellsComponent implements OnInit{
   public alert: IAlert | undefined;
 
   private linethroughDate: Date;
+  constructor() {
+    const globalEventsManager = inject(GlobalEventsManager);
 
-  constructor(
-    private router: Router,
-    private tournamentShellRepos: TournamentShellRepository,
-    private favoritesRepos: FavoritesRepository,
-    public dateFormatter: DateFormatter,
-    private dateConverter: DateConverter,
-    globalEventsManager: GlobalEventsManager
-  ) {
     this.linethroughDate = new Date();
     this.linethroughDate.setHours(this.linethroughDate.getHours() + 4);
 

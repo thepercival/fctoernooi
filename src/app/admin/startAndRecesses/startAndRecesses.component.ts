@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, TemplateRef, ChangeDetectionStrategy, inject } from '@angular/core';
 import { AbstractControl, FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router, RouterLink } from '@angular/router';
 import { NgbAlert, NgbDateStruct, NgbInputDatepicker, NgbTimepicker } from '@ng-bootstrap/ng-bootstrap';
@@ -27,10 +27,17 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
     templateUrl: './startAndRecesses.component.html',
     styleUrls: ['./startAndRecesses.component.scss'],
     standalone: true,
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [TournamentNavBarComponent,NgbAlert, NgbTimepicker, NgbInputDatepicker, FontAwesomeModule, ReactiveFormsModule, RouterLink]
 })
 export class StartAndRecessesComponent extends TournamentComponent implements OnInit {
+    private recessRepository = inject(RecessRepository);
+    private planningRepository = inject(PlanningRepository);
+    private tournamentMapper = inject(TournamentMapper);
+    private myNavigation = inject(MyNavigation);
+    dateFormatter = inject(DateFormatter);
+    private dateConverter = inject(DateConverter);
+
     
     public typedForm: FormGroup<{
         date: FormControl<string>,
@@ -41,20 +48,13 @@ export class StartAndRecessesComponent extends TournamentComponent implements On
     public hasBegun!: boolean;
 
     faSpinner = faSpinner;
+    constructor() {
+        const route = inject(ActivatedRoute);
+        const router = inject(Router);
+        const tournamentRepository = inject(TournamentRepository);
+        const structureRepository = inject(StructureRepository);
+        const globalEventsManager = inject(GlobalEventsManager);
 
-    constructor(
-        route: ActivatedRoute,
-        router: Router,
-        tournamentRepository: TournamentRepository,
-        structureRepository: StructureRepository,
-        globalEventsManager: GlobalEventsManager,        
-        private recessRepository: RecessRepository,
-        private planningRepository: PlanningRepository,
-        private tournamentMapper: TournamentMapper,
-        private myNavigation: MyNavigation,
-        public dateFormatter: DateFormatter,
-        private dateConverter: DateConverter,
-    ) {
         super(route, router, tournamentRepository, structureRepository, globalEventsManager);
 
         this.typedForm = new FormGroup({

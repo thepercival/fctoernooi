@@ -1,18 +1,17 @@
 import { Location, ViewportScroller } from '@angular/common';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Router, RoutesRecognized, Scroll } from '@angular/router';
 import { filter, pairwise } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class MyNavigation {
+    private router = inject(Router);
+    private location = inject(Location);
+    private viewportScroller = inject(ViewportScroller);
+
     private previousUrl: string | undefined;
     scrollPosition: [number, number] = [0, 0];
-
-    constructor(
-        private router: Router,
-        private location: Location,
-        private viewportScroller: ViewportScroller
-    ) {
+    constructor() {
         this.router.events.pipe(filter((e: any) => e instanceof RoutesRecognized),
             pairwise()
         ).subscribe((e: any) => {

@@ -19,6 +19,8 @@ import { createModalInjector } from '../../modal-input-interfaces/create-modal-i
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PouleRankingModalComponent {
+    private injector = inject(Injector);
+
     private readonly modalInputs = inject(POULE_RANKING_MODAL_INPUTS, { optional: true });
     public poule!: Poule;
     public competitionSports!: CompetitionSport[];
@@ -30,10 +32,7 @@ export class PouleRankingModalComponent {
     // public rankingService!: RankingService;
     private modalService = inject(NgbModal);
     public activeModal = inject(NgbActiveModal);
-
-    constructor(
-        private injector: Injector
-        ) {
+    constructor() {
         if (this.modalInputs) {
             this.poule = this.modalInputs.poule;
             this.competitionSports = this.modalInputs.competitionSports;

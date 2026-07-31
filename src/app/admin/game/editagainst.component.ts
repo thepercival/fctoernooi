@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ChangeDetectionStrategy, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -37,7 +37,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
     selector: 'app-tournament-againstgame-edit',
     templateUrl: './editagainst.component.html',
     styleUrls: ['./editagainst.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [GameBaseEditComponent, NgbAlert,TournamentNavBarComponent,EscapeHtmlPipe,FontAwesomeModule,ReactiveFormsModule],
     
 })
@@ -49,23 +49,22 @@ export class GameAgainstEditComponent extends GameEditComponent implements OnIni
     public scoreControls: AgainstScoreFormControl[] = [];
     public minExtraPoints = -10;
     public maxExtraPoints = 10;
+    constructor() {
+        const route = inject(ActivatedRoute);
+        const router = inject(Router);
+        const tournamentRepository = inject(TournamentRepository);
+        const structureRepository = inject(StructureRepository);
+        const globalEventsManager = inject(GlobalEventsManager);
+        const authService = inject(AuthService);
+        const gameRepository = inject(GameRepository);
+        const mapper = inject(GameMapper);
+        const fieldMapper = inject(FieldMapper);
+        const refereeMapper = inject(RefereeMapper);
+        const placeMapper = inject(PlaceMapper);
+        const translate = inject(TranslateScoreService);
+        const myNavigation = inject(MyNavigation);
+        const structureLocationMapper = inject(StructureLocationMapper);
 
-    constructor(
-        route: ActivatedRoute,
-        router: Router,
-        tournamentRepository: TournamentRepository,
-        structureRepository: StructureRepository,
-        globalEventsManager: GlobalEventsManager,
-        authService: AuthService,
-        gameRepository: GameRepository,
-        mapper: GameMapper,
-        fieldMapper: FieldMapper,
-        refereeMapper: RefereeMapper,
-        placeMapper: PlaceMapper,
-        translate: TranslateScoreService,
-        myNavigation: MyNavigation,
-        structureLocationMapper: StructureLocationMapper
-    ) {
         super(route, router, tournamentRepository, structureRepository, globalEventsManager,
             authService, gameRepository, mapper, fieldMapper, refereeMapper, placeMapper, translate, myNavigation,
             structureLocationMapper);

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router, RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
@@ -25,21 +25,21 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PaymentResultComponent extends UserComponent implements OnInit, OnDestroy {
+  private paymentRepository = inject(PaymentRepository);
+  myNavigation = inject(MyNavigation);
+
   faSpinner = faSpinner;
   public errorAlert: IAlert | undefined;
   refreshTimer: Subscription | undefined;
   private appErrorHandler: AppErrorHandler;
 
+  constructor() {
+    const route = inject(ActivatedRoute);
+    const router = inject(Router);
+    const userRepository = inject(UserRepository);
+    const authService = inject(AuthService);
+    const globalEventsManager = inject(GlobalEventsManager);
 
-  constructor(
-    route: ActivatedRoute,
-    router: Router,
-    userRepository: UserRepository,
-    authService: AuthService,
-    globalEventsManager: GlobalEventsManager,
-    private paymentRepository: PaymentRepository,
-    public myNavigation: MyNavigation
-  ) {
     super(route, router, userRepository, authService, globalEventsManager);
     this.appErrorHandler = new AppErrorHandler(router);
   }

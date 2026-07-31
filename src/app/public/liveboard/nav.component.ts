@@ -1,4 +1,4 @@
-import { AfterContentInit, Component, ElementRef, OnInit, input, output, ChangeDetectionStrategy } from '@angular/core';
+import { AfterContentInit, Component, ElementRef, OnInit, input, output, ChangeDetectionStrategy, inject } from '@angular/core';
 
 import { Router } from '@angular/router';
 import { DefaultJsonTheme } from '../../lib/tournament/theme';
@@ -18,11 +18,15 @@ import { CustomSportId } from '../../lib/ngx-sport/sport/custom';
     selector: 'app-liveboard-nav',
     templateUrl: './nav.component.html',
     styleUrls: ['./nav.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [EscapeHtmlPipe, ProgressComponent, FontAwesomeModule]
     
 })
 export class LiveboardNavComponent implements OnInit, AfterContentInit {
+  private elRef = inject(ElementRef);
+  private router = inject(Router);
+  private myNavigation = inject(MyNavigation);
+
 
   tournament = input.required<Tournament>();
   activeScreen = input.required<SponsorScreen | ResultsScreen | ScheduleScreen | EndRankingScreen | PoulesRankingScreen>();   
@@ -35,13 +39,8 @@ export class LiveboardNavComponent implements OnInit, AfterContentInit {
   public nrOfSecondsFromZero2 = 0;
   public faCogs = faCogs;
   public faGrip = faGrip;
-  public faLevelUpAlt = faLevelUpAlt;
-  
-  constructor(
-    private elRef: ElementRef,
-    private router: Router,
-    private myNavigation: MyNavigation
-  ) {
+  public faLevelUpAlt = faLevelUpAlt;  
+  constructor() {
   }
 
   ngOnInit() {

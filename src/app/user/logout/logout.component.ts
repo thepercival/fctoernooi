@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import { AuthService } from '../../lib/auth/auth.service';
 import { IAlertType } from '../../shared/common/alert';
@@ -12,8 +12,10 @@ import { IAlertType } from '../../shared/common/alert';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LogoutComponent implements OnInit {
+  private router = inject(Router);
+  private authService = inject(AuthService);
 
-  constructor(private router: Router, private authService: AuthService) { }
+  constructor() { }
 
   ngOnInit() {
     // reset login status

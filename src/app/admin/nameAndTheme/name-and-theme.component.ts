@@ -25,10 +25,13 @@ import { createModalInjector } from '../../shared/modal-input-interfaces/create-
     templateUrl: './name-and-theme.component.html',
     styleUrls: ['./name-and-theme.component.scss'],
     standalone: true,
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [FontAwesomeModule, NgbAlert, TournamentNavBarComponent, ReactiveFormsModule]
 })
 export class TournamentNameAndThemeComponent extends TournamentComponent implements OnInit {
+    private tournamentMapper = inject(TournamentMapper);
+    private myNavigation = inject(MyNavigation);
+
     faSpinner = faSpinner;
     public typedForm: FormGroup<{
         name: FormControl<string>,
@@ -50,16 +53,13 @@ export class TournamentNameAndThemeComponent extends TournamentComponent impleme
     };
 
     modalService: NgbModal = inject(NgbModal);
+    constructor() {
+        const route = inject(ActivatedRoute);
+        const router = inject(Router);
+        const tournamentRepository = inject(TournamentRepository);
+        const structureRepository = inject(StructureRepository);
+        const globalEventsManager = inject(GlobalEventsManager);
 
-    constructor(
-        route: ActivatedRoute,
-        router: Router,
-        tournamentRepository: TournamentRepository,
-        structureRepository: StructureRepository,
-        globalEventsManager: GlobalEventsManager,        
-        private tournamentMapper: TournamentMapper,
-        private myNavigation: MyNavigation
-    ) {
         super(route, router, tournamentRepository, structureRepository, globalEventsManager);
         this.logoInputType = LogoInput.ByUpload;
         this.newLogoUploaded = false;

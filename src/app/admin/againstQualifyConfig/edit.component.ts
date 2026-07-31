@@ -31,7 +31,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     templateUrl: './edit.component.html',
     standalone: true,
     imports: [FontAwesomeModule, NgbAlert, ReactiveFormsModule],
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     styleUrls: ['./edit.component.scss'],
 })
 export class AgainstQualifyConfigEditComponent implements OnInit {

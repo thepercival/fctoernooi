@@ -1,4 +1,4 @@
-import { Component, input, signal, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, input, signal, ChangeDetectionStrategy, OnInit, inject } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Structure, RoundNumber, StructureNameService } from 'ngx-sport';
 import { EscapeHtmlPipe } from '../../shared/common/escapehtmlpipe';
@@ -11,6 +11,8 @@ import { EscapeHtmlPipe } from '../../shared/common/escapehtmlpipe';
     imports: [EscapeHtmlPipe]
 })
 export class RoundNumbersSelectorModalComponent implements OnInit {
+    activeModal = inject(NgbActiveModal);
+
     public structure = input.required<Structure>();
     public subject = input.required<string>();
     public initialRoundNumber = input<RoundNumber | undefined>(undefined);
@@ -43,10 +45,7 @@ export class RoundNumbersSelectorModalComponent implements OnInit {
             this.activeModal.close(roundNumber);
         }
     }
-
-    constructor(
-        public activeModal: NgbActiveModal
-    ) {
+    constructor() {
         this.structureNameService = new StructureNameService();
     }
 

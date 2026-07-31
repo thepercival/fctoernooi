@@ -1,4 +1,4 @@
-import { Component, inject, Injector, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Injector, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { IAlertType } from '../../shared/common/alert';
@@ -18,28 +18,26 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
     selector: 'app-tournament-rules',
     templateUrl: './rules.component.html',
     styleUrls: ['./rules.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [TournamentNavBarComponent, FaIconComponent, NgbAlert],
     
 })
 export class TournamentRulesComponent extends TournamentComponent implements OnInit {
+  private ruleRepository = inject(TournamentRuleRepository);
+
   faSpinner = faSpinner;
   public rules!: JsonTournamentRule[];
-  private injector = inject(Injector);
   
   validations: any = {
     'minlengthdescription': TournamentRuleRepository.MIN_LENGTH_DESCRIPTION,
     'maxlengthdescription': TournamentRuleRepository.MAX_LENGTH_DESCRIPTION
   };
+  constructor() {
+    const route = inject(ActivatedRoute);
+    const router = inject(Router);
+    const tournamentRepository = inject(TournamentRepository);
+    const sructureRepository = inject(StructureRepository);
+    const globalEventsManager = inject(GlobalEventsManager);
 
-  constructor(
-    route: ActivatedRoute,
-    router: Router,
-    tournamentRepository: TournamentRepository,
-    sructureRepository: StructureRepository,
-    globalEventsManager: GlobalEventsManager,    
-    private ruleRepository: TournamentRuleRepository
-  ) {
     super(route, router, tournamentRepository, sructureRepository, globalEventsManager);
   }
 

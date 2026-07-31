@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, WritableSignal, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, WritableSignal, input, signal, inject } from '@angular/core';
 import { Poule, GameAmountConfig, ScoreConfigService, TogetherGame, CompetitionSport, TogetherGamePlace, TogetherSportRoundRankingCalculator, SportRoundRankingItem, PlaceLocation, GameState, Single, AllInOneGame, Place, AgainstH2h, AgainstGpp, StructureNameService } from 'ngx-sport';
 
 import { CSSService } from '../../../common/cssservice';
@@ -17,6 +17,10 @@ import { EscapeHtmlPipe } from '../../../common/escapehtmlpipe';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RankingTogetherComponent implements OnInit {
+  cssService = inject(CSSService);
+  private scoreConfigService = inject(ScoreConfigService);
+  favRepos = inject(FavoritesRepository);
+
   readonly _poule = input.required<Poule>();
   readonly _favorites = input<Favorites | undefined>(undefined);
   readonly _structureNameService = input.required<StructureNameService>();
@@ -31,11 +35,7 @@ export class RankingTogetherComponent implements OnInit {
   nrOfGameRounds!: number;
   public readonly processing: WritableSignal<boolean> = signal(true);
 
-
-  constructor(
-    public cssService: CSSService,
-    private scoreConfigService: ScoreConfigService,
-    public favRepos: FavoritesRepository) {
+  constructor() {
   }
 
   ngOnInit() {

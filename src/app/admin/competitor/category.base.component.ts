@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, output, SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, OnChanges, output, SimpleChanges, ChangeDetectionStrategy, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbAlert, NgbDropdown, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Category, Competitor, Place, StartLocationMap, StructureEditor, StructureNameService } from 'ngx-sport';
@@ -18,10 +18,15 @@ import { faCopy, faPlus } from '@fortawesome/free-solid-svg-icons';
     templateUrl: './category.base.component.html',
     styleUrls: ['./category.base.component.scss'],
     standalone: true,
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [NgbAlert, FontAwesomeModule, CompetitorListLineComponent,NgbDropdown]
 })
 export class CategoryBaseCompetitorListComponent implements OnChanges {
+  private router = inject(Router);
+  private structureEditor = inject(StructureEditor);
+  private competitorRepository = inject(CompetitorRepository);
+  private modalService = inject(NgbModal);
+
   faCopy = faCopy;
   faPlus = faPlus;
   @Input() tournament!: Tournament;
@@ -45,12 +50,7 @@ export class CategoryBaseCompetitorListComponent implements OnChanges {
   private areSomeCompetitorsArranged: boolean = false;
   public hasSomeCompetitorAnImage: boolean = false;
   public toClipboardMessage: string | undefined;
-
-  constructor(
-    private router: Router,
-    private structureEditor: StructureEditor,
-    private competitorRepository: CompetitorRepository,
-    private modalService: NgbModal) {
+  constructor() {
   }
 
   ngOnChanges(changes: SimpleChanges) {

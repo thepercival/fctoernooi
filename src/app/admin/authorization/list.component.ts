@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, TemplateRef, signal, WritableSignal, inject } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router, RouterLink } from '@angular/router';
 
 import { TournamentRepository } from '../../lib/tournament/repository';
@@ -19,32 +19,34 @@ import { TournamentNavBarComponent } from "../../shared/tournament/tournamentNav
 import { RoleItemComponent } from "./roleitem.component";
 import { FaIconComponent } from "@fortawesome/angular-fontawesome";
 import { faPlusCircle, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { AUTHORIZATION_EXPLANATION_MODAL_INPUTS } from '../../shared/modal-input-interfaces/authorization-explanation-modal-inputs.interface';
+import { createModalInjector } from '../../shared/modal-input-interfaces/create-modal-injector';
+import { finalize } from 'rxjs';
 
 @Component({
     selector: 'app-tournament-authorization-list',
     templateUrl: './list.component.html',
     styleUrls: ['./list.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [TournamentNavBarComponent, RoleItemComponent, FaIconComponent, NgbAlert, RouterLink],
 })
 export class AuthorizationListComponent extends TournamentComponent implements OnInit {
-    public invitations: TournamentInvitation[] = [];
+    private tournamentUserRepository = inject(TournamentUserRepository);
+    private invitationRepository = inject(TournamentInvitationRepository);
+    private authService = inject(AuthService);
+
+    public readonly invitations: WritableSignal<TournamentInvitation[]> = signal([]);
     faSpinner = faSpinner;
     faPlusCircle = faPlusCircle;
-    public roleToProcess: TournamentAuthorizationRole | undefined;
     public removeWithRefereeRole: boolean | undefined;
-    public validUserItems!: UserItem[];
+    public readonly validUserItems: WritableSignal<UserItem[]> = signal([]);
+    public readonly processingAuthorizations: WritableSignal<Set<TournamentAuthorization>> = signal(new Set<TournamentAuthorization>());
+    constructor() {
+        const route = inject(ActivatedRoute);
+        const router = inject(Router);
+        const tournamentRepository = inject(TournamentRepository);
+        const sructureRepository = inject(StructureRepository);
+        const globalEventsManager = inject(GlobalEventsManager);
 
-    constructor(
-        route: ActivatedRoute,
-        router: Router,
-        tournamentRepository: TournamentRepository,
-        sructureRepository: StructureRepository,
-        globalEventsManager: GlobalEventsManager,
-        private tournamentUserRepository: TournamentUserRepository,
-        private invitationRepository: TournamentInvitationRepository,
-        private authService: AuthService
-    ) {
         super(route, router, tournamentRepository, sructureRepository, globalEventsManager);
     }
 
@@ -53,14 +55,21 @@ export class AuthorizationListComponent extends TournamentComponent implements O
     }
 
     initAuthorizations() {
-        this.validUserItems = this.tournament.getUsers()
+        const userItems = this.tournament.getUsers()
             .filter((tournamentUser: TournamentUser) => !this.hasUnassignableRoles(tournamentUser.getRoles()))
-            .map((tournamentUser: TournamentUser): UserItem => { return { tournamentUser, emailaddress: undefined } });
+            .map((tournamentUser: TournamentUser): UserItem => {
+                return {
+                    tournamentUser,
+                    emailaddress: undefined,
+                    loadingEmail: true
+                }
+            });
+        this.validUserItems.set(userItems);
 
         this.invitationRepository.getObjects(this.tournament)
             .subscribe({
                 next: (invitations: TournamentInvitation[]) => {
-                    this.invitations = invitations
+                    this.invitations.set(invitations)
 
                     this.processing.set(false);
                 },
@@ -69,9 +78,50 @@ export class AuthorizationListComponent extends TournamentComponent implements O
                 }
             });
 
-        this.validUserItems.forEach((userItem: UserItem) => {
+        userItems.forEach((userItem: UserItem) => {
             this.tournamentUserRepository.getEmailaddress(userItem.tournamentUser)
-                .subscribe((emailaddress: string) => userItem.emailaddress = emailaddress);
+                .subscribe({
+                    next: (emailaddress: string) => {
+                        this.updateUserItem(userItem.tournamentUser, {
+                            emailaddress,
+                            loadingEmail: false
+                        });
+                    },
+                    error: () => {
+                        this.updateUserItem(userItem.tournamentUser, {
+                            emailaddress: '',
+                            loadingEmail: false
+                        });
+                    }
+                });
+        });
+    }
+
+    isAuthorizationProcessing(authorization: TournamentAuthorization): boolean {
+        return this.processingAuthorizations().has(authorization);
+    }
+
+    private setAuthorizationProcessing(authorization: TournamentAuthorization, processing: boolean): void {
+        this.processingAuthorizations.update((authorizations: Set<TournamentAuthorization>) => {
+            const updated = new Set(authorizations);
+            if (processing) {
+                updated.add(authorization);
+            } else {
+                updated.delete(authorization);
+            }
+            return updated;
+        });
+    }
+
+    private updateUserItem(user: TournamentUser, update: Partial<UserItem>): void {
+        const userId = user.getUserId().getId();
+        this.validUserItems.update((items: UserItem[]) => {
+            return items.map((item: UserItem) => {
+                if (item.tournamentUser.getUserId().getId() !== userId) {
+                    return item;
+                }
+                return { ...item, ...update };
+            });
         });
     }
 
@@ -83,67 +133,104 @@ export class AuthorizationListComponent extends TournamentComponent implements O
         ];
     }
 
-    getNrOfRoles(role: number): number {
+    getNrOfUsersForRole(role: Role): number {
         return this.tournament.getUsers().filter(tournamentUser => {
-            return tournamentUser.hasRoles(role);
+            return tournamentUser.hasRole(role);
         }).length
     }
 
-    canToggleRole(tournamentUser: TournamentUser, role: number) {
-        return !(role === Role.RoleAdmin && tournamentUser.hasRoles(role) && this.getNrOfRoles(Role.RoleAdmin) < 2);
+    canToggleRole(tournamentUser: TournamentUser, role: Role): boolean {
+        return !(role === Role.RoleAdmin && tournamentUser.hasRole(role) && this.getNrOfUsersForRole(Role.RoleAdmin) < 2);
     }
 
-    get RoleReferee(): number { return Role.Referee; }
+    get RoleReferee(): Role { return Role.Referee; }
 
-    hasUnassignableRoles(roles: number): boolean {
-        return roles === Role.Referee || roles === 0;
+    hasUnassignableRoles(roles: Role[]): boolean {
+        return roles.includes(Role.Referee) || roles.length === 0;
     }
 
     toggleRole(authorizationRole: TournamentAuthorizationRole, modalContent: TemplateRef<any>) {
-        const role = authorizationRole.role;
+        const roleToggled = authorizationRole.role;
         const authorization = authorizationRole.authorization;
-        const roleDelta = (authorization.hasRoles(role) ? -role : role);
-        const roleNew = authorization.getRoles() + roleDelta;
-        if (this.hasUnassignableRoles(roleNew)) {
-            this.openModalRemove(modalContent, authorization, roleNew === Role.Referee);
-        } else {
-            this.roleToProcess = authorizationRole;
-            this.editRole(authorization, roleDelta);
+        console.log('cdk', roleToggled, authorization);
+        
+        if( authorization.hasRole(roleToggled) ) { // remove
+            console.log('removerole');
+            if (this.hasUnassignableRoles(authorizationRole.authorization.getRoles())) {
+                this.openModalRemove(modalContent, authorization, roleToggled === Role.Referee);
+            } else {
+                this.removeRole(authorization, roleToggled);
+            }
+        } else { // add
+            console.log('addrole');
+            this.addRole(authorization, roleToggled);
         }
     }
 
-    editRole(authorization: TournamentAuthorization, newRole: number) {
-        authorization.setRoles(authorization.getRoles() + newRole);
+    addRole(authorization: TournamentAuthorization, newRole: Role) {
         if (authorization instanceof TournamentUser) {
-            this.tournamentUserRepository.editObject(<TournamentUser>authorization)
+            const cleanup = () => {
+                this.setAuthorizationProcessing(authorization, false);
+            };
+            this.setAuthorizationProcessing(authorization, true);
+            this.tournamentUserRepository.addRole(<TournamentUser>authorization, newRole)
+                .pipe(finalize(cleanup))
                 .subscribe({
                     next: (tournamentUser: TournamentUser) => {
-                        this.roleToProcess = undefined;
+                        cleanup();
                     },
                     error: (e) => {
                         this.alert.set({ type: IAlertType.Danger, message: e });
-                        this.roleToProcess = undefined;
+                        cleanup();
                     }
                 });
         } else {
-            this.invitationRepository.editObject(<TournamentInvitation>authorization)
+            this.invitationRepository.addRole(<TournamentInvitation>authorization, newRole  )
                 .subscribe({
                     next: (invitation: TournamentInvitation) => {
-                        this.roleToProcess = undefined;
                     },
                     error: (e) => {
                         this.alert.set({ type: IAlertType.Danger, message: e });
-                        this.roleToProcess = undefined;
+                    }
+                });
+        }
+    }
+
+    removeRole(authorization: TournamentAuthorization, removeRole: Role) {
+        if (authorization instanceof TournamentUser) {
+            const cleanup = () => {
+                this.setAuthorizationProcessing(authorization, false);
+            };
+            this.setAuthorizationProcessing(authorization, true);
+            this.tournamentUserRepository.removeRole(<TournamentUser>authorization, removeRole)
+                .pipe(finalize(cleanup))
+                .subscribe({
+                    next: (tournamentUser: TournamentUser) => {
+                        cleanup();
+                    },
+                    error: (e) => {
+                        this.alert.set({ type: IAlertType.Danger, message: e });
+                        cleanup();
+                    }
+                });
+        } else {
+            this.invitationRepository.removeRole(<TournamentInvitation>authorization, removeRole)
+                .subscribe({
+                    next: (invitation: TournamentInvitation) => {
+                    },
+                    error: (e) => {
+                        this.alert.set({ type: IAlertType.Danger, message: e });
                     }
                 });
         }
     }
 
     remove(authorization: TournamentAuthorization) {
-        if (authorization.getRoles() === Role.Referee)
-            this.processing.set(true);
         if (authorization instanceof TournamentUser) {
+            const cleanup = () => this.setAuthorizationProcessing(authorization, false);
+            this.setAuthorizationProcessing(authorization, true);
             this.tournamentUserRepository.removeObject(<TournamentUser>authorization)
+                .pipe(finalize(cleanup))
                 .subscribe({
                     next: () => {
                         this.removeTournamentUserFromList(authorization);                        
@@ -153,10 +240,11 @@ export class AuthorizationListComponent extends TournamentComponent implements O
                               };
                               this.router.navigate(['/'], navigationExtras);
                         }
-                        this.processing.set(false)
+                        cleanup();
                     },
                     error: (e) => {
-                        this.alert.set({ type: IAlertType.Danger, message: e }); this.processing.set(false);
+                        this.alert.set({ type: IAlertType.Danger, message: e });
+                        cleanup();
                     }
                 });
         } else {
@@ -164,21 +252,17 @@ export class AuthorizationListComponent extends TournamentComponent implements O
             this.invitationRepository.removeObject(invitation)
                 .subscribe({
                     next: () => {
-                        const idx = this.invitations.indexOf(invitation);
-                        if (idx >= 0) {
-                            this.invitations.splice(idx, 1);
-                        }
-                        this.processing.set(false);
+                        this.removeInvitationFromList(invitation);
                     },
                     error: (e) => {
-                        this.alert.set({ type: IAlertType.Danger, message: e }); this.processing.set(false);
+                        this.alert.set({ type: IAlertType.Danger, message: e });
                     }
                 });
         }
     }
 
     canBeRemoved(tournamentUser: TournamentUser) {
-        return !tournamentUser.hasRoles(Role.RoleAdmin) || this.getNrOfRoles(Role.RoleAdmin) > 1;
+        return !tournamentUser.hasRole(Role.RoleAdmin) || this.getNrOfUsersForRole(Role.RoleAdmin) > 1;
     }
 
     rolesAreEqual(roleA: TournamentAuthorizationRole, roleB: TournamentAuthorizationRole | undefined): boolean {
@@ -186,9 +270,11 @@ export class AuthorizationListComponent extends TournamentComponent implements O
     }
 
     openHelpModal() {
-        const activeModal = this.modalService.open(AuthorizationExplanationModalComponent, { windowClass: 'info-modal' });
-        activeModal.componentInstance.header = 'uitleg rollen';
-        activeModal.componentInstance.showAdd = false;
+        const modalInjector = createModalInjector(this.injector, AUTHORIZATION_EXPLANATION_MODAL_INPUTS, {
+            header: 'uitleg rollen',
+            showAdd: false
+        });
+        const activeModal = this.modalService.open(AuthorizationExplanationModalComponent, { windowClass: 'info-modal', injector: modalInjector });
         activeModal.result.then((result) => {
             if (result === 'linkToReferees') {
                 this.router.navigate(['/admin/referees', this.tournament.getId()]);
@@ -202,35 +288,36 @@ export class AuthorizationListComponent extends TournamentComponent implements O
         const activeModal = this.modalService.open(modalContent);
         activeModal.result.then((result) => {
             if (result === 'remove') {
+                authorization.emptyRoles();
                 if (removeWithRefereeRole) {
-                    authorization.setRoles(0);
-                    this.editRole(authorization, Role.Referee);
-                } else {
-                    this.remove(authorization);
+                    authorization.addRole(Role.Referee);
                 }
-
+                this.remove(authorization);
             }
         }, (reason) => {
         });
     }
 
     removeTournamentUserFromList(tournamentUser: TournamentUser) {
-        const userItem = this.validUserItems.find(userItem => userItem.tournamentUser === tournamentUser);
-        if (userItem) {
-            const idx = this.validUserItems.indexOf(userItem);
-            if (idx >= 0) {
-                this.validUserItems.splice(idx, 1);
-            }
-        }
+        this.validUserItems.update((items: UserItem[]) => {
+            return items.filter((userItem: UserItem) => userItem.tournamentUser !== tournamentUser);
+        });
+    }
+
+    removeInvitationFromList(invitation: TournamentInvitation) {
+        this.invitations.update((items: TournamentInvitation[]) => {
+            return items.filter((invitationIt: TournamentInvitation) => invitationIt !== invitation);
+        });
     }
 }
 
 export interface UserItem {
     tournamentUser: TournamentUser;
     emailaddress: string | undefined;
+    loadingEmail: boolean;
 }
 
 export interface TournamentAuthorizationRole {
     authorization: TournamentAuthorization;
-    role: number;
+    role: Role;
 }

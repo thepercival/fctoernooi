@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 
 import { JsonTournamentRegistration } from './json';
 import { TournamentRegistration } from '../registration';
@@ -9,7 +9,8 @@ import { RegistrationState } from './state';
     providedIn: 'root'
 })
 export class TournamentRegistrationMapper {
-    constructor(private categoryMapper: CategoryMapper) { }
+    private categoryMapper = inject(CategoryMapper);
+    constructor() { }
 
     toObject(json: JsonTournamentRegistration, category: Category): TournamentRegistration {
         const registration = new TournamentRegistration(
