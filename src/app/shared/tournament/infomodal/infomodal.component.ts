@@ -15,9 +15,23 @@ import { INFO_MODAL_INPUTS } from '../../modal-input-interfaces/info-modal-input
 })
 export class InfoModalComponent {
     private readonly modalInputs = inject(INFO_MODAL_INPUTS, { optional: true });
-    public modalContent!: TemplateRef<any>;
-    public header = '';
+    private modalContentRaw!: TemplateRef<any> | (() => TemplateRef<any>);
+    private headerRaw: string | (() => string) = '';
     public noHeaderBorder = false;
+
+    public get modalContent(): TemplateRef<any> {
+        return (typeof this.modalContentRaw === 'function') ? this.modalContentRaw() : this.modalContentRaw;
+    }
+    public set modalContent(value: TemplateRef<any> | (() => TemplateRef<any>)) {
+        this.modalContentRaw = value;
+    }
+
+    public get header(): string {
+        return (typeof this.headerRaw === 'function') ? this.headerRaw() : this.headerRaw;
+    }
+    public set header(value: string | (() => string)) {
+        this.headerRaw = value;
+    }
     
     faInfoCircle = faInfoCircle;
     public activeModal = inject(NgbActiveModal);

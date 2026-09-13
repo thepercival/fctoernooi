@@ -5,6 +5,7 @@ import { League } from 'ngx-sport';
 import { faCalendarAlt, faCopy } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FocusDirective } from '../../shared/common/focus';
+import { COPY_MODAL_INPUTS, CopyModalInputs } from '../../shared/modal-input-interfaces/copy-modal-inputs.interface';
 
 @Component({
     selector: 'app-ngbd-modal-copy',
@@ -15,10 +16,10 @@ import { FocusDirective } from '../../shared/common/focus';
     imports: [NgbAlert, FontAwesomeModule, NgbTimepicker, NgbInputDatepicker, ReactiveFormsModule, FocusDirective]
 })
 export class CopyModalComponent implements OnInit {
-    @Input() name!: string;
-    @Input() startDateTime!: Date; 
-    @Input() showLowCreditsWarning: boolean = false; 
-
+    // Inputs are required via modal injector
+    private readonly modalInputs = inject(COPY_MODAL_INPUTS) as CopyModalInputs;
+    public showLowCreditsWarning: boolean = false;
+    
     public modal: NgbActiveModal = inject(NgbActiveModal);
     private modalService: NgbModal = inject(NgbModal);
     
@@ -55,9 +56,12 @@ export class CopyModalComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.form.controls.name.setValue(this.name);
-        this.form.controls.date.setValue(this.toDateStruct(this.startDateTime));
-        this.form.controls.time.setValue(this.toTimeStruct(this.startDateTime));
+        // Modal inputs are required; use them to initialize the form.
+        this.form.controls.name.setValue(this.modalInputs.name);
+        const start = this.modalInputs.startDateTime;
+        this.form.controls.date.setValue(this.toDateStruct(start));
+        this.form.controls.time.setValue(this.toTimeStruct(start));
+        this.showLowCreditsWarning = this.modalInputs.showLowCreditsWarning;
         this.form.controls.competitors.setValue(false);
     }
 

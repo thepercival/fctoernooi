@@ -56,7 +56,7 @@ import {
     faUserPlus,
     faUsers,
 } from '@fortawesome/free-solid-svg-icons';
-import { inject, signal, WritableSignal } from '@angular/core';
+import { ChangeDetectorRef, inject, signal, WritableSignal } from '@angular/core';
 import { CATEGORY_CHOOSE_MODAL_INPUTS } from '../modal-input-interfaces/category-choose-modal-inputs.interface';
 import { createModalInjector } from '../modal-input-interfaces/create-modal-injector';
 
@@ -114,6 +114,7 @@ export class TournamentComponent {
 
     protected modalService: NgbModal = inject(NgbModal);
     protected favRepository: FavoritesRepository = inject(FavoritesRepository);
+    private changeDetectorRef: ChangeDetectorRef = inject(ChangeDetectorRef);
 
     protected injector: Injector = inject(Injector);
 
@@ -138,6 +139,7 @@ export class TournamentComponent {
                 next: (tournament: Tournament) => {
                     this.tournament = tournament;
                     this.competition = tournament.getCompetition();
+                    this.changeDetectorRef.markForCheck();
                     if (noStructure === true) {
                         if (callback !== undefined) {
                             callback();
@@ -151,6 +153,7 @@ export class TournamentComponent {
                             next: (structure: Structure) => {
                                 this.structure = structure;
                                 // console.log(structure);
+                                this.changeDetectorRef.markForCheck();
                                 if (callback !== undefined) {
                                     callback();
                                 }

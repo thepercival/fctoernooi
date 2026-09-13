@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, WritableSignal, ChangeDetectionStrategy, inject } from '@angular/core';
+import { Component, OnInit, signal, WritableSignal, ChangeDetectionStrategy, inject, Injector } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import { TournamentShell } from '../../lib/tournament/shell';
 import { TournamentShellRepository } from '../../lib/tournament/shell/repository';
@@ -8,6 +8,8 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UserRepository } from '../../lib/user/repository';
 import { User } from '../../lib/user';
 import { CopyConfig, CopyModalComponent } from '../tournament/copymodal.component';
+import { createModalInjector } from '../../shared/modal-input-interfaces/create-modal-injector';
+import { COPY_MODAL_INPUTS } from '../../shared/modal-input-interfaces/copy-modal-inputs.interface';
 import { TournamentRepository } from '../../lib/tournament/repository';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCopy, faSpinner } from '@fortawesome/free-solid-svg-icons';
@@ -26,6 +28,7 @@ export class ExamplesComponent implements OnInit{
   private tournamentShellRepos = inject(TournamentShellRepository);
   private tournamentRepository = inject(TournamentRepository);
   private userRepository = inject(UserRepository);
+  private injector = inject(Injector);
 
   faSpinner = faSpinner;
   faCopy = faCopy;
@@ -79,11 +82,12 @@ export class ExamplesComponent implements OnInit{
             return;
           }
 
-          const activeModal = this.modalService.open(CopyModalComponent, { scrollable: false });
-          activeModal.componentInstance.name = shell.name;
-          activeModal.componentInstance.startDateTime = shell.startDateTime;
-          activeModal.componentInstance.showLowCreditsWarning = nrOfCredits === 1;
-
+          const modalInjector = createModalInjector(this.injector, COPY_MODAL_INPUTS, {
+            name: shell.name,
+            startDateTime: shell.startDateTime,
+            showLowCreditsWarning: nrOfCredits === 1
+          });
+          const activeModal = this.modalService.open(CopyModalComponent, { scrollable: false, injector: modalInjector });
           activeModal.result.then((result) => {
             this.copy(shell.tournamentId, result);
           }, (reason) => {
